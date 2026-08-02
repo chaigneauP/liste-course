@@ -1,4 +1,4 @@
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { Ionicons } from '@expo/vector-icons';
 import { memo, useRef, type ReactNode } from 'react';
 import { Pressable, Text, View, type View as ViewType } from 'react-native';
 
@@ -43,15 +43,15 @@ export const CardRow = memo(function CardRow({
 
   const completionIcon =
     listCompletion === 'complete' ? (
-      <FontAwesome6
-        name="circle-check"
+      <Ionicons
+        name="checkmark-circle"
         size={20}
         color={colors.success}
         accessibilityLabel="Tous les articles sont cochés"
       />
     ) : listCompletion === 'in-progress' ? (
-      <FontAwesome6
-        name="arrows-rotate"
+      <Ionicons
+        name="sync"
         size={18}
         color={colors.accentBg}
         accessibilityLabel="Articles restants à acheter"

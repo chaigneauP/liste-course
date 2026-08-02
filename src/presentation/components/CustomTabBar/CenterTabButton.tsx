@@ -1,7 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useEffect, useRef } from 'react';
-import { Animated, Easing, Text } from 'react-native';
+import { useEffect } from 'react';
+import { Text } from 'react-native';
+import Animated, {
+  cancelAnimation,
+  Easing,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { DepressiblePressable } from '@/presentation/components/DepressiblePressable';
 import { useTheme } from '@/presentation/theme';
@@ -25,37 +33,39 @@ type Props = {
 export function CenterTabButton({ isHomeFocused, onNavigateHome }: Props) {
   const styles = useCenterTabButtonStyles();
   const { colors } = useTheme();
-  const morph = useRef(new Animated.Value(isHomeFocused ? 1 : 0)).current;
+  const morph = useSharedValue(isHomeFocused ? 1 : 0);
 
   useEffect(() => {
-    Animated.timing(morph, {
-      toValue: isHomeFocused ? 1 : 0,
+    morph.value = withTiming(isHomeFocused ? 1 : 0, {
       duration: MORPH_MS,
       easing: Easing.out(Easing.cubic),
-      useNativeDriver: false,
-    }).start();
+    });
+
+    return () => {
+      cancelAnimation(morph);
+    };
   }, [isHomeFocused, morph]);
 
-  const width = morph.interpolate({
-    inputRange: [0, 1],
-    outputRange: [BUBBLE_SIZE, PILL_WIDTH],
-  });
+  const buttonStyle = useAnimatedStyle(() => ({
+    width: interpolate(morph.value, [0, 1], [BUBBLE_SIZE, PILL_WIDTH]),
+    paddingHorizontal: interpolate(morph.value, [0, 1], [
+      0,
+      CENTER_TAB_PILL_HORIZONTAL_PADDING,
+    ]),
+    transform: [
+      {
+        scale: interpolate(morph.value, [0, 0.5, 1], [1, 0.9, 1]),
+      },
+    ],
+  }));
 
-  const paddingHorizontal = morph.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, CENTER_TAB_PILL_HORIZONTAL_PADDING],
-  });
+  const labelStyle = useAnimatedStyle(() => ({
+    opacity: morph.value,
+  }));
 
-  const morphScale = morph.interpolate({
-    inputRange: [0, 0.5, 1],
-    outputRange: [1, 0.9, 1],
-  });
-
-  const labelOpacity = morph;
-  const iconOpacity = morph.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 0],
-  });
+  const iconStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(morph.value, [0, 1], [1, 0]),
+  }));
 
   function handlePress() {
     if (isHomeFocused) {
@@ -73,20 +83,12 @@ export function CenterTabButton({ isHomeFocused, onNavigateHome }: Props) {
       accessibilityState={{ selected: isHomeFocused }}
       onPress={handlePress}
       style={({ pressed }) => [pressed && styles.centerButtonPressed]}>
-      <Animated.View
-        style={[
-          styles.centerButton,
-          {
-            width,
-            paddingHorizontal,
-            transform: [{ scale: morphScale }],
-          },
-        ]}>
-        <Animated.View style={[styles.centerButtonLayer, { opacity: labelOpacity }]}>
+      <Animated.View style={[styles.centerButton, buttonStyle]}>
+        <Animated.View style={[styles.centerButtonLayer, labelStyle]}>
           <Text style={styles.centerButtonLabel}>Nouvelle liste</Text>
         </Animated.View>
 
-        <Animated.View style={[styles.centerButtonLayer, { opacity: iconOpacity }]}>
+        <Animated.View style={[styles.centerButtonLayer, iconStyle]}>
           <Ionicons name="home" size={HOME_ICON_SIZE} color={colors.btnPrimaryIcon} />
         </Animated.View>
       </Animated.View>

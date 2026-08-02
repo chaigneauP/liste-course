@@ -122,6 +122,25 @@ Les fichiers de route sont des **re-exports** d’écrans, sauf `_layout.tsx` qu
 - `makeStyles` met en cache `StyleSheet.create` par schéma `light` / `dark`.
 - Tokens : `presentation/theme/tokens/` (`colors`, `spacing`, `radius`, `typography`, `shadows`).
 - Préférence thème : domaine (`light` \| `dark` \| `system`) → port → AsyncStorage → use cases → `ThemeProvider`.
+- Icônes UI : **Ionicons** (`@expo/vector-icons`) uniquement — ne pas introduire une seconde famille (FontAwesome, etc.).
+
+---
+
+## Animations & perf UI
+
+- Animations interactives / layout (scale press, morph tab, etc.) : **`react-native-reanimated`** (UI thread). Babel est déjà configuré via `babel-preset-expo`.
+- Animations simples de fade / opacity hors hot path peuvent rester sur `Animated` RN.
+- Toujours `cancelAnimation` (Reanimated) ou `.stop()` (RN) dans le cleanup `useEffect`.
+
+### React Compiler & `memo`
+
+`experiments.reactCompiler` (Expo) **n’est pas activé** pour l’instant — décision différée jusqu’à un healthcheck + validation manuelle (tabs, listes, animations).
+
+Jusque-là :
+
+- Garder `React.memo` sur les rows de listes (`ItemRow`, `CardRow`) et stabiliser handlers / props dans les écrans / sections qui les mappent.
+- Ne pas ajouter `useMemo` / `useCallback` hors listes « pour la perf ».
+- Quand le compiler sera activé (`app.json` → `experiments.reactCompiler: true`), on pourra retirer les `memo` redondants progressivement.
 
 ---
 

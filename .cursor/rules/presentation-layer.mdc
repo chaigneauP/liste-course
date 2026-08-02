@@ -35,3 +35,9 @@ export const useHomeScreenStyles = makeStyles(({ colors, spacing }) => ({
 
 - Encapsulent état local + appels use cases + refresh (`useFocusEffect`).
 - Textes UI en **français**.
+
+## Icônes & animations
+
+- Icônes : **Ionicons** uniquement (`@expo/vector-icons`).
+- Animations interactives / layout : `react-native-reanimated` ; cleanup via `cancelAnimation`.
+- `experiments.reactCompiler` non activé → garder `memo` sur les rows de listes ; pas de `useMemo`/`useCallback` hors listes.
