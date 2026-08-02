@@ -86,6 +86,23 @@ export function useShoppingList(listId: string) {
     });
   }, []);
 
+  const toggleItemChecked = useCallback((id: string) => {
+    setList((current) => {
+      if (!current || current.status === 'archived') {
+        return current;
+      }
+
+      const nextList = {
+        ...current,
+        items: current.items.map((item) =>
+          item.id === id ? { ...item, checked: !item.checked } : item
+        ),
+      };
+      void updateList(nextList);
+      return nextList;
+    });
+  }, []);
+
   return {
     list,
     items: list?.items ?? [],
@@ -93,5 +110,6 @@ export function useShoppingList(listId: string) {
     addItem,
     updateItem,
     removeItem,
+    toggleItemChecked,
   };
 }

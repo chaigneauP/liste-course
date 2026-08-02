@@ -1,6 +1,7 @@
 export type Item = {
   id: string;
   name: string;
+  checked?: boolean;
 };
 
 export type ListStatus = 'active' | 'archived';

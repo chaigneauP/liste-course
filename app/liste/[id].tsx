@@ -11,7 +11,8 @@ import type { Item } from '../../types';
 export default function ListScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const listId = typeof id === 'string' ? id : '';
-  const { list, items, loading, addItem, updateItem, removeItem } = useShoppingList(listId);
+  const { list, items, loading, addItem, updateItem, removeItem, toggleItemChecked } =
+    useShoppingList(listId);
   const insets = useSafeAreaInsets();
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -77,6 +78,7 @@ export default function ListScreen() {
               readOnly={readOnly}
               onEdit={openEdit}
               onDelete={removeItem}
+              onToggleChecked={toggleItemChecked}
             />
           )}
           contentContainerStyle={[
