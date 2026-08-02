@@ -164,3 +164,16 @@ export async function archiveList(id: string): Promise<void> {
   };
   await saveLists(lists);
 }
+
+export async function deleteArchivedLists(): Promise<number> {
+  const lists = await loadLists();
+  const remaining = lists.filter((list) => list.status !== 'archived');
+  const deletedCount = lists.length - remaining.length;
+
+  if (deletedCount === 0) {
+    return 0;
+  }
+
+  await saveLists(remaining);
+  return deletedCount;
+}
