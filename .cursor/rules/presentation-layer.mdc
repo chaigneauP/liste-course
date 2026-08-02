@@ -27,7 +27,7 @@ ComponentName/
 ```typescript
 // ✅ GOOD
 export const useHomeScreenStyles = makeStyles(({ colors, spacing }) => ({
-  screen: { flex: 1, backgroundColor: colors.background, padding: spacing[5] },
+  screen: { flex: 1, backgroundColor: colors.bg, padding: spacing[5] },
 }));
 ```
 

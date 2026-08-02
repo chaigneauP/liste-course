@@ -1,3 +1,4 @@
+import { filterListsByStatus } from '@/domain/entities/shoppingList';
 import type { ShoppingListRepository } from '@/domain/ports/shoppingListRepository';
 
 /** Renvoie le nombre de listes effectivement supprimées. */
@@ -8,7 +9,7 @@ export function makeDeleteArchivedShoppingLists(
 ): DeleteArchivedShoppingLists {
   return async () => {
     const lists = await repository.findAll();
-    const remaining = lists.filter((list) => list.status !== 'archived');
+    const remaining = filterListsByStatus(lists, 'active');
     const deletedCount = lists.length - remaining.length;
 
     if (deletedCount === 0) {

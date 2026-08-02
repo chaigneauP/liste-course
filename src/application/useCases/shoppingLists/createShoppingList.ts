@@ -1,4 +1,4 @@
-import { normalizeListTitle } from '@/domain/entities/listTitle';
+import { parseListTitle } from '@/domain/entities/listTitle';
 import type { ShoppingList } from '@/domain/entities/shoppingList';
 import type { Clock } from '@/domain/ports/clock';
 import type { IdGenerator } from '@/domain/ports/idGenerator';
@@ -12,10 +12,15 @@ export function makeCreateShoppingList(
   idGenerator: IdGenerator
 ): CreateShoppingList {
   return async (name) => {
+    const parsedName = parseListTitle(name);
+    if (parsedName === null) {
+      throw new Error('List title must not be empty');
+    }
+
     const now = clock.now();
     const list: ShoppingList = {
       id: idGenerator.generate(),
-      name: normalizeListTitle(name),
+      name: parsedName,
       items: [],
       status: 'active',
       createdAt: now,

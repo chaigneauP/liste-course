@@ -1,7 +1,7 @@
 import { makeStyles } from '@/presentation/theme';
 
 export const useShoppingListsSectionStyles = makeStyles(
-  ({ colors, spacing, radius, typography }) => ({
+  ({ colors, spacing, radius, typography, shadow }) => ({
     section: {
       flex: 1,
       gap: spacing[3],
@@ -39,11 +39,7 @@ export const useShoppingListsSectionStyles = makeStyles(
       borderRadius: radius.md,
       borderWidth: 1,
       borderColor: colors.border,
-      shadowColor: colors.shadow,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 6,
-      elevation: 3,
+      ...shadow.hint,
     },
     hintText: {
       ...typography.caption,

@@ -7,6 +7,8 @@ export type Shadows = {
   menu: ViewStyle;
   /** Bouton d'action flottant. */
   floating: ViewStyle;
+  /** Bulle d'aide / tooltip léger. */
+  hint: ViewStyle;
 };
 
 export function createShadows(colors: ThemeColors): Shadows {
@@ -24,6 +26,13 @@ export function createShadows(colors: ThemeColors): Shadows {
       shadowOpacity: 0.25,
       shadowRadius: 8,
       elevation: 6,
+    },
+    hint: {
+      shadowColor: colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 6,
+      elevation: 3,
     },
   };
 }

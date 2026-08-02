@@ -48,9 +48,18 @@ export function renameItemInList(
     return list;
   }
 
-  const items = list.items.map((item) =>
-    item.id === itemId ? { ...item, name: trimmed } : item
-  );
+  let changed = false;
+  const items = list.items.map((item) => {
+    if (item.id !== itemId || item.name === trimmed) {
+      return item;
+    }
+    changed = true;
+    return { ...item, name: trimmed };
+  });
+
+  if (!changed) {
+    return list;
+  }
   return { ...list, items };
 }
 
@@ -71,9 +80,18 @@ export function toggleItemInList(list: ShoppingList, itemId: string): ShoppingLi
     return list;
   }
 
-  const items = list.items.map((item) =>
-    item.id === itemId ? { ...item, checked: !item.checked } : item
-  );
+  let found = false;
+  const items = list.items.map((item) => {
+    if (item.id !== itemId) {
+      return item;
+    }
+    found = true;
+    return { ...item, checked: !item.checked };
+  });
+
+  if (!found) {
+    return list;
+  }
   return { ...list, items };
 }
 
@@ -91,8 +109,7 @@ export function filterListsByStatus(
   return lists.filter((list) => list.status === status);
 }
 
+/** Tri décroissant sur `updatedAt` ISO-8601 (comparaison lexicographique). */
 export function sortListsByRecentUpdate(lists: ShoppingList[]): ShoppingList[] {
-  return [...lists].sort(
-    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-  );
+  return [...lists].sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : a.updatedAt > b.updatedAt ? -1 : 0));
 }
