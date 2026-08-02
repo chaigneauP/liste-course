@@ -39,28 +39,31 @@ export function ItemRow({ item, readOnly = false, onEdit, onDelete, onToggleChec
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={`Modifier ${item.name}`}
+            accessibilityState={{ disabled: checked }}
+            disabled={checked}
             onPress={() => onEdit?.(item)}
             hitSlop={6}
             style={({ pressed }) => [
               styles.action,
-              checked ? styles.actionChecked : styles.actionDefault,
-              pressed && (checked ? styles.actionCheckedPressed : styles.actionDefaultPressed),
+              checked ? styles.actionDisabled : styles.actionDefault,
+              pressed && !checked && styles.actionDefaultPressed,
             ]}>
-            <Ionicons name="pencil" size={18} color={checked ? '#059669' : '#2563eb'} />
+            <Ionicons name="pencil" size={18} color={checked ? '#94a3b8' : '#2563eb'} />
           </Pressable>
 
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={`Supprimer ${item.name}`}
+            accessibilityState={{ disabled: checked }}
+            disabled={checked}
             onPress={confirmDelete}
             hitSlop={6}
             style={({ pressed }) => [
               styles.action,
-              checked ? styles.deleteActionChecked : styles.deleteActionDefault,
-              pressed &&
-                (checked ? styles.deleteActionCheckedPressed : styles.deleteActionDefaultPressed),
+              checked ? styles.actionDisabled : styles.deleteActionDefault,
+              pressed && !checked && styles.deleteActionDefaultPressed,
             ]}>
-            <Ionicons name="trash-outline" size={18} color={checked ? '#047857' : '#dc2626'} />
+            <Ionicons name="trash-outline" size={18} color={checked ? '#94a3b8' : '#dc2626'} />
           </Pressable>
         </View>
       }
@@ -84,11 +87,9 @@ const styles = StyleSheet.create({
   actionDefaultPressed: {
     backgroundColor: '#dbeafe',
   },
-  actionChecked: {
-    backgroundColor: '#d1fae5',
-  },
-  actionCheckedPressed: {
-    backgroundColor: '#a7f3d0',
+  actionDisabled: {
+    backgroundColor: '#f1f5f9',
+    opacity: 0.7,
   },
   deleteActionDefault: {
     backgroundColor: '#fef2f2',

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { CardRow } from './CardRow';
 import type { ShoppingList } from '../types';
@@ -13,6 +13,14 @@ function formatItemCount(count: number): string {
     return '1 article';
   }
   return `${count} articles`;
+}
+
+function getListCompletion(list: ShoppingList): 'complete' | 'in-progress' | undefined {
+  if (list.items.length === 0) {
+    return undefined;
+  }
+
+  return list.items.every((item) => item.checked) ? 'complete' : 'in-progress';
 }
 
 type Props = {
@@ -59,23 +67,19 @@ export function ShoppingListsSection({
               <CardRow
                 title={list.name}
                 subtitle={formatItemCount(list.items.length)}
+                listCompletion={getListCompletion(list)}
                 onPress={() =>
                   router.push({ pathname: '/liste/[id]', params: { id: list.id } })
                 }
-                right={
-                  onArchive ? (
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={`Archiver ${list.name}`}
-                      onPress={() => confirmArchive(list)}
-                      hitSlop={6}
-                      style={({ pressed }) => [
-                        styles.archiveButton,
-                        pressed && styles.archiveButtonPressed,
-                      ]}>
-                      <Ionicons name="archive-outline" size={20} color="#dc2626" />
-                    </Pressable>
-                  ) : undefined
+                longPressAction={
+                  onArchive
+                    ? {
+                        label: 'Archiver la liste',
+                        icon: <Ionicons name="archive-outline" size={18} color="#dc2626" />,
+                        accessibilityLabel: `Archiver ${list.name}`,
+                        onPress: () => confirmArchive(list),
+                      }
+                    : undefined
                 }
               />
             </View>
@@ -113,15 +117,5 @@ const styles = StyleSheet.create({
   },
   listRow: {
     alignSelf: 'stretch',
-  },
-  archiveButton: {
-    padding: 8,
-    borderRadius: 8,
-    backgroundColor: '#fef2f2',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  archiveButtonPressed: {
-    backgroundColor: '#fee2e2',
   },
 });
