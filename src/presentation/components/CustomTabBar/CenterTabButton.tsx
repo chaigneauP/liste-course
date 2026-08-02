@@ -24,6 +24,9 @@ const MORPH_MS = 220;
 const BUBBLE_SIZE = CENTER_BUTTON_HEIGHT;
 const PILL_WIDTH = 156;
 const HOME_ICON_SIZE = 26;
+/** Contenu masqué pendant le morph ; visible seulement près des extrémités. */
+const CONTENT_HIDE_START = 0.15;
+const CONTENT_SHOW_END = 0.85;
 
 type Props = {
   isHomeFocused: boolean;
@@ -60,11 +63,11 @@ export function CenterTabButton({ isHomeFocused, onNavigateHome }: Props) {
   }));
 
   const labelStyle = useAnimatedStyle(() => ({
-    opacity: morph.value,
+    opacity: interpolate(morph.value, [0, CONTENT_SHOW_END, 1], [0, 0, 1]),
   }));
 
   const iconStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(morph.value, [0, 1], [1, 0]),
+    opacity: interpolate(morph.value, [0, CONTENT_HIDE_START, 1], [1, 0, 0]),
   }));
 
   function handlePress() {
