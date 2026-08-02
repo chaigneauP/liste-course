@@ -4,7 +4,9 @@ export const useSettingsScreenStyles = makeStyles(
   ({ colors, spacing, radius, typography }) => ({
     screen: {
       flex: 1,
-      padding: spacing[5],
+    },
+    content: {
+      paddingHorizontal: spacing[5],
       gap: spacing[6],
     },
     description: {

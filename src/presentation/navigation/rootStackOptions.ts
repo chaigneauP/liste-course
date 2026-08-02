@@ -7,9 +7,7 @@ type StackScreenOptions = NonNullable<ComponentProps<typeof Stack>['screenOption
 
 export function createRootStackOptions({ colors }: Theme): StackScreenOptions {
   return {
-    headerStyle: { backgroundColor: colors.surface },
-    headerTitleStyle: { color: colors.textPrimary },
-    headerTintColor: colors.btnSecondaryIcon,
+    headerShown: false,
     contentStyle: { backgroundColor: colors.bg },
   };
 }

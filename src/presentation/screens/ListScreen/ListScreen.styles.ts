@@ -23,21 +23,22 @@ export const useListScreenStyles = makeStyles(
       gap: space[2],
       paddingHorizontal: space[6],
     },
-    missingTitle: {
-      ...typography.emptyTitle,
-      color: colors.textPrimary,
-    },
     missingText: {
       ...typography.body,
       color: colors.textSecondary,
       textAlign: 'center',
+      paddingHorizontal: space[6],
+    },
+    readOnlyBannerWrap: {
+      paddingHorizontal: space[5],
+      paddingBottom: space[3],
     },
     readOnlyBanner: {
       backgroundColor: colors.accentBg,
-      paddingVertical: space[2.5],
+      paddingVertical: space[2],
       paddingHorizontal: space[4],
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
+      borderRadius: radius.lg,
+      alignSelf: 'flex-start',
     },
     readOnlyText: {
       ...typography.label,
