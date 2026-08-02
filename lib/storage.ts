@@ -30,25 +30,6 @@ function isShoppingList(value: unknown): value is ShoppingList {
   );
 }
 
-function formatListName(date: Date, existingNames: string[]): string {
-  const base = `Liste du ${date.toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })}`;
-
-  if (!existingNames.includes(base)) {
-    return base;
-  }
-
-  let suffix = 2;
-  while (existingNames.includes(`${base} (${suffix})`)) {
-    suffix += 1;
-  }
-
-  return `${base} (${suffix})`;
-}
-
 async function loadLegacyItems(): Promise<Item[]> {
   try {
     const raw = await AsyncStorage.getItem(LEGACY_ITEMS_KEY);
@@ -124,15 +105,12 @@ export async function saveLists(lists: ShoppingList[]): Promise<void> {
   }
 }
 
-export async function createList(): Promise<ShoppingList> {
+export async function createList(name: string): Promise<ShoppingList> {
   const lists = await loadLists();
   const now = new Date().toISOString();
   const list: ShoppingList = {
     id: createId(),
-    name: formatListName(
-      new Date(),
-      lists.map((entry) => entry.name)
-    ),
+    name: name.trim(),
     items: [],
     createdAt: now,
     updatedAt: now,

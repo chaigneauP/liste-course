@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
-import { ComponentProps } from 'react';
+import { ComponentProps, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { CardRow } from '../components/CardRow';
+import { ListNameModal } from '../components/ListNameModal';
 import { useShoppingLists } from '../hooks/useShoppingLists';
 import type { ShoppingList } from '../types';
 
@@ -18,9 +19,19 @@ type MenuEntry = {
 
 export default function HomeScreen() {
   const { lists, loading, createNewList, removeList } = useShoppingLists();
+  const [createModalVisible, setCreateModalVisible] = useState(false);
 
-  async function handleCreateList() {
-    const list = await createNewList();
+  function openCreateModal() {
+    setCreateModalVisible(true);
+  }
+
+  function closeCreateModal() {
+    setCreateModalVisible(false);
+  }
+
+  async function handleCreateList(name: string) {
+    const list = await createNewList(name);
+    closeCreateModal();
     router.push({ pathname: '/liste/[id]', params: { id: list.id } });
   }
 
@@ -41,7 +52,7 @@ export default function HomeScreen() {
       icon: 'add-circle',
       iconColor: '#2563eb',
       backgroundColor: '#dbeafe',
-      onPress: () => void handleCreateList(),
+      onPress: openCreateModal,
     },
     {
       title: 'Historique',
@@ -131,6 +142,12 @@ export default function HomeScreen() {
           </ScrollView>
         )}
       </View>
+
+      <ListNameModal
+        visible={createModalVisible}
+        onCancel={closeCreateModal}
+        onSubmit={(name) => void handleCreateList(name)}
+      />
     </View>
   );
 }

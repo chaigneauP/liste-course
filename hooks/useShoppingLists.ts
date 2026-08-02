@@ -26,11 +26,14 @@ export function useShoppingLists() {
     }, [refresh])
   );
 
-  const createNewList = useCallback(async () => {
-    const list = await createList();
-    await refresh();
-    return list;
-  }, [refresh]);
+  const createNewList = useCallback(
+    async (name: string) => {
+      const list = await createList(name);
+      await refresh();
+      return list;
+    },
+    [refresh]
+  );
 
   const removeList = useCallback(
     async (id: string) => {
