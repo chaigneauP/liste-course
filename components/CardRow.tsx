@@ -12,6 +12,8 @@ import {
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 import { truncateListTitle } from '../lib/listTitle';
+import { makeStyles } from '../theme/makeStyles';
+import { useTheme } from '../theme/ThemeProvider';
 
 const MENU_GAP = 6;
 const MENU_EDGE_INSET = 20;
@@ -52,6 +54,8 @@ export function CardRow({
   longPressAction,
   listCompletion,
 }: Props) {
+  const styles = useCardRowStyles();
+  const { colors } = useTheme();
   const rowRef = useRef<ViewType>(null);
   const [menuVisible, setMenuVisible] = useState(false);
   const [anchor, setAnchor] = useState<Anchor | null>(null);
@@ -122,14 +126,14 @@ export function CardRow({
       <FontAwesome6
         name="circle-check"
         size={20}
-        color="#16a34a"
+        color={colors.success}
         accessibilityLabel="Tous les articles sont cochés"
       />
     ) : listCompletion === 'in-progress' ? (
       <FontAwesome6
         name="arrows-rotate"
         size={18}
-        color="#7c3aed"
+        color={colors.accentBg}
         accessibilityLabel="Articles restants à acheter"
       />
     ) : null;
@@ -224,35 +228,35 @@ export function CardRow({
   );
 }
 
-export const cardRowStyles = StyleSheet.create({
+const useCardRowStyles = makeStyles((colors) => ({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: colors.border,
   },
   rowChecked: {
-    backgroundColor: '#ecfdf5',
-    borderColor: '#bbf7d0',
+    backgroundColor: colors.successSurface,
+    borderColor: colors.border,
   },
   rowPressed: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: colors.btnSecondaryBgHover,
   },
   rowCheckedPressed: {
-    backgroundColor: '#d1fae5',
+    backgroundColor: colors.successSurfacePressed,
   },
   title: {
     fontSize: 16,
-    color: '#0f172a',
+    color: colors.textPrimary,
   },
   titleChecked: {
     textDecorationLine: 'line-through',
-    color: '#64748b',
+    color: colors.textSecondary,
   },
   titleContainer: {
     flex: 1,
@@ -269,7 +273,7 @@ export const cardRowStyles = StyleSheet.create({
   subtitle: {
     fontSize: 13,
     fontWeight: '500',
-    color: '#64748b',
+    color: colors.textSecondary,
   },
   menuOverlay: {
     flex: 1,
@@ -277,11 +281,11 @@ export const cardRowStyles = StyleSheet.create({
   menu: {
     position: 'absolute',
     alignSelf: 'flex-end',
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
-    shadowColor: '#0f172a',
+    borderColor: colors.border,
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.12,
     shadowRadius: 12,
@@ -296,14 +300,12 @@ export const cardRowStyles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   menuActionPressed: {
-    backgroundColor: '#fef2f2',
+    backgroundColor: colors.dangerSurface,
   },
   menuActionLabel: {
     fontSize: 13,
     fontWeight: '500',
-    color: '#dc2626',
+    color: colors.danger,
     flexShrink: 0,
   },
-});
-
-const styles = cardRowStyles;
+}));

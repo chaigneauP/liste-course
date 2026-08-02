@@ -1,16 +1,20 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
-export default function RootLayout() {
+import { ThemeProvider, useTheme } from '../theme/ThemeProvider';
+
+function RootNavigator() {
+  const { colors, scheme } = useTheme();
+
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: '#ffffff' },
-          headerTitleStyle: { color: '#0f172a' },
-          headerTintColor: '#2563eb',
-          contentStyle: { backgroundColor: '#f1f5f9' },
+          headerStyle: { backgroundColor: colors.surface },
+          headerTitleStyle: { color: colors.textPrimary },
+          headerTintColor: colors.btnSecondaryIcon,
+          contentStyle: { backgroundColor: colors.bg },
         }}>
         <Stack.Screen name="index" options={{ title: 'Accueil' }} />
         <Stack.Screen name="liste/[id]" options={{ title: 'Liste' }} />
@@ -18,5 +22,13 @@ export default function RootLayout() {
         <Stack.Screen name="parametres" options={{ title: 'Paramètres' }} />
       </Stack>
     </>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <RootNavigator />
+    </ThemeProvider>
   );
 }

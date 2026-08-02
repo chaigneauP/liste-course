@@ -1,11 +1,13 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ItemFormModal } from '../../components/ItemFormModal';
 import { ItemRow } from '../../components/ItemRow';
 import { useShoppingList } from '../../hooks/useShoppingList';
+import { makeStyles } from '../../theme/makeStyles';
+import { useTheme } from '../../theme/ThemeProvider';
 import type { Item } from '../../types';
 
 export default function ListScreen() {
@@ -14,6 +16,8 @@ export default function ListScreen() {
   const { list, items, loading, addItem, updateItem, removeItem, toggleItemChecked } =
     useShoppingList(listId);
   const insets = useSafeAreaInsets();
+  const styles = useStyles();
+  const { colors } = useTheme();
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const readOnly = list?.status === 'archived';
@@ -45,7 +49,7 @@ export default function ListScreen() {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator color="#2563eb" />
+        <ActivityIndicator color={colors.btnSecondaryIcon} />
       </View>
     );
   }
@@ -126,7 +130,7 @@ export default function ListScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   container: {
     flex: 1,
   },
@@ -140,24 +144,24 @@ const styles = StyleSheet.create({
   missingTitle: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.textPrimary,
   },
   missingText: {
     fontSize: 14,
-    color: '#64748b',
+    color: colors.textSecondary,
     textAlign: 'center',
   },
   readOnlyBanner: {
-    backgroundColor: '#fef3c7',
+    backgroundColor: colors.accentBg,
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#fde68a',
+    borderBottomColor: colors.border,
   },
   readOnlyText: {
     fontSize: 13,
     fontWeight: '500',
-    color: '#92400e',
+    color: colors.accentIcon,
     textAlign: 'center',
   },
   listContent: {
@@ -176,11 +180,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.textPrimary,
   },
   emptyText: {
     fontSize: 14,
-    color: '#64748b',
+    color: colors.textSecondary,
     textAlign: 'center',
   },
   fab: {
@@ -191,20 +195,20 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2563eb',
+    backgroundColor: colors.btnPrimaryBg,
     elevation: 6,
-    shadowColor: '#0f172a',
+    shadowColor: colors.shadow,
     shadowOpacity: 0.25,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
   },
   fabPressed: {
-    backgroundColor: '#1d4ed8',
+    backgroundColor: colors.btnPrimaryBgHover,
   },
   fabText: {
-    color: '#ffffff',
+    color: colors.btnPrimaryIcon,
     fontSize: 32,
     lineHeight: 36,
     fontWeight: '300',
   },
-});
+}));

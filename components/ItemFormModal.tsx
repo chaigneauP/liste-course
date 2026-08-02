@@ -10,6 +10,9 @@ import {
   View,
 } from 'react-native';
 
+import { makeStyles } from '../theme/makeStyles';
+import { useTheme } from '../theme/ThemeProvider';
+
 type Props = {
   visible: boolean;
   mode: 'create' | 'edit';
@@ -20,6 +23,8 @@ type Props = {
 
 export function ItemFormModal({ visible, mode, initialValue, onCancel, onSubmit }: Props) {
   const [value, setValue] = useState(initialValue);
+  const styles = useStyles();
+  const { colors } = useTheme();
 
   useEffect(() => {
     if (visible) {
@@ -52,7 +57,7 @@ export function ItemFormModal({ visible, mode, initialValue, onCancel, onSubmit 
             value={value}
             onChangeText={setValue}
             placeholder="Ex. : Lait, pain, tomates…"
-            placeholderTextColor="#94a3b8"
+            placeholderTextColor={colors.textSecondary}
             style={styles.input}
             autoFocus
             returnKeyType="done"
@@ -86,15 +91,15 @@ export function ItemFormModal({ visible, mode, initialValue, onCancel, onSubmit 
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   backdrop: {
     flex: 1,
     justifyContent: 'center',
     padding: 24,
-    backgroundColor: 'rgba(15, 23, 42, 0.45)',
+    backgroundColor: colors.overlay,
   },
   sheet: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     borderRadius: 18,
     padding: 20,
     gap: 16,
@@ -102,16 +107,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.textPrimary,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#cbd5e1',
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#0f172a',
+    color: colors.textPrimary,
   },
   actions: {
     flexDirection: 'row',
@@ -122,26 +127,30 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 18,
     borderRadius: 10,
-    backgroundColor: '#f1f5f9',
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.btnSecondaryBg,
   },
   buttonPressed: {
-    backgroundColor: '#e2e8f0',
+    backgroundColor: colors.btnSecondaryBgHover,
   },
   buttonText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#475569',
+    color: colors.btnSecondaryIcon,
   },
   submitButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: colors.btnPrimaryBg,
+    borderColor: colors.btnPrimaryBg,
   },
   submitButtonPressed: {
-    backgroundColor: '#1d4ed8',
+    backgroundColor: colors.btnPrimaryBgHover,
+    borderColor: colors.btnPrimaryBgHover,
   },
   submitButtonDisabled: {
-    backgroundColor: '#93c5fd',
+    opacity: 0.5,
   },
   submitButtonText: {
-    color: '#ffffff',
+    color: colors.btnPrimaryIcon,
   },
-});
+}));

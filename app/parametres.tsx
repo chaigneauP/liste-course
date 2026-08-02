@@ -1,11 +1,21 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, Text, View } from 'react-native';
 
 import { deleteArchivedLists, loadLists } from '../lib/storage';
+import { makeStyles } from '../theme/makeStyles';
+import { useTheme, type ThemePreference } from '../theme/ThemeProvider';
+
+const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
+  { value: 'light', label: 'Clair' },
+  { value: 'dark', label: 'Sombre' },
+  { value: 'system', label: 'Automatique' },
+];
 
 export default function SettingsScreen() {
   const [archivedCount, setArchivedCount] = useState(0);
+  const styles = useStyles();
+  const { preference, setPreference } = useTheme();
 
   const refreshCount = useCallback(async () => {
     const lists = await loadLists();
@@ -57,6 +67,38 @@ export default function SettingsScreen() {
       </Text>
 
       <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Apparence</Text>
+        <Text style={styles.sectionText}>
+          Choisissez le thème de l’application ou suivez le réglage du système.
+        </Text>
+
+        <View style={styles.themeOptions}>
+          {THEME_OPTIONS.map((option) => {
+            const selected = preference === option.value;
+
+            return (
+              <Pressable
+                key={option.value}
+                accessibilityRole="button"
+                accessibilityLabel={`Thème ${option.label.toLowerCase()}`}
+                accessibilityState={{ selected }}
+                onPress={() => setPreference(option.value)}
+                style={({ pressed }) => [
+                  styles.themeOption,
+                  selected && styles.themeOptionSelected,
+                  pressed && !selected && styles.themeOptionPressed,
+                ]}>
+                <Text
+                  style={[styles.themeOptionText, selected && styles.themeOptionTextSelected]}>
+                  {option.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
+
+      <View style={styles.section}>
         <Text style={styles.sectionTitle}>Historique</Text>
         <Text style={styles.sectionText}>
           {archivedCount === 0
@@ -88,7 +130,7 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   screen: {
     flex: 1,
     padding: 20,
@@ -96,7 +138,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: '#64748b',
+    color: colors.textSecondary,
     lineHeight: 20,
   },
   section: {
@@ -105,34 +147,63 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.textPrimary,
   },
   sectionText: {
     fontSize: 14,
-    color: '#64748b',
+    color: colors.textSecondary,
+  },
+  themeOptions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  themeOption: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.btnSecondaryBg,
+    alignItems: 'center',
+  },
+  themeOptionPressed: {
+    backgroundColor: colors.btnSecondaryBgHover,
+  },
+  themeOptionSelected: {
+    backgroundColor: colors.btnPrimaryBg,
+    borderColor: colors.btnPrimaryBg,
+  },
+  themeOptionText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.btnSecondaryIcon,
+  },
+  themeOptionTextSelected: {
+    color: colors.btnPrimaryIcon,
   },
   deleteButton: {
     alignSelf: 'flex-start',
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 10,
-    backgroundColor: '#fef2f2',
+    backgroundColor: colors.dangerSurface,
     borderWidth: 1,
-    borderColor: '#fecaca',
+    borderColor: colors.danger,
   },
   deleteButtonDisabled: {
-    backgroundColor: '#f8fafc',
-    borderColor: '#e2e8f0',
+    backgroundColor: colors.btnSecondaryBgHover,
+    borderColor: colors.border,
   },
   deleteButtonPressed: {
-    backgroundColor: '#fee2e2',
+    backgroundColor: colors.dangerSurfacePressed,
   },
   deleteButtonText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#dc2626',
+    color: colors.danger,
   },
   deleteButtonTextDisabled: {
-    color: '#94a3b8',
+    color: colors.textSecondary,
   },
-});
+}));

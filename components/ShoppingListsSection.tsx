@@ -1,8 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, Text, View } from 'react-native';
 
 import { CardRow } from './CardRow';
+import { makeStyles } from '../theme/makeStyles';
+import { useTheme } from '../theme/ThemeProvider';
 import type { ShoppingList } from '../types';
 
 function formatItemCount(count: number): string {
@@ -38,6 +40,9 @@ export function ShoppingListsSection({
   emptyMessage,
   onArchive,
 }: Props) {
+  const styles = useStyles();
+  const { colors } = useTheme();
+
   function confirmArchive(list: ShoppingList) {
     Alert.alert('Archiver la liste', `Voulez-vous archiver « ${list.name} » ?`, [
       { text: 'Annuler', style: 'cancel' },
@@ -54,7 +59,7 @@ export function ShoppingListsSection({
       <Text style={styles.sectionTitle}>{sectionTitle}</Text>
 
       {loading ? (
-        <ActivityIndicator color="#2563eb" style={styles.loader} />
+        <ActivityIndicator color={colors.btnSecondaryIcon} style={styles.loader} />
       ) : lists.length === 0 ? (
         <Text style={styles.empty}>{emptyMessage}</Text>
       ) : (
@@ -75,7 +80,9 @@ export function ShoppingListsSection({
                   onArchive
                     ? {
                         label: 'Archiver la liste',
-                        icon: <Ionicons name="archive-outline" size={18} color="#dc2626" />,
+                        icon: (
+                          <Ionicons name="archive-outline" size={18} color={colors.danger} />
+                        ),
                         accessibilityLabel: `Archiver ${list.name}`,
                         onPress: () => confirmArchive(list),
                       }
@@ -90,7 +97,7 @@ export function ShoppingListsSection({
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   section: {
     flex: 1,
     gap: 12,
@@ -102,14 +109,14 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.textPrimary,
   },
   loader: {
     marginTop: 8,
   },
   empty: {
     fontSize: 14,
-    color: '#64748b',
+    color: colors.textSecondary,
     lineHeight: 20,
   },
   lists: {
@@ -118,4 +125,4 @@ const styles = StyleSheet.create({
   listRow: {
     alignSelf: 'stretch',
   },
-});
+}));

@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
 
 import { CardRow } from './CardRow';
+import { makeStyles } from '../theme/makeStyles';
+import { useTheme } from '../theme/ThemeProvider';
 import type { Item } from '../types';
 
 type Props = {
@@ -13,6 +15,9 @@ type Props = {
 };
 
 export function ItemRow({ item, readOnly = false, onEdit, onDelete, onToggleChecked }: Props) {
+  const styles = useStyles();
+  const { colors } = useTheme();
+
   function confirmDelete() {
     Alert.alert('Supprimer l’article', `Voulez-vous supprimer « ${item.name} » ?`, [
       { text: 'Annuler', style: 'cancel' },
@@ -48,7 +53,11 @@ export function ItemRow({ item, readOnly = false, onEdit, onDelete, onToggleChec
               checked ? styles.actionDisabled : styles.actionDefault,
               pressed && !checked && styles.actionDefaultPressed,
             ]}>
-            <Ionicons name="pencil" size={18} color={checked ? '#94a3b8' : '#2563eb'} />
+            <Ionicons
+              name="pencil"
+              size={18}
+              color={checked ? colors.textSecondary : colors.btnSecondaryIcon}
+            />
           </Pressable>
 
           <Pressable
@@ -63,14 +72,18 @@ export function ItemRow({ item, readOnly = false, onEdit, onDelete, onToggleChec
               checked ? styles.actionDisabled : styles.deleteActionDefault,
               pressed && !checked && styles.deleteActionDefaultPressed,
             ]}>
-            <Ionicons name="trash-outline" size={18} color={checked ? '#94a3b8' : '#dc2626'} />
+            <Ionicons
+              name="trash-outline"
+              size={18}
+              color={checked ? colors.textSecondary : colors.danger}
+            />
           </Pressable>
         </View>
       }
     />
   );
 }
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   actions: {
     flexDirection: 'row',
     gap: 8,
@@ -82,25 +95,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   actionDefault: {
-    backgroundColor: '#eff6ff',
+    backgroundColor: colors.btnSecondaryBgHover,
   },
   actionDefaultPressed: {
-    backgroundColor: '#dbeafe',
+    backgroundColor: colors.border,
   },
   actionDisabled: {
-    backgroundColor: '#f1f5f9',
+    backgroundColor: colors.btnSecondaryBgHover,
     opacity: 0.7,
   },
   deleteActionDefault: {
-    backgroundColor: '#fef2f2',
+    backgroundColor: colors.dangerSurface,
   },
   deleteActionDefaultPressed: {
-    backgroundColor: '#fee2e2',
+    backgroundColor: colors.dangerSurfacePressed,
   },
-  deleteActionChecked: {
-    backgroundColor: '#bbf7d0',
-  },
-  deleteActionCheckedPressed: {
-    backgroundColor: '#86efac',
-  },
-});
+}));

@@ -1,17 +1,20 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { ComponentProps, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 import { ListNameModal } from '../components/ListNameModal';
 import { ShoppingListsSection } from '../components/ShoppingListsSection';
 import { useShoppingLists } from '../hooks/useShoppingLists';
+import { makeStyles } from '../theme/makeStyles';
+import { useTheme } from '../theme/ThemeProvider';
 
 type MenuEntry = {
   title: string;
   icon: ComponentProps<typeof Ionicons>['name'];
   iconColor: string;
   backgroundColor: string;
+  borderColor?: string;
   onPress?: () => void;
   href?: '/historique' | '/parametres';
 };
@@ -19,6 +22,8 @@ type MenuEntry = {
 export default function HomeScreen() {
   const { lists, loading, createNewList, archiveExistingList } = useShoppingLists('active');
   const [createModalVisible, setCreateModalVisible] = useState(false);
+  const styles = useStyles();
+  const { colors } = useTheme();
 
   function openCreateModal() {
     setCreateModalVisible(true);
@@ -38,22 +43,23 @@ export default function HomeScreen() {
     {
       title: 'Nouvelle liste',
       icon: 'add-circle',
-      iconColor: '#2563eb',
-      backgroundColor: '#dbeafe',
+      iconColor: colors.btnPrimaryIcon,
+      backgroundColor: colors.btnPrimaryBg,
       onPress: openCreateModal,
     },
     {
       title: 'Historique',
       icon: 'time',
-      iconColor: '#0d9488',
-      backgroundColor: '#ccfbf1',
+      iconColor: colors.accentIcon,
+      backgroundColor: colors.accentBg,
       href: '/historique',
     },
     {
       title: 'Paramètres',
       icon: 'settings',
-      iconColor: '#64748b',
-      backgroundColor: '#e2e8f0',
+      iconColor: colors.btnSecondaryIcon,
+      backgroundColor: colors.btnSecondaryBg,
+      borderColor: colors.border,
       href: '/parametres',
     },
   ];
@@ -67,7 +73,14 @@ export default function HomeScreen() {
         {menu.map((entry) => {
           const itemContent = (
             <>
-              <View style={[styles.iconButton, { backgroundColor: entry.backgroundColor }]}>
+              <View
+                style={[
+                  styles.iconButton,
+                  {
+                    backgroundColor: entry.backgroundColor,
+                    borderColor: entry.borderColor ?? entry.backgroundColor,
+                  },
+                ]}>
                 <Ionicons name={entry.icon} size={32} color={entry.iconColor} />
               </View>
               <Text style={styles.iconLabel}>{entry.title}</Text>
@@ -119,7 +132,7 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   screen: {
     flex: 1,
     padding: 20,
@@ -128,11 +141,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.textPrimary,
   },
   subtitle: {
     fontSize: 15,
-    color: '#64748b',
+    color: colors.textSecondary,
   },
   menu: {
     marginTop: 32,
@@ -151,6 +164,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 18,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -158,7 +172,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 13,
     fontWeight: '500',
-    color: '#0f172a',
+    color: colors.textPrimary,
     textAlign: 'center',
     width: '100%',
     lineHeight: 18,
@@ -169,4 +183,4 @@ const styles = StyleSheet.create({
     marginTop: 36,
     minHeight: 0,
   },
-});
+}));
