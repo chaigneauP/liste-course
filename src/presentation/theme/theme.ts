@@ -2,10 +2,12 @@ import type { ColorSchemeName } from '@/domain/entities/themePreference';
 
 import {
   createShadows,
+  opacity,
   palettes,
   radius,
   spacing,
   typography,
+  type Opacity,
   type Radius,
   type Shadows,
   type Spacing,
@@ -20,6 +22,7 @@ export type Theme = {
   radius: Radius;
   typography: Typography;
   shadow: Shadows;
+  opacity: Opacity;
 };
 
 function buildTheme(scheme: ColorSchemeName): Theme {
@@ -32,6 +35,7 @@ function buildTheme(scheme: ColorSchemeName): Theme {
     radius,
     typography,
     shadow: createShadows(colors),
+    opacity,
   };
 }
 

@@ -231,7 +231,7 @@ export function ShoppingListsSection({
       </View>
 
       {loading ? (
-        <ActivityIndicator color={colors.btnSecondaryIcon} style={styles.loader} />
+        <ActivityIndicator color={colors.icon} style={styles.loader} />
       ) : lists.length === 0 ? (
         <Text style={styles.empty}>{emptyMessage}</Text>
       ) : (

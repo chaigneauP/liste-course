@@ -6,7 +6,7 @@ export const BACK_BUTTON_HIT_SLOP = 8;
 export const SCREEN_TOP_EXTRA_PADDING = spacing[4];
 const BACK_BUTTON_SIZE = 44;
 
-export const useScreenTopStyles = makeStyles(({ colors, spacing, typography }) => ({
+export const useScreenTopStyles = makeStyles(({ colors, spacing, typography, opacity }) => ({
   container: {
     paddingHorizontal: spacing[5],
     paddingBottom: spacing[5],
@@ -26,7 +26,7 @@ export const useScreenTopStyles = makeStyles(({ colors, spacing, typography }) =
     marginLeft: -spacing[2],
   },
   backButtonPressed: {
-    opacity: 0.6,
+    opacity: opacity.pressed,
   },
   textBlock: {
     flex: 1,

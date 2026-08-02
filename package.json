@@ -24,7 +24,12 @@
     "react-native-worklets": "0.10.1"
   },
   "devDependencies": {
+    "@types/jest": "29.5.14",
     "@types/react": "~19.2.2",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "~57.0.1",
+    "jest": "~29.7.0",
+    "jest-expo": "~57.0.3",
     "typescript": "~6.0.3"
   },
   "scripts": {
@@ -33,12 +38,21 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "typecheck": "tsc --noEmit",
+    "lint": "expo lint",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
     "doctor": "npx expo-doctor",
     "eas:login": "npx eas-cli login",
     "eas:init": "npx eas-cli init",
     "build:dev": "npx eas-cli build --platform android --profile development",
     "build:preview": "npx eas-cli build --platform android --profile preview",
     "build:prod": "npx eas-cli build --platform android --profile production"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "testMatch": [
+      "**/src/**/*.test.ts"
+    ]
   },
   "private": true
 }

@@ -65,7 +65,7 @@ export function CustomTabBar({ state, navigation }: TabBarProps) {
           <Ionicons
             name="time-outline"
             size={24}
-            color={state.index === historiqueIndex ? colors.btnSecondaryIcon : colors.textSecondary}
+            color={state.index === historiqueIndex ? colors.iconActive : colors.textSecondary}
           />
           <Text
             style={[
@@ -88,7 +88,7 @@ export function CustomTabBar({ state, navigation }: TabBarProps) {
           <Ionicons
             name="settings-outline"
             size={24}
-            color={state.index === parametresIndex ? colors.btnSecondaryIcon : colors.textSecondary}
+            color={state.index === parametresIndex ? colors.iconActive : colors.textSecondary}
           />
           <Text
             style={[

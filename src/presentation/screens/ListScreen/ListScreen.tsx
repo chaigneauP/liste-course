@@ -86,7 +86,7 @@ export function ListScreen() {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator color={colors.btnSecondaryIcon} />
+        <ActivityIndicator color={colors.icon} />
       </View>
     );
   }

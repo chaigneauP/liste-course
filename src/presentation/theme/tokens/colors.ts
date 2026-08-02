@@ -3,6 +3,10 @@ import type { ColorSchemeName } from '@/domain/entities/themePreference';
 export type ThemeColors = {
   bg: string;
   surface: string;
+  /** Surface secondaire (fills muted, fonds désactivés). */
+  surfaceMuted: string;
+  /** Surface au press (fills pressed hors états success/danger). */
+  surfacePressed: string;
   border: string;
 
   btnPrimaryBg: string;
@@ -12,6 +16,13 @@ export type ThemeColors = {
 
   btnPrimaryIcon: string;
   btnSecondaryIcon: string;
+
+  /** Icône chrome par défaut (spinners, actions). */
+  icon: string;
+  /** Icône / label d’onglet actif. */
+  iconActive: string;
+  /** Icône d’accent (statut in-progress, etc.). */
+  iconAccent: string;
 
   accentBg: string;
   accentIcon: string;
@@ -36,6 +47,8 @@ export type ThemeColors = {
 export const lightColors: ThemeColors = {
   bg: '#F4F1E8',
   surface: '#FFFFFF',
+  surfaceMuted: '#EDE9DD',
+  surfacePressed: '#E3DECF',
   border: '#E3DECF',
   btnPrimaryBg: '#4A6B4D',
   btnPrimaryBgHover: '#3A5A3D',
@@ -43,6 +56,9 @@ export const lightColors: ThemeColors = {
   btnSecondaryBgHover: '#EDE9DD',
   btnPrimaryIcon: '#F4F1E8',
   btnSecondaryIcon: '#4A6B4D',
+  icon: '#4A6B4D',
+  iconActive: '#4A6B4D',
+  iconAccent: '#D98E63',
   accentBg: '#D98E63',
   accentIcon: '#4A1B0C',
   textPrimary: '#2E2A24',
@@ -60,6 +76,8 @@ export const lightColors: ThemeColors = {
 export const darkColors: ThemeColors = {
   bg: '#1E1C18',
   surface: '#2A2722',
+  surfaceMuted: '#3D3931',
+  surfacePressed: '#3D3931',
   border: '#3D3931',
   btnPrimaryBg: '#7FA07D',
   btnPrimaryBgHover: '#94B592',
@@ -67,6 +85,9 @@ export const darkColors: ThemeColors = {
   btnSecondaryBgHover: '#3D3931',
   btnPrimaryIcon: '#1E1C18',
   btnSecondaryIcon: '#7FA07D',
+  icon: '#7FA07D',
+  iconActive: '#7FA07D',
+  iconAccent: '#E3A57D',
   accentBg: '#E3A57D',
   accentIcon: '#4A1B0C',
   textPrimary: '#F0EDE4',

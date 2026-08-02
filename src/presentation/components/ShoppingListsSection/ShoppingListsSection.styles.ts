@@ -1,7 +1,7 @@
 import { makeStyles } from '@/presentation/theme';
 
 export const useShoppingListsSectionStyles = makeStyles(
-  ({ colors, spacing, radius, typography, shadow }) => ({
+  ({ colors, spacing, radius, typography, shadow, opacity }) => ({
     section: {
       flex: 1,
       gap: spacing[3],
@@ -25,7 +25,7 @@ export const useShoppingListsSectionStyles = makeStyles(
       borderRadius: radius.full,
     },
     infoButtonPressed: {
-      opacity: 0.6,
+      opacity: opacity.pressed,
     },
     hintBubble: {
       position: 'absolute',

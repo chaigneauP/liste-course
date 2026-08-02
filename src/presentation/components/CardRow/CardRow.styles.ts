@@ -18,7 +18,7 @@ export const useCardRowStyles = makeStyles(
       borderColor: colors.border,
     },
     rowPressed: {
-      backgroundColor: colors.btnSecondaryBgHover,
+      backgroundColor: colors.surfaceMuted,
     },
     rowCheckedPressed: {
       backgroundColor: colors.successSurfacePressed,

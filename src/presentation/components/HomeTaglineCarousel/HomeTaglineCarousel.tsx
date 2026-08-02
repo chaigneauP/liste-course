@@ -1,6 +1,6 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, AppState, Text } from 'react-native';
+import { Animated, AppState } from 'react-native';
 
 import { HOME_TAGLINE_PHRASES } from './homeTaglinePhrases';
 import {

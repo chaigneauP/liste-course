@@ -39,7 +39,7 @@ export const useSettingsScreenStyles = makeStyles(
       alignItems: 'center',
     },
     themeOptionPressed: {
-      backgroundColor: colors.btnSecondaryBgHover,
+      backgroundColor: colors.surfacePressed,
     },
     themeOptionSelected: {
       backgroundColor: colors.btnPrimaryBg,
@@ -62,7 +62,7 @@ export const useSettingsScreenStyles = makeStyles(
       borderColor: colors.danger,
     },
     deleteButtonDisabled: {
-      backgroundColor: colors.btnSecondaryBgHover,
+      backgroundColor: colors.surfaceMuted,
       borderColor: colors.border,
     },
     deleteButtonPressed: {

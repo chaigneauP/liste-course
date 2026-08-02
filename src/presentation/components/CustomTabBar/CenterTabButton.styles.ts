@@ -6,7 +6,7 @@ import { CENTER_BUTTON_HEIGHT } from './CustomTabBar.styles';
 export const CENTER_TAB_PILL_HORIZONTAL_PADDING = spacing[5];
 
 export const useCenterTabButtonStyles = makeStyles(
-  ({ colors, radius, typography, shadow }) => ({
+  ({ colors, radius, typography, shadow, opacity }) => ({
     centerButton: {
       height: CENTER_BUTTON_HEIGHT,
       borderRadius: radius.full,
@@ -17,7 +17,7 @@ export const useCenterTabButtonStyles = makeStyles(
       ...shadow.floating,
     },
     centerButtonPressed: {
-      opacity: 0.92,
+      opacity: opacity.pressed,
     },
     centerButtonLayer: {
       position: 'absolute',

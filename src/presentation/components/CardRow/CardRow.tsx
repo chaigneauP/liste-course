@@ -53,7 +53,7 @@ export const CardRow = memo(function CardRow({
       <Ionicons
         name="sync"
         size={18}
-        color={colors.accentBg}
+        color={colors.iconAccent}
         accessibilityLabel="Articles restants à acheter"
       />
     ) : null;

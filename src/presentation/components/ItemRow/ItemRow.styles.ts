@@ -1,6 +1,6 @@
 import { makeStyles } from '@/presentation/theme';
 
-export const useItemRowStyles = makeStyles(({ colors, spacing, radius }) => ({
+export const useItemRowStyles = makeStyles(({ colors, spacing, radius, opacity }) => ({
   actions: {
     flexDirection: 'row',
     gap: spacing[2],
@@ -12,14 +12,14 @@ export const useItemRowStyles = makeStyles(({ colors, spacing, radius }) => ({
     justifyContent: 'center',
   },
   actionDefault: {
-    backgroundColor: colors.btnSecondaryBgHover,
+    backgroundColor: colors.surfaceMuted,
   },
   actionDefaultPressed: {
-    backgroundColor: colors.border,
+    backgroundColor: colors.surfacePressed,
   },
   actionDisabled: {
-    backgroundColor: colors.btnSecondaryBgHover,
-    opacity: 0.7,
+    backgroundColor: colors.surfaceMuted,
+    opacity: opacity.disabled,
   },
   deleteActionDefault: {
     backgroundColor: colors.dangerSurface,

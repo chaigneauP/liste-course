@@ -72,7 +72,7 @@ export const ItemRow = memo(function ItemRow({
             <Ionicons
               name="pencil"
               size={18}
-              color={checked ? colors.textSecondary : colors.btnSecondaryIcon}
+              color={checked ? colors.textSecondary : colors.icon}
             />
           </Pressable>
 

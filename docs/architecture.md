@@ -120,7 +120,8 @@ Les fichiers de route sont des **re-exports** d’écrans, sauf `_layout.tsx` qu
 
 - Styles hors JSX : fichiers `*.styles.ts` via `makeStyles((theme) => ({ … }))`.
 - `makeStyles` met en cache `StyleSheet.create` par schéma `light` / `dark`.
-- Tokens : `presentation/theme/tokens/` (`colors`, `spacing`, `radius`, `typography`, `shadows`).
+- Tokens : `presentation/theme/tokens/` (`colors`, `spacing`, `radius`, `typography`, `shadows`, `opacity`).
+- Couleurs chrome : préférer `icon` / `iconActive` / `iconAccent` et `surfaceMuted` / `surfacePressed` plutôt que de détourner `btnSecondaryIcon` / `accentBg` / `border`.
 - Préférence thème : domaine (`light` \| `dark` \| `system`) → port → AsyncStorage → use cases → `ThemeProvider`.
 - Icônes UI : **Ionicons** (`@expo/vector-icons`) uniquement — ne pas introduire une seconde famille (FontAwesome, etc.).
 
@@ -164,6 +165,14 @@ Jusque-là :
 6. **Route** → fichier mince dans `src/app` qui réexporte l’écran.
 
 ---
+
+## Garde-fous
+
+- `npm run typecheck` — TypeScript strict
+- `npm run lint` — ESLint (`eslint-config-expo`) + boundaries de couches (`no-restricted-imports` dans `eslint.config.js`)
+- `npm test` — Jest (`jest-expo`) : domain, application, mapper
+
+Aucune CI GitLab/GitHub n’est configurée pour l’instant ; brancher ces trois scripts dès qu’un pipeline apparaît.
 
 ## Références
 

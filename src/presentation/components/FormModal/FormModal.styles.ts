@@ -1,6 +1,6 @@
 import { makeStyles } from '@/presentation/theme';
 
-export const useFormModalStyles = makeStyles(({ colors, spacing, radius, typography }) => ({
+export const useFormModalStyles = makeStyles(({ colors, spacing, radius, typography, opacity }) => ({
   backdrop: {
     flex: 1,
     justifyContent: 'center',
@@ -43,7 +43,7 @@ export const useFormModalStyles = makeStyles(({ colors, spacing, radius, typogra
     backgroundColor: colors.btnSecondaryBg,
   },
   buttonPressed: {
-    backgroundColor: colors.btnSecondaryBgHover,
+    backgroundColor: colors.surfacePressed,
   },
   buttonText: {
     ...typography.button,
@@ -58,7 +58,7 @@ export const useFormModalStyles = makeStyles(({ colors, spacing, radius, typogra
     borderColor: colors.btnPrimaryBgHover,
   },
   submitButtonDisabled: {
-    opacity: 0.5,
+    opacity: opacity.disabled,
   },
   submitButtonText: {
     color: colors.btnPrimaryIcon,

@@ -40,7 +40,7 @@ export const useCustomTabBarStyles = makeStyles(({ colors, spacing, typography }
       color: colors.textSecondary,
     },
     sideTabLabelActive: {
-      color: colors.btnSecondaryIcon,
+      color: colors.iconActive,
       fontWeight: '600',
     },
     centerSpacer: {
