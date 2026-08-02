@@ -1,5 +1,6 @@
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { CardRow } from './CardRow';
 import type { Item } from '../types';
 
 type Props = {
@@ -17,55 +18,38 @@ export function ItemRow({ item, onEdit, onDelete }: Props) {
   }
 
   return (
-    <View style={styles.row}>
-      <Text style={styles.name} numberOfLines={2}>
-        {item.name}
-      </Text>
+    <CardRow
+      title={item.name}
+      right={
+        <View style={styles.actions}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Modifier ${item.name}`}
+            onPress={() => onEdit(item)}
+            hitSlop={6}
+            style={({ pressed }) => [styles.action, pressed && styles.actionPressed]}>
+            <Text style={styles.actionText}>Modifier</Text>
+          </Pressable>
 
-      <View style={styles.actions}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Modifier ${item.name}`}
-          onPress={() => onEdit(item)}
-          hitSlop={6}
-          style={({ pressed }) => [styles.action, pressed && styles.actionPressed]}>
-          <Text style={styles.actionText}>Modifier</Text>
-        </Pressable>
-
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Supprimer ${item.name}`}
-          onPress={confirmDelete}
-          hitSlop={6}
-          style={({ pressed }) => [
-            styles.action,
-            styles.deleteAction,
-            pressed && styles.deleteActionPressed,
-          ]}>
-          <Text style={[styles.actionText, styles.deleteActionText]}>Supprimer</Text>
-        </Pressable>
-      </View>
-    </View>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Supprimer ${item.name}`}
+            onPress={confirmDelete}
+            hitSlop={6}
+            style={({ pressed }) => [
+              styles.action,
+              styles.deleteAction,
+              pressed && styles.deleteActionPressed,
+            ]}>
+            <Text style={[styles.actionText, styles.deleteActionText]}>Supprimer</Text>
+          </Pressable>
+        </View>
+      }
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    backgroundColor: '#ffffff',
-    borderRadius: 14,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-  },
-  name: {
-    flex: 1,
-    fontSize: 16,
-    color: '#0f172a',
-  },
   actions: {
     flexDirection: 'row',
     gap: 8,

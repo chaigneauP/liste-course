@@ -13,7 +13,7 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: '#f1f5f9' },
         }}>
         <Stack.Screen name="index" options={{ title: 'Accueil' }} />
-        <Stack.Screen name="nouvelle-liste" options={{ title: 'Nouvelle liste' }} />
+        <Stack.Screen name="liste/[id]" options={{ title: 'Liste' }} />
         <Stack.Screen name="historique" options={{ title: 'Historique' }} />
         <Stack.Screen name="parametres" options={{ title: 'Paramètres' }} />
       </Stack>

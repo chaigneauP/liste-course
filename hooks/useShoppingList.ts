@@ -1,62 +1,97 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import { loadItems, saveItems } from '../lib/storage';
-import type { Item } from '../types';
+import { createId, getListById, updateList } from '../lib/storage';
+import type { ShoppingList } from '../types';
 
-function createId(): string {
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-}
-
-export function useShoppingList() {
-  const [items, setItems] = useState<Item[]>([]);
+export function useShoppingList(listId: string) {
+  const [list, setList] = useState<ShoppingList | null>(null);
   const [loading, setLoading] = useState(true);
-  const hasLoaded = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
 
-    loadItems().then((stored) => {
+    getListById(listId).then((stored) => {
       if (cancelled) {
         return;
       }
-      setItems(stored);
-      hasLoaded.current = true;
+      setList(stored);
       setLoading(false);
     });
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [listId]);
 
-  useEffect(() => {
-    if (!hasLoaded.current) {
-      return;
-    }
-    void saveItems(items);
-  }, [items]);
+  const addItem = useCallback(
+    (name: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) {
+        return;
+      }
 
-  const addItem = useCallback((name: string) => {
-    const trimmed = name.trim();
-    if (!trimmed) {
-      return;
-    }
-    setItems((current) => [...current, { id: createId(), name: trimmed }]);
-  }, []);
+      setList((current) => {
+        if (!current) {
+          return current;
+        }
 
-  const updateItem = useCallback((id: string, name: string) => {
-    const trimmed = name.trim();
-    if (!trimmed) {
-      return;
-    }
-    setItems((current) =>
-      current.map((item) => (item.id === id ? { ...item, name: trimmed } : item))
-    );
-  }, []);
+        const nextList = {
+          ...current,
+          items: [...current.items, { id: createId(), name: trimmed }],
+        };
+        void updateList(nextList);
+        return nextList;
+      });
+    },
+    []
+  );
+
+  const updateItem = useCallback(
+    (id: string, name: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) {
+        return;
+      }
+
+      setList((current) => {
+        if (!current) {
+          return current;
+        }
+
+        const nextList = {
+          ...current,
+          items: current.items.map((item) =>
+            item.id === id ? { ...item, name: trimmed } : item
+          ),
+        };
+        void updateList(nextList);
+        return nextList;
+      });
+    },
+    []
+  );
 
   const removeItem = useCallback((id: string) => {
-    setItems((current) => current.filter((item) => item.id !== id));
+    setList((current) => {
+      if (!current) {
+        return current;
+      }
+
+      const nextList = {
+        ...current,
+        items: current.items.filter((item) => item.id !== id),
+      };
+      void updateList(nextList);
+      return nextList;
+    });
   }, []);
 
-  return { items, loading, addItem, updateItem, removeItem };
+  return {
+    list,
+    items: list?.items ?? [],
+    loading,
+    addItem,
+    updateItem,
+    removeItem,
+  };
 }
