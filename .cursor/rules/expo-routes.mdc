@@ -1,0 +1,26 @@
+---
+description: Routes Expo Router — coquilles minces dans src/app
+globs: src/app/**/*
+alwaysApply: false
+---
+
+# Expo Router (`src/app`)
+
+- Expo Router lit `src/app` (pas de dossier `app/` racine concurrent).
+- Fichiers de route = **re-export** d’écran, sauf `_layout.tsx`.
+
+```typescript
+// ✅ GOOD — src/app/index.tsx
+import { HomeScreen } from '@/presentation/screens/HomeScreen';
+export default HomeScreen;
+```
+
+## `_layout.tsx`
+
+- Compose `createAppContainer` → `UseCasesProvider` → `ThemeProvider` → `Stack`.
+- Seul point de route autorisé à importer l’infrastructure.
+
+## Noms de routes
+
+- Chemins et titres nav en **français** (`historique`, `parametres`, `liste/[id]`).
+- Consulter https://docs.expo.dev/versions/v57.0.0/ avant d’ajouter du code Expo.

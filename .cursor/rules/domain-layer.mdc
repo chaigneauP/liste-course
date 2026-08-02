@@ -1,0 +1,29 @@
+---
+description: Couche domain — entités pures et ports
+globs: src/domain/**/*
+alwaysApply: false
+---
+
+# Domain
+
+- Uniquement types + fonctions pures + interfaces (ports).
+- Aucun import hors `src/domain`.
+- Pas de React, Expo, AsyncStorage, ni effets de bord.
+
+## Entités
+
+- Mutations métier dans l’entité (`addItemToList`, `markListAsArchived`, …).
+- Si la règle interdit la modif : **retourner la même référence** (no-op).
+
+```typescript
+// ✅ GOOD — no-op par identité
+export function markListAsArchived(list: ShoppingList): ShoppingList {
+  if (list.status === 'archived') return list;
+  return { ...list, status: 'archived' };
+}
+```
+
+## Ports
+
+- Interfaces dans `ports/` (`ShoppingListRepository`, `Clock`, …).
+- Décrivent le *quoi*, jamais le *comment* (pas de détail AsyncStorage).

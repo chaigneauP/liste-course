@@ -1,0 +1,47 @@
+---
+description: Clean Architecture — couches, dépendances et checklist feature
+alwaysApply: true
+---
+
+# Clean Architecture
+
+Doc complète : `docs/architecture.md`.
+
+## Couches (`src/`)
+
+| Couche | Rôle |
+|--------|------|
+| `domain` | Entités + ports, pur |
+| `application` | Cas d’usage (`make*`) |
+| `infrastructure` | Adaptateurs + `createAppContainer` |
+| `presentation` | UI, hooks, thème |
+| `app` | Routes Expo Router (minces) |
+
+## Dépendances autorisées
+
+```
+app → infrastructure, presentation
+presentation → application, domain
+infrastructure → application, domain
+application → domain
+domain → (rien d’extérieur)
+```
+
+## Interdits
+
+- Présentation / hooks → pas d’import `@/infrastructure` ni AsyncStorage
+- Domaine / application → pas de React, Expo, RN, AsyncStorage
+- Câblage concret → uniquement dans `createAppContainer.ts`
+
+## Nouvelle feature
+
+1. Règle métier dans `domain/entities`
+2. I/O → port + adaptateur infra
+3. `make*` use case + registre `AppUseCases`
+4. UI via `use*UseCases()` + `*.styles.ts`
+5. Route = re-export d’écran dans `src/app`
+
+## Langue
+
+- Code / domaine : **anglais**
+- UI / routes / alertes : **français**

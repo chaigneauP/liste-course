@@ -1,0 +1,31 @@
+---
+description: Couche application — cas d’usage et façade AppUseCases
+globs: src/application/**/*
+alwaysApply: false
+---
+
+# Application
+
+- Importe uniquement `@/domain`.
+- Expose des factories : `makeXxx(deps) → (input) => Promise<…>`.
+- Enregistrer tout nouveau cas d’usage dans `appUseCases.ts` (`AppUseCases`).
+
+## Pattern
+
+```typescript
+export function makeArchiveShoppingList(
+  mutate: MutateShoppingList
+): ArchiveShoppingList {
+  return (listId) => mutate(listId, markListAsArchived);
+}
+```
+
+## Mutations de liste
+
+- Réutiliser `makeMutateShoppingList` : load → mutation domaine → `updatedAt` → save.
+- Ne pas persister si `mutated === list`.
+
+## Interdits
+
+- Pas d’accès direct à AsyncStorage / Date / ids concrets.
+- Pas d’imports presentation ou infrastructure.

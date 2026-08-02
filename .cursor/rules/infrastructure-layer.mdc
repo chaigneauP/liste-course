@@ -1,0 +1,34 @@
+---
+description: Couche infrastructure — adaptateurs et composition root
+globs: src/infrastructure/**/*
+alwaysApply: false
+---
+
+# Infrastructure
+
+- Seule couche avec I/O concret (AsyncStorage, `Date`, ids).
+- Implémente les ports du domaine.
+- Composition root : `createAppContainer.ts` — **seul** endroit qui branche les concrets sur les use cases.
+
+```typescript
+// ✅ GOOD — câblage centralisé
+export function createAppContainer(): AppUseCases {
+  return createAppUseCases({
+    shoppingListRepository: createAsyncStorageShoppingListRepository(...),
+    themePreferenceRepository: createAsyncStorageThemePreferenceRepository(),
+    clock: systemClock,
+    idGenerator: randomIdGenerator,
+  });
+}
+```
+
+## Interdits
+
+- Pas d’import presentation / UI.
+- Ne pas instancier les repos depuis les screens ou hooks.
+
+## Nouveau stockage
+
+1. Port dans `domain/ports`
+2. Adaptateur dans `infrastructure/storage` (ou `system`)
+3. Injecter dans `createAppContainer` uniquement

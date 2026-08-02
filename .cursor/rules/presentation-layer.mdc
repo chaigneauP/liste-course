@@ -1,0 +1,37 @@
+---
+description: Couche presentation — screens, components, hooks, styles
+globs: src/presentation/**/*
+alwaysApply: false
+---
+
+# Presentation
+
+- Consomme les use cases via `UseCasesProvider` / `use*UseCases()`.
+- Peut importer `@/domain` (types/helpers) et types application.
+- **Jamais** `@/infrastructure` ni AsyncStorage.
+
+## Structure
+
+```
+ComponentName/
+├── ComponentName.tsx
+├── ComponentName.styles.ts
+└── index.ts
+```
+
+## Styles
+
+- Extraire dans `*.styles.ts` avec `makeStyles` + tokens du thème.
+- Pas de `StyleSheet.create` inline dans le JSX (sauf cas trivial justifié).
+
+```typescript
+// ✅ GOOD
+export const useHomeScreenStyles = makeStyles(({ colors, spacing }) => ({
+  screen: { flex: 1, backgroundColor: colors.background, padding: spacing[5] },
+}));
+```
+
+## Hooks
+
+- Encapsulent état local + appels use cases + refresh (`useFocusEffect`).
+- Textes UI en **français**.
