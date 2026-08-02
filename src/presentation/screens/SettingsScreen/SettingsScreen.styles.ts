@@ -37,6 +37,7 @@ export const useSettingsScreenStyles = makeStyles(
       borderColor: colors.border,
       backgroundColor: colors.btnSecondaryBg,
       alignItems: 'center',
+      justifyContent: 'center',
     },
     themeOptionPressed: {
       backgroundColor: colors.surfacePressed,
@@ -47,7 +48,10 @@ export const useSettingsScreenStyles = makeStyles(
     },
     themeOptionText: {
       ...typography.buttonSmall,
+      fontSize: 13,
       color: colors.btnSecondaryIcon,
+      width: '100%',
+      textAlign: 'center',
     },
     themeOptionTextSelected: {
       color: colors.btnPrimaryIcon,

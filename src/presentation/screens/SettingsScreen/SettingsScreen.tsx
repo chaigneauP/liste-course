@@ -15,7 +15,7 @@ import { useSettingsScreenStyles } from './SettingsScreen.styles';
 const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
   { value: 'light', label: 'Clair' },
   { value: 'dark', label: 'Sombre' },
-  { value: 'system', label: 'Automatique' },
+  { value: 'system', label: 'Système' },
 ];
 
 export function SettingsScreen() {
