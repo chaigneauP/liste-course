@@ -65,28 +65,38 @@ export default function HomeScreen() {
 
       <View style={styles.menu}>
         {menu.map((entry) => {
-          const content = (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={entry.title}
-              onPress={entry.onPress}
-              style={({ pressed }) => [styles.iconItem, pressed && styles.iconItemPressed]}>
+          const itemContent = (
+            <>
               <View style={[styles.iconButton, { backgroundColor: entry.backgroundColor }]}>
                 <Ionicons name={entry.icon} size={32} color={entry.iconColor} />
               </View>
               <Text style={styles.iconLabel}>{entry.title}</Text>
-            </Pressable>
+            </>
           );
 
           if (entry.href) {
             return (
               <Link key={entry.title} href={entry.href} asChild>
-                {content}
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={entry.title}
+                  style={({ pressed }) => [styles.iconItem, pressed && styles.iconItemPressed]}>
+                  {itemContent}
+                </Pressable>
               </Link>
             );
           }
 
-          return <View key={entry.title}>{content}</View>;
+          return (
+            <Pressable
+              key={entry.title}
+              accessibilityRole="button"
+              accessibilityLabel={entry.title}
+              onPress={entry.onPress}
+              style={({ pressed }) => [styles.iconItem, pressed && styles.iconItemPressed]}>
+              {itemContent}
+            </Pressable>
+          );
         })}
       </View>
 
@@ -132,7 +142,6 @@ const styles = StyleSheet.create({
   },
   iconItem: {
     alignItems: 'center',
-    gap: 8,
     width: 96,
   },
   iconItemPressed: {
@@ -146,10 +155,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iconLabel: {
+    marginTop: 8,
     fontSize: 13,
     fontWeight: '500',
     color: '#0f172a',
     textAlign: 'center',
+    width: '100%',
+    lineHeight: 18,
+    minHeight: 36,
   },
   listsSection: {
     flex: 1,
