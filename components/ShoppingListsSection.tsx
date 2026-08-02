@@ -5,6 +5,16 @@ import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View
 import { CardRow } from './CardRow';
 import type { ShoppingList } from '../types';
 
+function formatItemCount(count: number): string {
+  if (count === 0) {
+    return 'Aucun article';
+  }
+  if (count === 1) {
+    return '1 article';
+  }
+  return `${count} articles`;
+}
+
 type Props = {
   lists: ShoppingList[];
   loading: boolean;
@@ -48,6 +58,7 @@ export function ShoppingListsSection({
             <View key={list.id} style={styles.listRow}>
               <CardRow
                 title={list.name}
+                subtitle={formatItemCount(list.items.length)}
                 onPress={() =>
                   router.push({ pathname: '/liste/[id]', params: { id: list.id } })
                 }

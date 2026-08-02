@@ -10,6 +10,8 @@ import {
   View,
 } from 'react-native';
 
+import { MAX_LIST_TITLE_LENGTH } from '../lib/listTitle';
+
 type Props = {
   visible: boolean;
   onCancel: () => void;
@@ -26,6 +28,11 @@ export function ListNameModal({ visible, onCancel, onSubmit }: Props) {
   }, [visible]);
 
   const canSubmit = value.trim().length > 0;
+  const atLimit = value.length >= MAX_LIST_TITLE_LENGTH;
+
+  function handleChangeText(text: string) {
+    setValue(text.slice(0, MAX_LIST_TITLE_LENGTH));
+  }
 
   function handleSubmit() {
     if (!canSubmit) {
@@ -45,16 +52,22 @@ export function ListNameModal({ visible, onCancel, onSubmit }: Props) {
           <Text style={styles.title}>Nouvelle liste</Text>
           <Text style={styles.subtitle}>Donnez un titre à votre liste de courses.</Text>
 
-          <TextInput
-            value={value}
-            onChangeText={setValue}
-            placeholder="Ex. : Courses du samedi"
-            placeholderTextColor="#94a3b8"
-            style={styles.input}
-            autoFocus
-            returnKeyType="done"
-            onSubmitEditing={handleSubmit}
-          />
+          <View style={styles.inputGroup}>
+            <TextInput
+              value={value}
+              onChangeText={handleChangeText}
+              placeholder="Ex. : Courses du samedi"
+              placeholderTextColor="#94a3b8"
+              style={styles.input}
+              maxLength={MAX_LIST_TITLE_LENGTH}
+              autoFocus
+              returnKeyType="done"
+              onSubmitEditing={handleSubmit}
+            />
+            <Text style={[styles.counter, atLimit && styles.counterAtLimit]}>
+              {value.length} / {MAX_LIST_TITLE_LENGTH}
+            </Text>
+          </View>
 
           <View style={styles.actions}>
             <Pressable
@@ -105,6 +118,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#64748b',
   },
+  inputGroup: {
+    gap: 6,
+  },
   input: {
     borderWidth: 1,
     borderColor: '#cbd5e1',
@@ -113,6 +129,15 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
     color: '#0f172a',
+  },
+  counter: {
+    fontSize: 12,
+    color: '#94a3b8',
+    textAlign: 'right',
+  },
+  counterAtLimit: {
+    color: '#dc2626',
+    fontWeight: '600',
   },
   actions: {
     flexDirection: 'row',

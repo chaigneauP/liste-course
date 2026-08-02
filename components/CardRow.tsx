@@ -1,13 +1,24 @@
 import { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { truncateListTitle } from '../lib/listTitle';
+
 type Props = {
   title: string;
+  subtitle?: string;
   onPress?: () => void;
   right?: ReactNode;
 };
 
-export function CardRow({ title, onPress, right }: Props) {
+export function CardRow({ title, subtitle, onPress, right }: Props) {
+  const displayTitle = truncateListTitle(title);
+
+  const titleElement = (
+    <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">
+      {displayTitle}
+    </Text>
+  );
+
   return (
     <View style={styles.row}>
       {onPress ? (
@@ -15,18 +26,22 @@ export function CardRow({ title, onPress, right }: Props) {
           accessibilityRole="button"
           onPress={onPress}
           style={({ pressed }) => [styles.titleContainer, pressed && styles.titlePressablePressed]}>
-          <Text style={styles.title} numberOfLines={2}>
-            {title}
-          </Text>
+          {titleElement}
         </Pressable>
       ) : (
-        <View style={styles.titleContainer}>
-          <Text style={styles.title} numberOfLines={2}>
-            {title}
-          </Text>
+        <View style={styles.titleContainer}>{titleElement}</View>
+      )}
+
+      {(subtitle || right) && (
+        <View style={styles.trailing}>
+          {subtitle ? (
+            <Text style={styles.subtitle} numberOfLines={1}>
+              {subtitle}
+            </Text>
+          ) : null}
+          {right}
         </View>
       )}
-      {right}
     </View>
   );
 }
@@ -35,7 +50,7 @@ export const cardRowStyles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 8,
     backgroundColor: '#ffffff',
     borderRadius: 14,
     paddingVertical: 14,
@@ -46,12 +61,22 @@ export const cardRowStyles = StyleSheet.create({
   title: {
     fontSize: 16,
     color: '#0f172a',
-    textAlign: 'center',
   },
   titleContainer: {
     flex: 1,
+    minWidth: 0,
+    paddingRight: 12,
     justifyContent: 'center',
-    alignItems: 'flex-start',
+  },
+  trailing: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexShrink: 0,
+  },
+  subtitle: {
+    fontSize: 13,
+    color: '#64748b',
   },
   titlePressablePressed: {
     opacity: 0.7,
