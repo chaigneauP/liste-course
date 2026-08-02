@@ -15,6 +15,7 @@ export default function ListScreen() {
   const insets = useSafeAreaInsets();
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const readOnly = list?.status === 'archived';
 
   function openCreate() {
     setEditingItem(null);
@@ -61,46 +62,63 @@ export default function ListScreen() {
     <>
       <Stack.Screen options={{ title: list.name }} />
       <View style={styles.container}>
+        {readOnly ? (
+          <View style={styles.readOnlyBanner}>
+            <Text style={styles.readOnlyText}>Liste archivée — consultation seule</Text>
+          </View>
+        ) : null}
+
         <FlatList
           data={items}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <ItemRow item={item} onEdit={openEdit} onDelete={removeItem} />
+            <ItemRow
+              item={item}
+              readOnly={readOnly}
+              onEdit={openEdit}
+              onDelete={removeItem}
+            />
           )}
           contentContainerStyle={[
             styles.listContent,
             items.length === 0 && styles.listContentEmpty,
-            { paddingBottom: insets.bottom + 96 },
+            { paddingBottom: insets.bottom + (readOnly ? 24 : 96) },
           ]}
           ListEmptyComponent={
             <View style={styles.empty}>
               <Text style={styles.emptyTitle}>Aucun article pour l’instant</Text>
               <Text style={styles.emptyText}>
-                Appuyez sur le bouton + en bas à droite pour ajouter votre premier article.
+                {readOnly
+                  ? 'Cette liste archivée ne contient aucun article.'
+                  : 'Appuyez sur le bouton + en bas à droite pour ajouter votre premier article.'}
               </Text>
             </View>
           }
         />
 
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Ajouter un article"
-          onPress={openCreate}
-          style={({ pressed }) => [
-            styles.fab,
-            { bottom: insets.bottom + 24 },
-            pressed && styles.fabPressed,
-          ]}>
-          <Text style={styles.fabText}>+</Text>
-        </Pressable>
+        {!readOnly ? (
+          <>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Ajouter un article"
+              onPress={openCreate}
+              style={({ pressed }) => [
+                styles.fab,
+                { bottom: insets.bottom + 24 },
+                pressed && styles.fabPressed,
+              ]}>
+              <Text style={styles.fabText}>+</Text>
+            </Pressable>
 
-        <ItemFormModal
-          visible={modalVisible}
-          mode={editingItem ? 'edit' : 'create'}
-          initialValue={editingItem?.name ?? ''}
-          onCancel={closeModal}
-          onSubmit={handleSubmit}
-        />
+            <ItemFormModal
+              visible={modalVisible}
+              mode={editingItem ? 'edit' : 'create'}
+              initialValue={editingItem?.name ?? ''}
+              onCancel={closeModal}
+              onSubmit={handleSubmit}
+            />
+          </>
+        ) : null}
       </View>
     </>
   );
@@ -125,6 +143,19 @@ const styles = StyleSheet.create({
   missingText: {
     fontSize: 14,
     color: '#64748b',
+    textAlign: 'center',
+  },
+  readOnlyBanner: {
+    backgroundColor: '#fef3c7',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#fde68a',
+  },
+  readOnlyText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#92400e',
     textAlign: 'center',
   },
   listContent: {

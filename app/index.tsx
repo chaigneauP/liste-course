@@ -1,12 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { ComponentProps, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { CardRow } from '../components/CardRow';
 import { ListNameModal } from '../components/ListNameModal';
+import { ShoppingListsSection } from '../components/ShoppingListsSection';
 import { useShoppingLists } from '../hooks/useShoppingLists';
-import type { ShoppingList } from '../types';
 
 type MenuEntry = {
   title: string;
@@ -18,7 +17,7 @@ type MenuEntry = {
 };
 
 export default function HomeScreen() {
-  const { lists, loading, createNewList, removeList } = useShoppingLists();
+  const { lists, loading, createNewList, archiveExistingList } = useShoppingLists('active');
   const [createModalVisible, setCreateModalVisible] = useState(false);
 
   function openCreateModal() {
@@ -33,17 +32,6 @@ export default function HomeScreen() {
     const list = await createNewList(name);
     closeCreateModal();
     router.push({ pathname: '/liste/[id]', params: { id: list.id } });
-  }
-
-  function confirmDeleteList(list: ShoppingList) {
-    Alert.alert('Supprimer la liste', `Voulez-vous supprimer « ${list.name} » ?`, [
-      { text: 'Annuler', style: 'cancel' },
-      {
-        text: 'Supprimer',
-        style: 'destructive',
-        onPress: () => void removeList(list.id),
-      },
-    ]);
   }
 
   const menu: MenuEntry[] = [
@@ -103,44 +91,13 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.listsSection}>
-        <Text style={styles.sectionTitle}>Mes listes</Text>
-
-        {loading ? (
-          <ActivityIndicator color="#2563eb" style={styles.listsLoader} />
-        ) : lists.length === 0 ? (
-          <Text style={styles.listsEmpty}>
-            Aucune liste pour l’instant. Créez-en une avec le bouton ci-dessus.
-          </Text>
-        ) : (
-          <ScrollView
-            style={styles.listsScroll}
-            contentContainerStyle={styles.lists}
-            showsVerticalScrollIndicator>
-            {lists.map((list) => (
-              <View key={list.id} style={styles.listPressable}>
-                <CardRow
-                  title={list.name}
-                  onPress={() =>
-                    router.push({ pathname: '/liste/[id]', params: { id: list.id } })
-                  }
-                  right={
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={`Supprimer ${list.name}`}
-                      onPress={() => confirmDeleteList(list)}
-                      hitSlop={6}
-                      style={({ pressed }) => [
-                        styles.deleteButton,
-                        pressed && styles.deleteButtonPressed,
-                      ]}>
-                      <Ionicons name="trash-outline" size={20} color="#dc2626" />
-                    </Pressable>
-                  }
-                />
-              </View>
-            ))}
-          </ScrollView>
-        )}
+        <ShoppingListsSection
+          lists={lists}
+          loading={loading}
+          sectionTitle="Mes listes"
+          emptyMessage="Aucune liste pour l’instant. Créez-en une avec le bouton ci-dessus."
+          onArchive={(list) => void archiveExistingList(list.id)}
+        />
       </View>
 
       <ListNameModal
@@ -197,39 +154,6 @@ const styles = StyleSheet.create({
   listsSection: {
     flex: 1,
     marginTop: 36,
-    gap: 12,
     minHeight: 0,
-  },
-  listsScroll: {
-    flex: 1,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#0f172a',
-  },
-  listsLoader: {
-    marginTop: 8,
-  },
-  listsEmpty: {
-    fontSize: 14,
-    color: '#64748b',
-    lineHeight: 20,
-  },
-  lists: {
-    gap: 10,
-  },
-  listPressable: {
-    alignSelf: 'stretch',
-  },
-  deleteButton: {
-    padding: 8,
-    borderRadius: 8,
-    backgroundColor: '#fef2f2',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  deleteButtonPressed: {
-    backgroundColor: '#fee2e2',
   },
 });

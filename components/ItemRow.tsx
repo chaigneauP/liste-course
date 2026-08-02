@@ -5,16 +5,21 @@ import type { Item } from '../types';
 
 type Props = {
   item: Item;
-  onEdit: (item: Item) => void;
-  onDelete: (id: string) => void;
+  readOnly?: boolean;
+  onEdit?: (item: Item) => void;
+  onDelete?: (id: string) => void;
 };
 
-export function ItemRow({ item, onEdit, onDelete }: Props) {
+export function ItemRow({ item, readOnly = false, onEdit, onDelete }: Props) {
   function confirmDelete() {
     Alert.alert('Supprimer l’article', `Voulez-vous supprimer « ${item.name} » ?`, [
       { text: 'Annuler', style: 'cancel' },
-      { text: 'Supprimer', style: 'destructive', onPress: () => onDelete(item.id) },
+      { text: 'Supprimer', style: 'destructive', onPress: () => onDelete?.(item.id) },
     ]);
+  }
+
+  if (readOnly) {
+    return <CardRow title={item.name} />;
   }
 
   return (
@@ -25,7 +30,7 @@ export function ItemRow({ item, onEdit, onDelete }: Props) {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={`Modifier ${item.name}`}
-            onPress={() => onEdit(item)}
+            onPress={() => onEdit?.(item)}
             hitSlop={6}
             style={({ pressed }) => [styles.action, pressed && styles.actionPressed]}>
             <Text style={styles.actionText}>Modifier</Text>

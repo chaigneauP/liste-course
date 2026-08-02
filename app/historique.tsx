@@ -1,32 +1,26 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
+import { ShoppingListsSection } from '../components/ShoppingListsSection';
+import { useShoppingLists } from '../hooks/useShoppingLists';
 
 export default function HistoryScreen() {
+  const { lists, loading } = useShoppingLists('archived');
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Aucune liste sauvegardée</Text>
-      <Text style={styles.text}>
-        Les listes que vous archiverez depuis « Nouvelle liste » apparaîtront ici.
-      </Text>
+    <View style={styles.screen}>
+      <ShoppingListsSection
+        lists={lists}
+        loading={loading}
+        sectionTitle="Listes archivées"
+        emptyMessage="Aucune liste archivée pour l’instant. Archivez une liste depuis l’accueil pour la retrouver ici."
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingHorizontal: 24,
-  },
-  title: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#0f172a',
-  },
-  text: {
-    fontSize: 14,
-    color: '#64748b',
-    textAlign: 'center',
+    padding: 20,
   },
 });

@@ -1,8 +1,8 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 
-import { createList, deleteList, loadLists } from '../lib/storage';
-import type { ShoppingList } from '../types';
+import { archiveList, createList, loadLists } from '../lib/storage';
+import type { ListStatus, ShoppingList } from '../types';
 
 function sortLists(lists: ShoppingList[]): ShoppingList[] {
   return [...lists].sort(
@@ -10,15 +10,15 @@ function sortLists(lists: ShoppingList[]): ShoppingList[] {
   );
 }
 
-export function useShoppingLists() {
+export function useShoppingLists(status: ListStatus) {
   const [lists, setLists] = useState<ShoppingList[]>([]);
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
     const stored = await loadLists();
-    setLists(sortLists(stored));
+    setLists(sortLists(stored.filter((list) => list.status === status)));
     setLoading(false);
-  }, []);
+  }, [status]);
 
   useFocusEffect(
     useCallback(() => {
@@ -35,13 +35,13 @@ export function useShoppingLists() {
     [refresh]
   );
 
-  const removeList = useCallback(
+  const archiveExistingList = useCallback(
     async (id: string) => {
-      await deleteList(id);
+      await archiveList(id);
       await refresh();
     },
     [refresh]
   );
 
-  return { lists, loading, createNewList, removeList, refresh };
+  return { lists, loading, createNewList, archiveExistingList, refresh };
 }

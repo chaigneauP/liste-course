@@ -18,6 +18,10 @@ function isItem(value: unknown): value is Item {
   );
 }
 
+function isListStatus(value: unknown): value is ShoppingList['status'] {
+  return value === 'active' || value === 'archived';
+}
+
 function isShoppingList(value: unknown): value is ShoppingList {
   return (
     typeof value === 'object' &&
@@ -28,6 +32,13 @@ function isShoppingList(value: unknown): value is ShoppingList {
     typeof (value as ShoppingList).createdAt === 'string' &&
     typeof (value as ShoppingList).updatedAt === 'string'
   );
+}
+
+function normalizeList(list: ShoppingList): ShoppingList {
+  return {
+    ...list,
+    status: isListStatus(list.status) ? list.status : 'active',
+  };
 }
 
 async function loadLegacyItems(): Promise<Item[]> {
@@ -64,6 +75,7 @@ async function migrateLegacyItemsIfNeeded(lists: ShoppingList[]): Promise<Shoppi
     id: createId(),
     name: 'Ma liste',
     items: legacyItems,
+    status: 'active',
     createdAt: now,
     updatedAt: now,
   };
@@ -88,7 +100,7 @@ export async function loadLists(): Promise<ShoppingList[]> {
 
     const lists = parsed
       .filter(isShoppingList)
-      .map((list) => ({ ...list, items: list.items.filter(isItem) }));
+      .map((list) => normalizeList({ ...list, items: list.items.filter(isItem) }));
 
     return migrateLegacyItemsIfNeeded(lists);
   } catch (error) {
@@ -112,6 +124,7 @@ export async function createList(name: string): Promise<ShoppingList> {
     id: createId(),
     name: name.trim(),
     items: [],
+    status: 'active',
     createdAt: now,
     updatedAt: now,
   };
@@ -137,7 +150,17 @@ export async function getListById(id: string): Promise<ShoppingList | null> {
   return lists.find((entry) => entry.id === id) ?? null;
 }
 
-export async function deleteList(id: string): Promise<void> {
+export async function archiveList(id: string): Promise<void> {
   const lists = await loadLists();
-  await saveLists(lists.filter((entry) => entry.id !== id));
+  const index = lists.findIndex((entry) => entry.id === id);
+  if (index === -1) {
+    return;
+  }
+
+  lists[index] = {
+    ...lists[index],
+    status: 'archived',
+    updatedAt: new Date().toISOString(),
+  };
+  await saveLists(lists);
 }

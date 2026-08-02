@@ -31,7 +31,7 @@ export function useShoppingList(listId: string) {
       }
 
       setList((current) => {
-        if (!current) {
+        if (!current || current.status === 'archived') {
           return current;
         }
 
@@ -54,7 +54,7 @@ export function useShoppingList(listId: string) {
       }
 
       setList((current) => {
-        if (!current) {
+        if (!current || current.status === 'archived') {
           return current;
         }
 
@@ -73,7 +73,7 @@ export function useShoppingList(listId: string) {
 
   const removeItem = useCallback((id: string) => {
     setList((current) => {
-      if (!current) {
+      if (!current || current.status === 'archived') {
         return current;
       }
 
