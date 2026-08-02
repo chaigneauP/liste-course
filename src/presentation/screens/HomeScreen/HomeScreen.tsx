@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
 import { useTabBarBottomInset } from '@/presentation/components/CustomTabBar';
+import { HomeTaglineCarousel } from '@/presentation/components/HomeTaglineCarousel';
 import { ListNameModal } from '@/presentation/components/ListNameModal';
 import { ScreenTop } from '@/presentation/components/ScreenTop';
 import { ShoppingListsSection } from '@/presentation/components/ShoppingListsSection';
@@ -36,16 +37,18 @@ export function HomeScreen() {
 
   return (
     <View style={[styles.screen, { paddingBottom: tabBarInset }]}>
-      <ScreenTop
-        title="Liste de courses"
-        subtitle="Tout est stocké sur votre téléphone, sans connexion."
-      />
+      <ScreenTop title="Ma liste de courses" />
+
+      <View style={styles.tagline}>
+        <HomeTaglineCarousel />
+      </View>
 
       <View style={styles.listsSection}>
         <ShoppingListsSection
           lists={lists}
           loading={loading}
           sectionTitle="Mes listes"
+          sectionInfoMessage="Maintenez appuyé sur une liste pour l’archiver."
           emptyMessage="Aucune liste pour l’instant. Appuyez sur « Nouvelle liste » en bas pour en créer une."
           onArchive={(list) => void archiveList(list.id)}
         />

@@ -15,7 +15,7 @@ export const typography = {
   button: { fontSize: 15, fontWeight: '600' },
   buttonSmall: { fontSize: 14, fontWeight: '600' },
   body: { fontSize: 14 },
-  bodyRelaxed: { fontSize: 14, lineHeight: 20 },
+  bodyRelaxed: { fontSize: 16, lineHeight: 20 },
   label: { fontSize: 13, fontWeight: '500' },
   caption: { fontSize: 12 },
   fabGlyph: { fontSize: 32, fontWeight: '300', lineHeight: 36 },
