@@ -34,7 +34,7 @@ export function ScreenTop({ title, subtitle, showBack = false, onBack }: Props) 
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + SCREEN_TOP_EXTRA_PADDING }]}>
-      <View style={styles.row}>
+      <View style={[styles.row, showBack && styles.rowWithBack]}>
         {showBack ? (
           <Pressable
             accessibilityRole="button"
@@ -46,7 +46,7 @@ export function ScreenTop({ title, subtitle, showBack = false, onBack }: Props) 
           </Pressable>
         ) : null}
 
-        <View style={[styles.textBlock, showBack && styles.textBlockWithBack]}>
+        <View style={styles.textBlock}>
           <Text style={styles.title} numberOfLines={2}>
             {title}
           </Text>

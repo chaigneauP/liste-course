@@ -15,13 +15,15 @@ export const useScreenTopStyles = makeStyles(({ colors, spacing, typography }) =
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
+  rowWithBack: {
+    alignItems: 'center',
+  },
   backButton: {
     width: BACK_BUTTON_SIZE,
     height: BACK_BUTTON_SIZE,
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: -spacing[2],
-    marginTop: -spacing[1],
   },
   backButtonPressed: {
     opacity: 0.6,
@@ -29,9 +31,6 @@ export const useScreenTopStyles = makeStyles(({ colors, spacing, typography }) =
   textBlock: {
     flex: 1,
     gap: spacing[1],
-  },
-  textBlockWithBack: {
-    paddingTop: spacing[1.5],
   },
   title: {
     ...typography.screenTitle,
