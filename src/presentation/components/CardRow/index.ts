@@ -1,1 +1,1 @@
-export { CardRow, type CardRowLongPressAction } from './CardRow';
+export { CardRow } from './CardRow';

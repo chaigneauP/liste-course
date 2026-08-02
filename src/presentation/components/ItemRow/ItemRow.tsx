@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { memo, useCallback } from 'react';
 import { Alert, Pressable, View } from 'react-native';
 
 import type { Item } from '@/domain/entities/item';
@@ -15,16 +16,30 @@ type Props = {
   onToggleChecked?: (id: string) => void;
 };
 
-export function ItemRow({ item, readOnly = false, onEdit, onDelete, onToggleChecked }: Props) {
+export const ItemRow = memo(function ItemRow({
+  item,
+  readOnly = false,
+  onEdit,
+  onDelete,
+  onToggleChecked,
+}: Props) {
   const styles = useItemRowStyles();
   const { colors } = useTheme();
 
-  function confirmDelete() {
+  const confirmDelete = useCallback(() => {
     Alert.alert('Supprimer l’article', `Voulez-vous supprimer « ${item.name} » ?`, [
       { text: 'Annuler', style: 'cancel' },
       { text: 'Supprimer', style: 'destructive', onPress: () => onDelete?.(item.id) },
     ]);
-  }
+  }, [item.id, item.name, onDelete]);
+
+  const handleToggle = useCallback(() => {
+    onToggleChecked?.(item.id);
+  }, [item.id, onToggleChecked]);
+
+  const handleEdit = useCallback(() => {
+    onEdit?.(item);
+  }, [item, onEdit]);
 
   if (readOnly) {
     return <CardRow title={item.name} checked={item.checked} />;
@@ -39,7 +54,7 @@ export function ItemRow({ item, readOnly = false, onEdit, onDelete, onToggleChec
       accessibilityLabel={
         checked ? `Marquer ${item.name} comme non acheté` : `Marquer ${item.name} comme acheté`
       }
-      onPress={() => onToggleChecked?.(item.id)}
+      onPress={handleToggle}
       right={
         <View style={styles.actions}>
           <Pressable
@@ -47,7 +62,7 @@ export function ItemRow({ item, readOnly = false, onEdit, onDelete, onToggleChec
             accessibilityLabel={`Modifier ${item.name}`}
             accessibilityState={{ disabled: checked }}
             disabled={checked}
-            onPress={() => onEdit?.(item)}
+            onPress={handleEdit}
             hitSlop={6}
             style={({ pressed }) => [
               styles.action,
@@ -83,4 +98,4 @@ export function ItemRow({ item, readOnly = false, onEdit, onDelete, onToggleChec
       }
     />
   );
-}
+});

@@ -46,6 +46,11 @@ export const useShoppingListsSectionStyles = makeStyles(
       color: colors.textSecondary,
       lineHeight: 16,
     },
+    scrollWrap: {
+      flex: 1,
+      minHeight: 0,
+      position: 'relative',
+    },
     scroll: {
       flex: 1,
     },

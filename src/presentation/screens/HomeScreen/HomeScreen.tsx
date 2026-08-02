@@ -1,7 +1,8 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 
+import type { ShoppingList } from '@/domain/entities/shoppingList';
 import { useTabBarBottomInset } from '@/presentation/components/CustomTabBar';
 import { HomeTaglineCarousel } from '@/presentation/components/HomeTaglineCarousel';
 import { ListNameModal } from '@/presentation/components/ListNameModal';
@@ -25,15 +26,25 @@ export function HomeScreen() {
     }
   }, [create]);
 
-  function closeCreateModal() {
+  const closeCreateModal = useCallback(() => {
     setCreateModalVisible(false);
-  }
+  }, []);
 
-  async function handleCreateList(name: string) {
-    const list = await createList(name);
-    closeCreateModal();
-    router.push({ pathname: '/liste/[id]', params: { id: list.id } });
-  }
+  const handleCreateList = useCallback(
+    async (name: string) => {
+      const list = await createList(name);
+      closeCreateModal();
+      router.push({ pathname: '/liste/[id]', params: { id: list.id } });
+    },
+    [closeCreateModal, createList]
+  );
+
+  const handleArchive = useCallback(
+    (list: ShoppingList) => {
+      void archiveList(list.id);
+    },
+    [archiveList]
+  );
 
   return (
     <View style={[styles.screen, { paddingBottom: tabBarInset }]}>
@@ -50,7 +61,7 @@ export function HomeScreen() {
           sectionTitle="Mes listes"
           sectionInfoMessage="Maintenez appuyé sur une liste pour l’archiver."
           emptyMessage="Aucune liste pour l’instant. Appuyez sur « Nouvelle liste » en bas pour en créer une."
-          onArchive={(list) => void archiveList(list.id)}
+          onArchive={handleArchive}
         />
       </View>
 

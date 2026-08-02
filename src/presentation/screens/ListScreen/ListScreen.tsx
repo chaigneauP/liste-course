@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -27,29 +27,61 @@ export function ListScreen() {
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  function openCreate() {
+  const openCreate = useCallback(() => {
     setEditingItem(null);
     setModalVisible(true);
-  }
+  }, []);
 
-  function openEdit(item: Item) {
+  const openEdit = useCallback((item: Item) => {
     setEditingItem(item);
     setModalVisible(true);
-  }
+  }, []);
 
-  function closeModal() {
+  const closeModal = useCallback(() => {
     setModalVisible(false);
     setEditingItem(null);
-  }
+  }, []);
 
-  function handleSubmit(name: string) {
-    if (editingItem) {
-      void renameItem(editingItem.id, name);
-    } else {
-      void addItem(name);
-    }
-    closeModal();
-  }
+  const handleSubmit = useCallback(
+    (name: string) => {
+      if (editingItem) {
+        void renameItem(editingItem.id, name);
+      } else {
+        void addItem(name);
+      }
+      closeModal();
+    },
+    [addItem, closeModal, editingItem, renameItem]
+  );
+
+  const handleDelete = useCallback(
+    (itemId: string) => {
+      void removeItem(itemId);
+    },
+    [removeItem]
+  );
+
+  const handleToggle = useCallback(
+    (itemId: string) => {
+      void toggleItem(itemId);
+    },
+    [toggleItem]
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: Item }) => (
+      <ItemRow
+        item={item}
+        readOnly={readOnly}
+        onEdit={openEdit}
+        onDelete={handleDelete}
+        onToggleChecked={handleToggle}
+      />
+    ),
+    [handleDelete, handleToggle, openEdit, readOnly]
+  );
+
+  const keyExtractor = useCallback((item: Item) => item.id, []);
 
   if (loading) {
     return (
@@ -88,16 +120,8 @@ export function ListScreen() {
 
       <FlatList
         data={items}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <ItemRow
-            item={item}
-            readOnly={readOnly}
-            onEdit={openEdit}
-            onDelete={(itemId) => void removeItem(itemId)}
-            onToggleChecked={(itemId) => void toggleItem(itemId)}
-          />
-        )}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
         contentContainerStyle={[
           styles.listContent,
           items.length === 0 && styles.listContentEmpty,
