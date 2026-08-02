@@ -60,7 +60,7 @@ export default function HomeScreen() {
   ];
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.screen}>
       <Text style={styles.title}>Liste de courses</Text>
       <Text style={styles.subtitle}>Tout est stocké sur votre téléphone, sans connexion.</Text>
 
@@ -101,7 +101,10 @@ export default function HomeScreen() {
             Aucune liste pour l’instant. Créez-en une avec le bouton ci-dessus.
           </Text>
         ) : (
-          <View style={styles.lists}>
+          <ScrollView
+            style={styles.listsScroll}
+            contentContainerStyle={styles.lists}
+            showsVerticalScrollIndicator>
             {lists.map((list) => (
               <View key={list.id} style={styles.listPressable}>
                 <CardRow
@@ -125,15 +128,16 @@ export default function HomeScreen() {
                 />
               </View>
             ))}
-          </View>
+          </ScrollView>
         )}
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
+    flex: 1,
     padding: 20,
     gap: 8,
   },
@@ -174,8 +178,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   listsSection: {
+    flex: 1,
     marginTop: 36,
     gap: 12,
+    minHeight: 0,
+  },
+  listsScroll: {
+    flex: 1,
   },
   sectionTitle: {
     fontSize: 18,
