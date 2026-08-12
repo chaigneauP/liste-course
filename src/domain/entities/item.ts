@@ -6,6 +6,105 @@ export function isItemUnit(value: unknown): value is ItemUnit {
   return typeof value === 'string' && ITEM_UNITS.includes(value as ItemUnit);
 }
 
+export type ItemAisle =
+  | 'produce'
+  | 'dairy'
+  | 'meat'
+  | 'fish'
+  | 'bakery'
+  | 'frozen'
+  | 'grocery'
+  | 'drinks'
+  | 'hygiene'
+  | 'home'
+  | 'other';
+
+const ITEM_AISLES: ItemAisle[] = [
+  'produce',
+  'dairy',
+  'meat',
+  'fish',
+  'bakery',
+  'frozen',
+  'grocery',
+  'drinks',
+  'hygiene',
+  'home',
+  'other',
+];
+
+export function isItemAisle(value: unknown): value is ItemAisle {
+  return typeof value === 'string' && ITEM_AISLES.includes(value as ItemAisle);
+}
+
+export const AUTO_AISLE_KEY = 'auto' as const;
+
+export type ItemAisleGroupKey = typeof AUTO_AISLE_KEY | ItemAisle;
+
+export const ITEM_AISLE_ORDER: readonly ItemAisleGroupKey[] = [
+  AUTO_AISLE_KEY,
+  'produce',
+  'dairy',
+  'meat',
+  'fish',
+  'bakery',
+  'frozen',
+  'grocery',
+  'drinks',
+  'hygiene',
+  'home',
+  'other',
+];
+
+export const ITEM_AISLE_LABELS: Record<ItemAisle, string> = {
+  produce: 'Fruits et Légumes',
+  dairy: 'Crèmerie',
+  meat: 'Boucherie',
+  fish: 'Poissonnerie',
+  bakery: 'Boulangerie',
+  frozen: 'Surgelés',
+  grocery: 'Epicerie',
+  drinks: 'Boissons',
+  hygiene: 'Hygiène',
+  home: 'Maison',
+  other: 'Autres',
+};
+
+export const AUTO_AISLE_LABEL = 'Auto';
+
+export type ItemAisleSection = {
+  key: ItemAisleGroupKey;
+  title: string;
+  items: Item[];
+};
+
+export function getItemAisleSectionLabel(key: ItemAisleGroupKey): string {
+  if (key === AUTO_AISLE_KEY) {
+    return AUTO_AISLE_LABEL;
+  }
+  return ITEM_AISLE_LABELS[key];
+}
+
+export function groupItemsByAisle(items: Item[]): ItemAisleSection[] {
+  const buckets = new Map<ItemAisleGroupKey, Item[]>();
+
+  for (const item of items) {
+    const key: ItemAisleGroupKey = item.aisle ?? AUTO_AISLE_KEY;
+    const bucket = buckets.get(key);
+    if (bucket) {
+      bucket.push(item);
+    } else {
+      buckets.set(key, [item]);
+    }
+  }
+
+  return ITEM_AISLE_ORDER.filter((key) => buckets.has(key)).map((key) => ({
+    key,
+    title: getItemAisleSectionLabel(key),
+    items: buckets.get(key)!,
+  }));
+}
+
 export const MAX_ITEM_NOTE_LENGTH = 80;
 
 export type Item = {
@@ -15,6 +114,7 @@ export type Item = {
   quantity?: number;
   unit?: ItemUnit;
   note?: string;
+  aisle?: ItemAisle;
 };
 
 export type ItemDetails = {
@@ -22,6 +122,7 @@ export type ItemDetails = {
   quantity?: number;
   unit?: ItemUnit;
   note?: string;
+  aisle?: ItemAisle;
 };
 
 export function normalizeItemNote(value: string): string | undefined {
@@ -48,6 +149,7 @@ function normalizeItemDetails(details: ItemDetails): ItemDetails {
   let quantity = details.quantity;
   let unit = details.unit;
   const note = details.note !== undefined ? normalizeItemNote(details.note) : undefined;
+  let aisle = details.aisle;
 
   if (quantity !== undefined && (!Number.isFinite(quantity) || quantity <= 0)) {
     quantity = undefined;
@@ -60,7 +162,11 @@ function normalizeItemDetails(details: ItemDetails): ItemDetails {
     unit = 'piece';
   }
 
-  return { name, quantity, unit, note };
+  if (aisle !== undefined && !isItemAisle(aisle)) {
+    aisle = undefined;
+  }
+
+  return { name, quantity, unit, note, aisle };
 }
 
 export function createItem(id: string, details: ItemDetails): Item {
@@ -74,6 +180,10 @@ export function createItem(id: string, details: ItemDetails): Item {
 
   if (normalized.note !== undefined) {
     item.note = normalized.note;
+  }
+
+  if (normalized.aisle !== undefined) {
+    item.aisle = normalized.aisle;
   }
 
   return item;
@@ -111,7 +221,11 @@ export function itemDetailsMatchItem(item: Item, details: ItemDetails): boolean 
     return false;
   }
 
-  return item.note === normalized.note;
+  if (item.note !== normalized.note) {
+    return false;
+  }
+
+  return item.aisle === normalized.aisle;
 }
 
 export function applyItemDetails(item: Item, details: ItemDetails): Item {
@@ -129,6 +243,10 @@ export function applyItemDetails(item: Item, details: ItemDetails): Item {
 
   if (normalized.note !== undefined) {
     next.note = normalized.note;
+  }
+
+  if (normalized.aisle !== undefined) {
+    next.aisle = normalized.aisle;
   }
 
   return next;

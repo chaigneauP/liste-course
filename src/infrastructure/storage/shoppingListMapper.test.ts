@@ -10,6 +10,7 @@ describe('shoppingListMapper', () => {
         quantity: undefined,
         unit: undefined,
         note: undefined,
+        aisle: undefined,
       });
       expect(parseItem({ id: 'a', name: 'Pain', checked: true })).toEqual({
         id: 'a',
@@ -18,6 +19,7 @@ describe('shoppingListMapper', () => {
         quantity: undefined,
         unit: undefined,
         note: undefined,
+        aisle: undefined,
       });
     });
 
@@ -29,6 +31,7 @@ describe('shoppingListMapper', () => {
         quantity: 500,
         unit: 'g',
         note: undefined,
+        aisle: undefined,
       });
       expect(parseItem({ id: 'a', name: 'Oeufs', quantity: 2 })).toEqual({
         id: 'a',
@@ -37,6 +40,7 @@ describe('shoppingListMapper', () => {
         quantity: 2,
         unit: 'piece',
         note: undefined,
+        aisle: undefined,
       });
       expect(parseItem({ id: 'a', name: 'Pain', quantity: 0, unit: 'kg' })).toEqual({
         id: 'a',
@@ -45,6 +49,7 @@ describe('shoppingListMapper', () => {
         quantity: undefined,
         unit: undefined,
         note: undefined,
+        aisle: undefined,
       });
       expect(parseItem({ id: 'a', name: 'Pain', quantity: 1, unit: 'invalid' })).toEqual({
         id: 'a',
@@ -53,6 +58,7 @@ describe('shoppingListMapper', () => {
         quantity: 1,
         unit: 'piece',
         note: undefined,
+        aisle: undefined,
       });
     });
 
@@ -64,6 +70,7 @@ describe('shoppingListMapper', () => {
         quantity: undefined,
         unit: undefined,
         note: 'bio',
+        aisle: undefined,
       });
       expect(parseItem({ id: 'a', name: 'Lait', note: '   ' })).toEqual({
         id: 'a',
@@ -72,6 +79,7 @@ describe('shoppingListMapper', () => {
         quantity: undefined,
         unit: undefined,
         note: undefined,
+        aisle: undefined,
       });
       expect(parseItem({ id: 'a', name: 'Lait', note: 123 })).toEqual({
         id: 'a',
@@ -80,6 +88,28 @@ describe('shoppingListMapper', () => {
         quantity: undefined,
         unit: undefined,
         note: undefined,
+        aisle: undefined,
+      });
+    });
+
+    it('accepts aisle with validation', () => {
+      expect(parseItem({ id: 'a', name: 'Tomates', aisle: 'produce' })).toEqual({
+        id: 'a',
+        name: 'Tomates',
+        checked: undefined,
+        quantity: undefined,
+        unit: undefined,
+        note: undefined,
+        aisle: 'produce',
+      });
+      expect(parseItem({ id: 'a', name: 'Tomates', aisle: 'invalid' })).toEqual({
+        id: 'a',
+        name: 'Tomates',
+        checked: undefined,
+        quantity: undefined,
+        unit: undefined,
+        note: undefined,
+        aisle: undefined,
       });
     });
 
@@ -93,7 +123,15 @@ describe('shoppingListMapper', () => {
   describe('parseItems', () => {
     it('filters out invalid entries', () => {
       expect(parseItems([{ id: 'a', name: 'Pain' }, { id: 2 }, null])).toEqual([
-        { id: 'a', name: 'Pain', checked: undefined, quantity: undefined, unit: undefined, note: undefined },
+        {
+          id: 'a',
+          name: 'Pain',
+          checked: undefined,
+          quantity: undefined,
+          unit: undefined,
+          note: undefined,
+          aisle: undefined,
+        },
       ]);
       expect(parseItems('nope')).toEqual([]);
     });
@@ -114,7 +152,15 @@ describe('shoppingListMapper', () => {
         id: 'list-1',
         name: 'Courses',
         items: [
-          { id: 'a', name: 'Pain', checked: false, quantity: undefined, unit: undefined, note: undefined },
+          {
+            id: 'a',
+            name: 'Pain',
+            checked: false,
+            quantity: undefined,
+            unit: undefined,
+            note: undefined,
+            aisle: undefined,
+          },
         ],
         status: 'active',
         createdAt: '2026-01-01T00:00:00.000Z',

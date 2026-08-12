@@ -1,11 +1,17 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 
-import type { ItemDetails, ItemUnit } from '@/domain/entities/item';
+import {
+  AUTO_AISLE_LABEL,
+  ITEM_AISLE_LABELS,
+  ITEM_AISLE_ORDER,
+  type ItemAisle,
+  type ItemDetails,
+  type ItemUnit,
+} from '@/domain/entities/item';
+import { DropdownField } from '@/presentation/components/DropdownField';
 import { FormModal } from '@/presentation/components/FormModal';
 import { TextField } from '@/presentation/components/TextField';
-import { useTheme } from '@/presentation/theme';
 
 import { useItemFormModalStyles } from './ItemFormModal.styles';
 
@@ -16,6 +22,13 @@ const UNIT_OPTIONS: { value: ItemUnit; label: string }[] = [
   { value: 'ml', label: 'mL' },
   { value: 'l', label: 'L' },
 ];
+
+const AISLE_OPTIONS: { value: ItemAisle | undefined; label: string }[] = ITEM_AISLE_ORDER.map(
+  (key) =>
+    key === 'auto'
+      ? { value: undefined, label: AUTO_AISLE_LABEL }
+      : { value: key, label: ITEM_AISLE_LABELS[key] }
+);
 
 const DEFAULT_UNIT: ItemUnit = 'piece';
 
@@ -47,12 +60,17 @@ function parseQuantityField(value: string): number | undefined {
 
 function buildDetails(
   name: string,
+  aisle: ItemAisle | undefined,
   quantityText: string,
   unit: ItemUnit,
   note: string
 ): ItemDetails {
   const details: ItemDetails = { name: name.trim() };
   const quantity = parseQuantityField(quantityText);
+
+  if (aisle !== undefined) {
+    details.aisle = aisle;
+  }
 
   if (quantity !== undefined) {
     details.quantity = quantity;
@@ -74,20 +92,19 @@ export function ItemFormModal({
   onSubmit,
 }: Props) {
   const styles = useItemFormModalStyles();
-  const { colors } = useTheme();
+  const [aisle, setAisle] = useState<ItemAisle | undefined>(initialDetails.aisle);
   const [name, setName] = useState(initialDetails.name);
   const [quantityText, setQuantityText] = useState(quantityToFieldValue(initialDetails.quantity));
   const [unit, setUnit] = useState<ItemUnit>(initialDetails.unit ?? DEFAULT_UNIT);
   const [note, setNote] = useState(initialDetails.note ?? '');
-  const [unitMenuOpen, setUnitMenuOpen] = useState(false);
 
   useEffect(() => {
     if (visible) {
+      setAisle(initialDetails.aisle);
       setName(initialDetails.name);
       setQuantityText(quantityToFieldValue(initialDetails.quantity));
       setUnit(initialDetails.unit ?? DEFAULT_UNIT);
       setNote(initialDetails.note ?? '');
-      setUnitMenuOpen(false);
     }
   }, [visible, initialDetails]);
 
@@ -95,17 +112,9 @@ export function ItemFormModal({
 
   function handleSubmit() {
     if (canSubmit) {
-      onSubmit(buildDetails(name, quantityText, unit, note));
+      onSubmit(buildDetails(name, aisle, quantityText, unit, note));
     }
   }
-
-  function handleSelectUnit(nextUnit: ItemUnit) {
-    setUnit(nextUnit);
-    setUnitMenuOpen(false);
-  }
-
-  const selectedUnitLabel =
-    UNIT_OPTIONS.find((option) => option.value === unit)?.label ?? UNIT_OPTIONS[0].label;
 
   return (
     <FormModal
@@ -115,6 +124,16 @@ export function ItemFormModal({
       submitDisabled={!canSubmit}
       onCancel={onCancel}
       onSubmit={handleSubmit}>
+      <DropdownField
+        accessibilityLabel="Choisir le rayon"
+        value={aisle}
+        options={AISLE_OPTIONS}
+        onChange={setAisle}
+        parentVisible={visible}
+        fullWidth
+        scrollable
+      />
+
       <TextField
         value={name}
         onChangeText={setName}
@@ -134,47 +153,13 @@ export function ItemFormModal({
         </View>
 
         <View style={styles.unitField}>
-          <Pressable
-            accessibilityRole="button"
+          <DropdownField
             accessibilityLabel="Choisir l’unité"
-            accessibilityState={{ expanded: unitMenuOpen }}
-            onPress={() => setUnitMenuOpen((open) => !open)}
-            style={({ pressed }) => [styles.unitTrigger, pressed && styles.unitTriggerPressed]}>
-            <Text style={styles.unitTriggerText}>{selectedUnitLabel}</Text>
-            <Ionicons
-              name={unitMenuOpen ? 'chevron-up' : 'chevron-down'}
-              size={16}
-              color={colors.icon}
-            />
-          </Pressable>
-
-          {unitMenuOpen ? (
-            <View style={styles.unitMenu}>
-              {UNIT_OPTIONS.map((option) => {
-                const selected = option.value === unit;
-                return (
-                  <Pressable
-                    key={option.value}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected }}
-                    onPress={() => handleSelectUnit(option.value)}
-                    style={({ pressed }) => [
-                      styles.unitOption,
-                      selected && styles.unitOptionSelected,
-                      pressed && styles.unitOptionPressed,
-                    ]}>
-                    <Text
-                      style={[
-                        styles.unitOptionText,
-                        selected && styles.unitOptionTextSelected,
-                      ]}>
-                      {option.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          ) : null}
+            value={unit}
+            options={UNIT_OPTIONS}
+            onChange={setUnit}
+            parentVisible={visible}
+          />
         </View>
       </View>
 

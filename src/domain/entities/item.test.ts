@@ -1,6 +1,8 @@
 import {
   createItem,
   formatItemQuantity,
+  groupItemsByAisle,
+  isItemAisle,
   isItemUnit,
   normalizeItemNote,
 } from './item';
@@ -59,6 +61,21 @@ describe('item entity', () => {
       const item = createItem('a', { name: 'Lait', note: longNote });
       expect(item.note).toHaveLength(80);
     });
+
+    it('stores aisle when valid', () => {
+      expect(createItem('a', { name: 'Tomates', aisle: 'produce' })).toEqual({
+        id: 'a',
+        name: 'Tomates',
+        aisle: 'produce',
+      });
+    });
+
+    it('omits invalid aisle', () => {
+      expect(createItem('a', { name: 'Tomates', aisle: 'snacks' as never })).toEqual({
+        id: 'a',
+        name: 'Tomates',
+      });
+    });
   });
 
   describe('normalizeItemNote', () => {
@@ -89,6 +106,34 @@ describe('item entity', () => {
       expect(isItemUnit('piece')).toBe(true);
       expect(isItemUnit('oz')).toBe(false);
       expect(isItemUnit(null)).toBe(false);
+    });
+  });
+
+  describe('isItemAisle', () => {
+    it('accepts only known aisles', () => {
+      expect(isItemAisle('produce')).toBe(true);
+      expect(isItemAisle('other')).toBe(true);
+      expect(isItemAisle('snacks')).toBe(false);
+      expect(isItemAisle(null)).toBe(false);
+    });
+  });
+
+  describe('groupItemsByAisle', () => {
+    it('groups items with Auto first and omits empty sections', () => {
+      const items = [
+        createItem('1', { name: 'Lait', aisle: 'dairy' }),
+        createItem('2', { name: 'Pain' }),
+        createItem('3', { name: 'Pommes', aisle: 'produce' }),
+        createItem('4', { name: 'Eau', aisle: 'drinks' }),
+      ];
+
+      expect(groupItemsByAisle(items).map((section) => section.key)).toEqual([
+        'auto',
+        'produce',
+        'dairy',
+        'drinks',
+      ]);
+      expect(groupItemsByAisle(items)[0]?.items.map((item) => item.name)).toEqual(['Pain']);
     });
   });
 });

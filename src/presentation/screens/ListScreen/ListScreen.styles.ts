@@ -49,6 +49,14 @@ export const useListScreenStyles = makeStyles(
       padding: space[4],
       gap: space[2.5],
     },
+    aisleSectionHeader: {
+      paddingTop: space[2],
+      paddingBottom: space[1],
+    },
+    aisleSectionTitle: {
+      ...typography.sectionTitle,
+      color: colors.textSecondary,
+    },
     listContentEmpty: {
       flexGrow: 1,
       justifyContent: 'center',

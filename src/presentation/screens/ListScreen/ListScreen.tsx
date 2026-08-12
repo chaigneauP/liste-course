@@ -1,9 +1,9 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, SectionList, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import type { Item, ItemDetails } from '@/domain/entities/item';
+import { groupItemsByAisle, type Item, type ItemDetails } from '@/domain/entities/item';
 import { ItemFormModal } from '@/presentation/components/ItemFormModal';
 import { ItemRow } from '@/presentation/components/ItemRow';
 import { ScreenTop } from '@/presentation/components/ScreenTop';
@@ -83,6 +83,20 @@ export function ListScreen() {
 
   const keyExtractor = useCallback((item: Item) => item.id, []);
 
+  const renderSectionHeader = useCallback(
+    ({ section }: { section: { title: string } }) => (
+      <View style={styles.aisleSectionHeader}>
+        <Text style={styles.aisleSectionTitle}>{section.title}</Text>
+      </View>
+    ),
+    [styles.aisleSectionHeader, styles.aisleSectionTitle]
+  );
+
+  const sections = groupItemsByAisle(items).map((section) => ({
+    title: section.title,
+    data: section.items,
+  }));
+
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -118,10 +132,12 @@ export function ListScreen() {
         </View>
       ) : null}
 
-      <FlatList
-        data={items}
+      <SectionList
+        sections={sections}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
+        renderSectionHeader={renderSectionHeader}
+        stickySectionHeadersEnabled={false}
         contentContainerStyle={[
           styles.listContent,
           items.length === 0 && styles.listContentEmpty,
@@ -163,6 +179,7 @@ export function ListScreen() {
                     quantity: editingItem.quantity,
                     unit: editingItem.unit,
                     note: editingItem.note,
+                    aisle: editingItem.aisle,
                   }
                 : { name: '' }
             }
