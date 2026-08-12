@@ -2,6 +2,7 @@ import { createAppUseCases, type AppUseCases } from '@/application/appUseCases';
 
 import { createAsyncStorageShoppingListRepository } from './storage/asyncStorageShoppingListRepository';
 import { createAsyncStorageThemePreferenceRepository } from './storage/asyncStorageThemePreferenceRepository';
+import { createExpoListTransferGateway } from './system/expoListTransferGateway';
 import { randomIdGenerator } from './system/randomIdGenerator';
 import { systemClock } from './system/systemClock';
 
@@ -16,6 +17,7 @@ export function createAppContainer(): AppUseCases {
       randomIdGenerator
     ),
     themePreferenceRepository: createAsyncStorageThemePreferenceRepository(),
+    listTransferGateway: createExpoListTransferGateway(),
     clock: systemClock,
     idGenerator: randomIdGenerator,
   });

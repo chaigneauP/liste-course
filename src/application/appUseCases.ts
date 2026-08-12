@@ -1,5 +1,6 @@
 import type { Clock } from '@/domain/ports/clock';
 import type { IdGenerator } from '@/domain/ports/idGenerator';
+import type { ListTransferGateway } from '@/domain/ports/listTransferGateway';
 import type { ShoppingListRepository } from '@/domain/ports/shoppingListRepository';
 import type { ThemePreferenceRepository } from '@/domain/ports/themePreferenceRepository';
 
@@ -15,6 +16,18 @@ import {
   makeDeleteArchivedShoppingLists,
   type DeleteArchivedShoppingLists,
 } from './useCases/shoppingLists/deleteArchivedShoppingLists';
+import {
+  makeDownloadShoppingList,
+  type DownloadShoppingList,
+} from './useCases/shoppingLists/downloadShoppingList';
+import {
+  makeExportShoppingList,
+  type ExportShoppingList,
+} from './useCases/shoppingLists/exportShoppingList';
+import {
+  makeImportShoppingList,
+  type ImportShoppingList,
+} from './useCases/shoppingLists/importShoppingList';
 import {
   makeAddShoppingListItem,
   makeMergeShoppingListItem,
@@ -46,6 +59,7 @@ import {
 export type AppDependencies = {
   shoppingListRepository: ShoppingListRepository;
   themePreferenceRepository: ThemePreferenceRepository;
+  listTransferGateway: ListTransferGateway;
   clock: Clock;
   idGenerator: IdGenerator;
 };
@@ -57,6 +71,9 @@ export type ShoppingListUseCases = {
   create: CreateShoppingList;
   archive: ArchiveShoppingList;
   deleteArchived: DeleteArchivedShoppingLists;
+  exportList: ExportShoppingList;
+  downloadList: DownloadShoppingList;
+  importList: ImportShoppingList;
   addItem: AddShoppingListItem;
   updateItem: UpdateShoppingListItem;
   mergeItem: MergeShoppingListItem;
@@ -81,6 +98,7 @@ export type AppUseCases = {
 export function createAppUseCases({
   shoppingListRepository,
   themePreferenceRepository,
+  listTransferGateway,
   clock,
   idGenerator,
 }: AppDependencies): AppUseCases {
@@ -94,6 +112,14 @@ export function createAppUseCases({
       create: makeCreateShoppingList(shoppingListRepository, clock, idGenerator),
       archive: makeArchiveShoppingList(mutate),
       deleteArchived: makeDeleteArchivedShoppingLists(shoppingListRepository),
+      exportList: makeExportShoppingList(shoppingListRepository, listTransferGateway),
+      downloadList: makeDownloadShoppingList(shoppingListRepository, listTransferGateway),
+      importList: makeImportShoppingList(
+        shoppingListRepository,
+        listTransferGateway,
+        clock,
+        idGenerator
+      ),
       addItem: makeAddShoppingListItem(mutate, idGenerator),
       updateItem: makeUpdateShoppingListItem(mutate),
       mergeItem: makeMergeShoppingListItem(mutate),

@@ -1,10 +1,10 @@
 import { makeStyles } from '@/presentation/theme';
 import { spacing } from '@/presentation/theme/tokens';
 
-export const BACK_BUTTON_HIT_SLOP = 8;
+export const ACTION_BUTTON_HIT_SLOP = 8;
 /** Marge sous la safe area, avant le titre. */
 export const SCREEN_TOP_EXTRA_PADDING = spacing[4];
-const BACK_BUTTON_SIZE = 44;
+const SIDE_BUTTON_SIZE = 44;
 
 export const useScreenTopStyles = makeStyles(({ colors, spacing, typography, opacity }) => ({
   container: {
@@ -15,17 +15,22 @@ export const useScreenTopStyles = makeStyles(({ colors, spacing, typography, opa
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
-  rowWithBack: {
+  rowWithActions: {
     alignItems: 'center',
   },
-  backButton: {
-    width: BACK_BUTTON_SIZE,
-    height: BACK_BUTTON_SIZE,
+  sideButton: {
+    width: SIDE_BUTTON_SIZE,
+    height: SIDE_BUTTON_SIZE,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  backButton: {
     marginLeft: -spacing[2],
   },
-  backButtonPressed: {
+  rightButton: {
+    marginRight: -spacing[2],
+  },
+  sideButtonPressed: {
     opacity: opacity.pressed,
   },
   textBlock: {

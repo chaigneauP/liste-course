@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, Pressable, SectionList, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, SectionList, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { groupItemsByAisle, formatItemQuantity, type Item, type ItemDetails } from '@/domain/entities/item';
@@ -9,6 +9,7 @@ import { ItemRow } from '@/presentation/components/ItemRow';
 import { MergeItemConfirmModal } from '@/presentation/components/MergeItemConfirmModal';
 import { ScreenTop } from '@/presentation/components/ScreenTop';
 import { useShoppingList } from '@/presentation/hooks/useShoppingList';
+import { useShoppingListUseCases } from '@/presentation/providers/UseCasesProvider';
 import { useTheme } from '@/presentation/theme';
 
 import {
@@ -22,15 +23,63 @@ export function ListScreen() {
   const listId = typeof id === 'string' ? id : '';
   const { list, items, loading, readOnly, addItem, mergeItem, getMergeCandidate, updateItem, removeItem, toggleItem } =
     useShoppingList(listId);
+  const shoppingLists = useShoppingListUseCases();
   const insets = useSafeAreaInsets();
   const styles = useListScreenStyles();
   const { colors } = useTheme();
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [sharing, setSharing] = useState(false);
   const [mergePrompt, setMergePrompt] = useState<{
     candidate: Item;
     details: ItemDetails;
   } | null>(null);
+
+  async function handleSharePress() {
+    if (!list || sharing) {
+      return;
+    }
+
+    Alert.alert('Exporter la liste', 'Choisissez comment récupérer le fichier JSON.', [
+      { text: 'Annuler', style: 'cancel' },
+      {
+        text: 'Télécharger',
+        onPress: () => void runExport('download'),
+      },
+      {
+        text: 'Partager…',
+        onPress: () => void runExport('share'),
+      },
+    ]);
+  }
+
+  async function runExport(mode: 'share' | 'download') {
+    if (!list || sharing) {
+      return;
+    }
+
+    setSharing(true);
+    try {
+      if (mode === 'share') {
+        await shoppingLists.exportList(list.id);
+        return;
+      }
+
+      const result = await shoppingLists.downloadList(list.id);
+      if (result === 'saved') {
+        Alert.alert('Fichier enregistré', 'La liste a été téléchargée dans le dossier choisi.');
+      }
+    } catch {
+      Alert.alert(
+        mode === 'share' ? 'Partage impossible' : 'Téléchargement impossible',
+        mode === 'share'
+          ? 'La liste n’a pas pu être partagée. Réessayez.'
+          : 'La liste n’a pas pu être enregistrée. Réessayez.'
+      );
+    } finally {
+      setSharing(false);
+    }
+  }
 
   const openCreate = useCallback(() => {
     setEditingItem(null);
@@ -156,7 +205,15 @@ export function ListScreen() {
 
   return (
     <View style={styles.container}>
-      <ScreenTop title={list.name} showBack />
+      <ScreenTop
+        title={list.name}
+        showBack
+        rightAction={{
+          icon: 'share-social-outline',
+          accessibilityLabel: 'Partager la liste',
+          onPress: () => void handleSharePress(),
+        }}
+      />
 
       {readOnly ? (
         <View style={styles.readOnlyBannerWrap}>

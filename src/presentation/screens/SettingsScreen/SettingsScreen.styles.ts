@@ -56,6 +56,28 @@ export const useSettingsScreenStyles = makeStyles(
     themeOptionTextSelected: {
       color: colors.btnPrimaryIcon,
     },
+    actionButton: {
+      alignSelf: 'flex-start',
+      paddingVertical: spacing[3],
+      paddingHorizontal: spacing[4],
+      borderRadius: radius.md,
+      backgroundColor: colors.btnSecondaryBg,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    actionButtonDisabled: {
+      backgroundColor: colors.surfaceMuted,
+    },
+    actionButtonPressed: {
+      backgroundColor: colors.surfacePressed,
+    },
+    actionButtonText: {
+      ...typography.button,
+      color: colors.btnSecondaryIcon,
+    },
+    actionButtonTextDisabled: {
+      color: colors.textSecondary,
+    },
     deleteButton: {
       alignSelf: 'flex-start',
       paddingVertical: spacing[3],

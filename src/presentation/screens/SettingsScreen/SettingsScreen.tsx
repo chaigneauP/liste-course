@@ -1,3 +1,5 @@
+import { router } from 'expo-router';
+import { useState } from 'react';
 import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 
 import type { ThemePreference } from '@/domain/entities/themePreference';
@@ -8,6 +10,7 @@ import {
   plural,
 } from '@/presentation/formatters/shoppingListFormatters';
 import { useArchivedLists } from '@/presentation/hooks/useArchivedLists';
+import { useShoppingListUseCases } from '@/presentation/providers/UseCasesProvider';
 import { useThemePreference } from '@/presentation/theme';
 
 import { useSettingsScreenStyles } from './SettingsScreen.styles';
@@ -20,9 +23,40 @@ const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
 
 export function SettingsScreen() {
   const { count: archivedCount, deleteAll } = useArchivedLists();
+  const shoppingLists = useShoppingListUseCases();
   const { preference, setPreference } = useThemePreference();
   const styles = useSettingsScreenStyles();
   const tabBarInset = useTabBarBottomInset();
+  const [importing, setImporting] = useState(false);
+
+  async function handleImportList() {
+    if (importing) {
+      return;
+    }
+
+    setImporting(true);
+    try {
+      const list = await shoppingLists.importList();
+      if (!list) {
+        return;
+      }
+
+      Alert.alert('Liste importée', `« ${list.name} » a été ajoutée à vos listes.`, [
+        {
+          text: 'Ouvrir',
+          onPress: () => router.push(`/liste/${list.id}`),
+        },
+        { text: 'OK', style: 'cancel' },
+      ]);
+    } catch {
+      Alert.alert(
+        'Import impossible',
+        'Le fichier sélectionné n’est pas une liste valide. Exportez une liste depuis l’application puis réessayez.'
+      );
+    } finally {
+      setImporting(false);
+    }
+  }
 
   async function handleDeleteHistory() {
     const deletedCount = await deleteAll();
@@ -97,6 +131,30 @@ export function SettingsScreen() {
               );
             })}
           </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Partage</Text>
+          <Text style={styles.sectionText}>
+            Importez une liste partagée au format JSON pour l’ajouter à cet appareil.
+          </Text>
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Importer une liste"
+            accessibilityState={{ disabled: importing }}
+            onPress={() => void handleImportList()}
+            disabled={importing}
+            style={({ pressed }) => [
+              styles.actionButton,
+              importing && styles.actionButtonDisabled,
+              pressed && !importing && styles.actionButtonPressed,
+            ]}>
+            <Text
+              style={[styles.actionButtonText, importing && styles.actionButtonTextDisabled]}>
+              {importing ? 'Import…' : 'Importer une liste'}
+            </Text>
+          </Pressable>
         </View>
 
         <View style={styles.section}>

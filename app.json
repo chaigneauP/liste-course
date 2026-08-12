@@ -39,7 +39,8 @@
           }
         }
       ],
-      "./plugins/withAndroidSplashFullImage.js"
+      "./plugins/withAndroidSplashFullImage.js",
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": true
