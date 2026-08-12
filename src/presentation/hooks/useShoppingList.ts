@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 
-import { createItem, type ItemDetails } from '@/domain/entities/item';
+import { createItem, type Item, type ItemDetails } from '@/domain/entities/item';
 import {
   addItemToList,
+  findMergeCandidate,
   isListEditable,
+  mergeItemIntoList,
   removeItemFromList,
   toggleItemInList,
   updateItemInList,
@@ -97,6 +99,26 @@ export function useShoppingList(listId: string) {
     [listId, mutateOptimistic, useCases]
   );
 
+  const mergeItem = useCallback(
+    async (existingItemId: string, details: ItemDetails) => {
+      await mutateOptimistic(
+        (current) => mergeItemIntoList(current, existingItemId, details),
+        () => useCases.mergeItem(listId, existingItemId, details)
+      );
+    },
+    [listId, mutateOptimistic, useCases]
+  );
+
+  const getMergeCandidate = useCallback(
+    (details: ItemDetails): Item | undefined => {
+      if (!list) {
+        return undefined;
+      }
+      return findMergeCandidate(list, details);
+    },
+    [list]
+  );
+
   const updateItem = useCallback(
     async (itemId: string, details: ItemDetails) => {
       await mutateOptimistic(
@@ -133,6 +155,8 @@ export function useShoppingList(listId: string) {
     loading,
     readOnly: list ? !isListEditable(list) : false,
     addItem,
+    mergeItem,
+    getMergeCandidate,
     updateItem,
     removeItem,
     toggleItem,

@@ -1,4 +1,11 @@
-import { applyItemDetails, itemDetailsMatchItem, type Item, type ItemDetails } from './item';
+import {
+  applyItemDetails,
+  itemDetailsMatchItem,
+  normalizeItemDetails,
+  normalizeItemNameForComparison,
+  type Item,
+  type ItemDetails,
+} from './item';
 
 export type ListStatus = 'active' | 'archived';
 
@@ -30,6 +37,122 @@ export function getListCompletion(list: ShoppingList): ListCompletion | undefine
 
 // Les opérations ci-dessous renvoient la liste d'origine quand la règle métier
 // interdit la modification : l'appelant peut ainsi détecter un no-op par identité.
+
+export function findMergeCandidate(list: ShoppingList, details: ItemDetails): Item | undefined {
+  if (!isListEditable(list)) {
+    return undefined;
+  }
+
+  const normalized = normalizeItemDetails(details);
+  if (!normalized.name) {
+    return undefined;
+  }
+
+  const targetName = normalizeItemNameForComparison(normalized.name);
+
+  return list.items.find(
+    (item) =>
+      !item.checked && normalizeItemNameForComparison(item.name) === targetName
+  );
+}
+
+export function mergeItemIntoList(
+  list: ShoppingList,
+  existingId: string,
+  details: ItemDetails
+): ShoppingList {
+  if (!isListEditable(list)) {
+    return list;
+  }
+
+  const existing = list.items.find((item) => item.id === existingId);
+  if (!existing || existing.checked) {
+    return list;
+  }
+
+  const normalized = normalizeItemDetails(details);
+  let changed = false;
+
+  const items = list.items.map((item) => {
+    if (item.id !== existingId) {
+      return item;
+    }
+
+    changed = true;
+    const merged: Item = {
+      id: item.id,
+      name: normalized.name,
+      checked: item.checked,
+    };
+
+    const quantityMerge = mergeItemQuantities(item, normalized);
+    if (quantityMerge.quantity !== undefined) {
+      merged.quantity = quantityMerge.quantity;
+      merged.unit = quantityMerge.unit;
+    }
+
+    const existingNote = item.note?.trim();
+    if (existingNote) {
+      merged.note = item.note;
+    } else if (normalized.note !== undefined) {
+      merged.note = normalized.note;
+    }
+
+    if (item.aisle !== undefined) {
+      merged.aisle = item.aisle;
+    } else if (normalized.aisle !== undefined) {
+      merged.aisle = normalized.aisle;
+    }
+
+    return merged;
+  });
+
+  if (!changed) {
+    return list;
+  }
+  return { ...list, items };
+}
+
+function mergeItemQuantities(
+  existing: Item,
+  incoming: ItemDetails
+): { quantity?: number; unit?: Item['unit'] } {
+  const existingHasQty = existing.quantity !== undefined;
+  const incomingHasQty = incoming.quantity !== undefined;
+
+  if (!existingHasQty && !incomingHasQty) {
+    return { quantity: 2, unit: 'piece' };
+  }
+
+  if (existingHasQty && !incomingHasQty) {
+    return {
+      quantity: existing.quantity! + 1,
+      unit: existing.unit ?? 'piece',
+    };
+  }
+
+  if (!existingHasQty && incomingHasQty) {
+    return {
+      quantity: incoming.quantity,
+      unit: incoming.unit ?? 'piece',
+    };
+  }
+
+  const existingUnit = existing.unit ?? 'piece';
+  const incomingUnit = incoming.unit ?? 'piece';
+
+  if (existingUnit === incomingUnit) {
+    return {
+      quantity: existing.quantity! + incoming.quantity!,
+      unit: existingUnit,
+    };
+  }
+
+  return {
+    quantity: existing.quantity! + 1,
+    unit: existingUnit,
+  };
+}
 
 export function addItemToList(list: ShoppingList, item: Item): ShoppingList {
   if (!isListEditable(list) || !item.name) {

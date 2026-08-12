@@ -136,15 +136,14 @@ export function normalizeItemNote(value: string): string | undefined {
   return trimmed;
 }
 
-const UNIT_LABELS: Record<ItemUnit, string> = {
-  piece: 'u',
+const UNIT_LABELS: Record<Exclude<ItemUnit, 'piece'>, string> = {
   g: 'g',
   kg: 'kg',
   ml: 'mL',
   l: 'L',
 };
 
-function normalizeItemDetails(details: ItemDetails): ItemDetails {
+export function normalizeItemDetails(details: ItemDetails): ItemDetails {
   const name = details.name.trim();
   let quantity = details.quantity;
   let unit = details.unit;
@@ -167,6 +166,10 @@ function normalizeItemDetails(details: ItemDetails): ItemDetails {
   }
 
   return { name, quantity, unit, note, aisle };
+}
+
+export function normalizeItemNameForComparison(name: string): string {
+  return name.trim().toLowerCase();
 }
 
 export function createItem(id: string, details: ItemDetails): Item {
@@ -199,6 +202,9 @@ export function formatItemQuantity(item: Pick<Item, 'quantity' | 'unit'>): strin
   }
 
   const unit = item.unit ?? 'piece';
+  if (unit === 'piece') {
+    return `x${formatQuantityNumber(item.quantity)}`;
+  }
   return `${formatQuantityNumber(item.quantity)} ${UNIT_LABELS[unit]}`;
 }
 

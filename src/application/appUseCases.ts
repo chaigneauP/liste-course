@@ -17,10 +17,12 @@ import {
 } from './useCases/shoppingLists/deleteArchivedShoppingLists';
 import {
   makeAddShoppingListItem,
+  makeMergeShoppingListItem,
   makeRemoveShoppingListItem,
   makeToggleShoppingListItem,
   makeUpdateShoppingListItem,
   type AddShoppingListItem,
+  type MergeShoppingListItem,
   type RemoveShoppingListItem,
   type ToggleShoppingListItem,
   type UpdateShoppingListItem,
@@ -57,6 +59,7 @@ export type ShoppingListUseCases = {
   deleteArchived: DeleteArchivedShoppingLists;
   addItem: AddShoppingListItem;
   updateItem: UpdateShoppingListItem;
+  mergeItem: MergeShoppingListItem;
   removeItem: RemoveShoppingListItem;
   toggleItem: ToggleShoppingListItem;
 };
@@ -93,6 +96,7 @@ export function createAppUseCases({
       deleteArchived: makeDeleteArchivedShoppingLists(shoppingListRepository),
       addItem: makeAddShoppingListItem(mutate, idGenerator),
       updateItem: makeUpdateShoppingListItem(mutate),
+      mergeItem: makeMergeShoppingListItem(mutate),
       removeItem: makeRemoveShoppingListItem(mutate),
       toggleItem: makeToggleShoppingListItem(mutate),
     },

@@ -4,6 +4,8 @@ import {
   groupItemsByAisle,
   isItemAisle,
   isItemUnit,
+  normalizeItemDetails,
+  normalizeItemNameForComparison,
   normalizeItemNote,
 } from './item';
 
@@ -92,7 +94,7 @@ describe('item entity', () => {
     });
 
     it('formats known units', () => {
-      expect(formatItemQuantity({ quantity: 2, unit: 'piece' })).toBe('2 u');
+      expect(formatItemQuantity({ quantity: 2, unit: 'piece' })).toBe('x2');
       expect(formatItemQuantity({ quantity: 500, unit: 'g' })).toBe('500 g');
       expect(formatItemQuantity({ quantity: 1.5, unit: 'kg' })).toBe('1.5 kg');
       expect(formatItemQuantity({ quantity: 250, unit: 'ml' })).toBe('250 mL');
@@ -115,6 +117,18 @@ describe('item entity', () => {
       expect(isItemAisle('other')).toBe(true);
       expect(isItemAisle('snacks')).toBe(false);
       expect(isItemAisle(null)).toBe(false);
+    });
+  });
+
+  describe('merge helpers', () => {
+    it('normalizes details for merge matching', () => {
+      expect(normalizeItemDetails({ name: '  Lait ', quantity: 0, unit: 'l' })).toEqual({
+        name: 'Lait',
+      });
+    });
+
+    it('compares names case-insensitively', () => {
+      expect(normalizeItemNameForComparison('  Lait ')).toBe('lait');
     });
   });
 

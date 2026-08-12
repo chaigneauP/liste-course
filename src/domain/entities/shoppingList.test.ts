@@ -2,8 +2,10 @@ import { createItem } from './item';
 import {
   addItemToList,
   filterListsByStatus,
+  findMergeCandidate,
   getListCompletion,
   markListAsArchived,
+  mergeItemIntoList,
   removeItemFromList,
   sortListsByRecentUpdate,
   toggleItemInList,
@@ -92,6 +94,108 @@ describe('shoppingList entity', () => {
       });
       const next = updateItemInList(list, 'a', { name: 'Lait' });
       expect(next.items[0]).toEqual({ id: 'a', name: 'Lait' });
+    });
+  });
+
+  describe('merge', () => {
+    it('findMergeCandidate matches unchecked items by normalized name only', () => {
+      const list = makeList({
+        items: [
+          createItem('a', { name: 'Lait', quantity: 1, unit: 'l', aisle: 'dairy' }),
+          { ...createItem('b', { name: 'Pain' }), checked: true },
+          createItem('c', { name: 'Eau', quantity: 1, unit: 'l', aisle: 'drinks' }),
+        ],
+      });
+
+      expect(findMergeCandidate(list, { name: '  lait ', quantity: 2, unit: 'l' })?.id).toBe('a');
+      expect(findMergeCandidate(list, { name: 'Pain' })).toBeUndefined();
+      expect(findMergeCandidate(list, { name: 'Eau', quantity: 1, unit: 'l', aisle: 'dairy' })?.id).toBe(
+        'c'
+      );
+      expect(findMergeCandidate(list, { name: 'Lait', quantity: 1, unit: 'piece' })?.id).toBe('a');
+    });
+
+    it('mergeItemIntoList sets quantity 2 piece when neither item has a unit', () => {
+      const list = makeList({
+        items: [createItem('a', { name: 'Pain' })],
+      });
+
+      const next = mergeItemIntoList(list, 'a', { name: 'Pain' });
+
+      expect(next.items[0]).toEqual({
+        id: 'a',
+        name: 'Pain',
+        quantity: 2,
+        unit: 'piece',
+      });
+    });
+
+    it('mergeItemIntoList increments by 1 when incoming item has no unit', () => {
+      const list = makeList({
+        items: [createItem('a', { name: 'Pain', quantity: 2, unit: 'piece' })],
+      });
+
+      const next = mergeItemIntoList(list, 'a', { name: 'Pain' });
+
+      expect(next.items[0]?.quantity).toBe(3);
+      expect(next.items[0]?.unit).toBe('piece');
+    });
+
+    it('mergeItemIntoList sums quantities and keeps existing note when present', () => {
+      const list = makeList({
+        items: [
+          createItem('a', {
+            name: 'Lait',
+            quantity: 1,
+            unit: 'l',
+            note: 'bio',
+            aisle: 'dairy',
+          }),
+        ],
+      });
+
+      const next = mergeItemIntoList(list, 'a', {
+        name: 'Lait',
+        quantity: 2,
+        unit: 'l',
+        note: 'entier',
+      });
+
+      expect(next.items[0]).toEqual({
+        id: 'a',
+        name: 'Lait',
+        quantity: 3,
+        unit: 'l',
+        note: 'bio',
+        aisle: 'dairy',
+      });
+    });
+
+    it('mergeItemIntoList adopts new note when existing note is empty', () => {
+      const list = makeList({
+        items: [createItem('a', { name: 'Lait', quantity: 1, unit: 'l' })],
+      });
+
+      const next = mergeItemIntoList(list, 'a', {
+        name: 'Lait',
+        quantity: 1,
+        unit: 'l',
+        note: 'bio',
+      });
+
+      expect(next.items[0]?.note).toBe('bio');
+      expect(next.items[0]?.quantity).toBe(2);
+    });
+
+    it('mergeItemIntoList is a no-op for checked or missing items', () => {
+      const list = makeList({
+        items: [{ id: 'a', name: 'Pain', checked: true }],
+      });
+
+      expect(mergeItemIntoList(list, 'a', { name: 'Pain', quantity: 1, unit: 'piece' })).toBe(
+        list
+      );
+      expect(mergeItemIntoList(list, 'missing', { name: 'Pain' })).toBe(list);
     });
   });
 

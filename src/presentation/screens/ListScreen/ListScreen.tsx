@@ -3,9 +3,10 @@ import { useCallback, useState } from 'react';
 import { ActivityIndicator, Pressable, SectionList, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { groupItemsByAisle, type Item, type ItemDetails } from '@/domain/entities/item';
+import { groupItemsByAisle, formatItemQuantity, type Item, type ItemDetails } from '@/domain/entities/item';
 import { ItemFormModal } from '@/presentation/components/ItemFormModal';
 import { ItemRow } from '@/presentation/components/ItemRow';
+import { MergeItemConfirmModal } from '@/presentation/components/MergeItemConfirmModal';
 import { ScreenTop } from '@/presentation/components/ScreenTop';
 import { useShoppingList } from '@/presentation/hooks/useShoppingList';
 import { useTheme } from '@/presentation/theme';
@@ -19,13 +20,17 @@ import {
 export function ListScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const listId = typeof id === 'string' ? id : '';
-  const { list, items, loading, readOnly, addItem, updateItem, removeItem, toggleItem } =
+  const { list, items, loading, readOnly, addItem, mergeItem, getMergeCandidate, updateItem, removeItem, toggleItem } =
     useShoppingList(listId);
   const insets = useSafeAreaInsets();
   const styles = useListScreenStyles();
   const { colors } = useTheme();
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [mergePrompt, setMergePrompt] = useState<{
+    candidate: Item;
+    details: ItemDetails;
+  } | null>(null);
 
   const openCreate = useCallback(() => {
     setEditingItem(null);
@@ -46,13 +51,42 @@ export function ListScreen() {
     (details: ItemDetails) => {
       if (editingItem) {
         void updateItem(editingItem.id, details);
-      } else {
-        void addItem(details);
+        closeModal();
+        return;
       }
+
+      const candidate = getMergeCandidate(details);
+      if (candidate) {
+        closeModal();
+        setMergePrompt({ candidate, details });
+        return;
+      }
+
+      void addItem(details);
       closeModal();
     },
-    [addItem, closeModal, editingItem, updateItem]
+    [addItem, closeModal, editingItem, getMergeCandidate, updateItem]
   );
+
+  const closeMergePrompt = useCallback(() => {
+    setMergePrompt(null);
+  }, []);
+
+  const handleMergeConfirm = useCallback(() => {
+    if (!mergePrompt) {
+      return;
+    }
+    void mergeItem(mergePrompt.candidate.id, mergePrompt.details);
+    setMergePrompt(null);
+  }, [mergeItem, mergePrompt]);
+
+  const handleMergeDecline = useCallback(() => {
+    if (!mergePrompt) {
+      return;
+    }
+    void addItem(mergePrompt.details);
+    setMergePrompt(null);
+  }, [addItem, mergePrompt]);
 
   const handleDelete = useCallback(
     (itemId: string) => {
@@ -185,6 +219,17 @@ export function ListScreen() {
             }
             onCancel={closeModal}
             onSubmit={handleSubmit}
+          />
+
+          <MergeItemConfirmModal
+            visible={mergePrompt !== null}
+            itemName={mergePrompt?.candidate.name ?? ''}
+            itemQuantityLabel={
+              mergePrompt ? formatItemQuantity(mergePrompt.candidate) : undefined
+            }
+            onCancel={closeMergePrompt}
+            onMerge={handleMergeConfirm}
+            onDeclineMerge={handleMergeDecline}
           />
         </>
       ) : null}

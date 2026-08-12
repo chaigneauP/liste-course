@@ -1,6 +1,7 @@
 import { createItem, type ItemDetails } from '@/domain/entities/item';
 import {
   addItemToList,
+  mergeItemIntoList,
   removeItemFromList,
   toggleItemInList,
   updateItemInList,
@@ -31,6 +32,12 @@ export type ToggleShoppingListItem = (
   itemId: string
 ) => Promise<ShoppingList | null>;
 
+export type MergeShoppingListItem = (
+  listId: string,
+  existingItemId: string,
+  details: ItemDetails
+) => Promise<ShoppingList | null>;
+
 export function makeAddShoppingListItem(
   mutate: MutateShoppingList,
   idGenerator: IdGenerator
@@ -56,4 +63,9 @@ export function makeToggleShoppingListItem(
   mutate: MutateShoppingList
 ): ToggleShoppingListItem {
   return (listId, itemId) => mutate(listId, (list) => toggleItemInList(list, itemId));
+}
+
+export function makeMergeShoppingListItem(mutate: MutateShoppingList): MergeShoppingListItem {
+  return (listId, existingItemId, details) =>
+    mutate(listId, (list) => mergeItemIntoList(list, existingItemId, details));
 }
