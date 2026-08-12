@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { memo, useCallback } from 'react';
 import { Alert, Pressable, View } from 'react-native';
 
-import type { Item } from '@/domain/entities/item';
+import { formatItemQuantity, type Item } from '@/domain/entities/item';
 import { CardRow } from '@/presentation/components/CardRow';
 import { useTheme } from '@/presentation/theme';
 
@@ -42,14 +42,18 @@ export const ItemRow = memo(function ItemRow({
   }, [item, onEdit]);
 
   if (readOnly) {
-    return <CardRow title={item.name} checked={item.checked} />;
+    return (
+      <CardRow title={item.name} subtitle={formatItemQuantity(item)} checked={item.checked} />
+    );
   }
 
   const checked = item.checked ?? false;
+  const quantityLabel = formatItemQuantity(item);
 
   return (
     <CardRow
       title={item.name}
+      subtitle={quantityLabel}
       checked={checked}
       accessibilityLabel={
         checked ? `Marquer ${item.name} comme non acheté` : `Marquer ${item.name} comme acheté`
@@ -71,7 +75,7 @@ export const ItemRow = memo(function ItemRow({
             ]}>
             <Ionicons
               name="pencil"
-              size={18}
+              size={16}
               color={checked ? colors.textSecondary : colors.icon}
             />
           </Pressable>
@@ -90,7 +94,7 @@ export const ItemRow = memo(function ItemRow({
             ]}>
             <Ionicons
               name="trash-outline"
-              size={18}
+              size={16}
               color={checked ? colors.textSecondary : colors.danger}
             />
           </Pressable>

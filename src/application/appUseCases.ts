@@ -18,12 +18,12 @@ import {
 import {
   makeAddShoppingListItem,
   makeRemoveShoppingListItem,
-  makeRenameShoppingListItem,
   makeToggleShoppingListItem,
+  makeUpdateShoppingListItem,
   type AddShoppingListItem,
   type RemoveShoppingListItem,
-  type RenameShoppingListItem,
   type ToggleShoppingListItem,
+  type UpdateShoppingListItem,
 } from './useCases/shoppingLists/manageShoppingListItems';
 import { makeMutateShoppingList } from './useCases/shoppingLists/mutateShoppingList';
 import {
@@ -56,7 +56,7 @@ export type ShoppingListUseCases = {
   archive: ArchiveShoppingList;
   deleteArchived: DeleteArchivedShoppingLists;
   addItem: AddShoppingListItem;
-  renameItem: RenameShoppingListItem;
+  updateItem: UpdateShoppingListItem;
   removeItem: RemoveShoppingListItem;
   toggleItem: ToggleShoppingListItem;
 };
@@ -92,7 +92,7 @@ export function createAppUseCases({
       archive: makeArchiveShoppingList(mutate),
       deleteArchived: makeDeleteArchivedShoppingLists(shoppingListRepository),
       addItem: makeAddShoppingListItem(mutate, idGenerator),
-      renameItem: makeRenameShoppingListItem(mutate),
+      updateItem: makeUpdateShoppingListItem(mutate),
       removeItem: makeRemoveShoppingListItem(mutate),
       toggleItem: makeToggleShoppingListItem(mutate),
     },

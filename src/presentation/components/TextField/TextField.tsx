@@ -1,4 +1,4 @@
-import { Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View, type KeyboardTypeOptions } from 'react-native';
 
 import { useTheme } from '@/presentation/theme';
 
@@ -12,6 +12,7 @@ type Props = {
   /** Affiche un compteur « saisi / maximum », nécessite `maxLength`. */
   showCounter?: boolean;
   autoFocus?: boolean;
+  keyboardType?: KeyboardTypeOptions;
   onSubmitEditing?: () => void;
 };
 
@@ -22,6 +23,7 @@ export function TextField({
   maxLength,
   showCounter = false,
   autoFocus = false,
+  keyboardType,
   onSubmitEditing,
 }: Props) {
   const styles = useTextFieldStyles();
@@ -38,6 +40,7 @@ export function TextField({
         style={styles.input}
         maxLength={maxLength}
         autoFocus={autoFocus}
+        keyboardType={keyboardType}
         returnKeyType="done"
         onSubmitEditing={onSubmitEditing}
       />

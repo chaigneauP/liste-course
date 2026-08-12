@@ -7,11 +7,46 @@ describe('shoppingListMapper', () => {
         id: 'a',
         name: 'Pain',
         checked: undefined,
+        quantity: undefined,
+        unit: undefined,
       });
       expect(parseItem({ id: 'a', name: 'Pain', checked: true })).toEqual({
         id: 'a',
         name: 'Pain',
         checked: true,
+        quantity: undefined,
+        unit: undefined,
+      });
+    });
+
+    it('accepts quantity and unit with validation', () => {
+      expect(parseItem({ id: 'a', name: 'Farine', quantity: 500, unit: 'g' })).toEqual({
+        id: 'a',
+        name: 'Farine',
+        checked: undefined,
+        quantity: 500,
+        unit: 'g',
+      });
+      expect(parseItem({ id: 'a', name: 'Oeufs', quantity: 2 })).toEqual({
+        id: 'a',
+        name: 'Oeufs',
+        checked: undefined,
+        quantity: 2,
+        unit: 'piece',
+      });
+      expect(parseItem({ id: 'a', name: 'Pain', quantity: 0, unit: 'kg' })).toEqual({
+        id: 'a',
+        name: 'Pain',
+        checked: undefined,
+        quantity: undefined,
+        unit: undefined,
+      });
+      expect(parseItem({ id: 'a', name: 'Pain', quantity: 1, unit: 'invalid' })).toEqual({
+        id: 'a',
+        name: 'Pain',
+        checked: undefined,
+        quantity: 1,
+        unit: 'piece',
       });
     });
 
@@ -25,7 +60,7 @@ describe('shoppingListMapper', () => {
   describe('parseItems', () => {
     it('filters out invalid entries', () => {
       expect(parseItems([{ id: 'a', name: 'Pain' }, { id: 2 }, null])).toEqual([
-        { id: 'a', name: 'Pain', checked: undefined },
+        { id: 'a', name: 'Pain', checked: undefined, quantity: undefined, unit: undefined },
       ]);
       expect(parseItems('nope')).toEqual([]);
     });
@@ -45,7 +80,9 @@ describe('shoppingListMapper', () => {
       expect(parseShoppingList(valid)).toEqual({
         id: 'list-1',
         name: 'Courses',
-        items: [{ id: 'a', name: 'Pain', checked: false }],
+        items: [
+          { id: 'a', name: 'Pain', checked: false, quantity: undefined, unit: undefined },
+        ],
         status: 'active',
         createdAt: '2026-01-01T00:00:00.000Z',
         updatedAt: '2026-01-02T00:00:00.000Z',

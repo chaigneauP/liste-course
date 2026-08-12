@@ -1,4 +1,4 @@
-import type { Item } from '@/domain/entities/item';
+import { isItemUnit, type Item } from '@/domain/entities/item';
 import { isListStatus, type ShoppingList } from '@/domain/entities/shoppingList';
 
 /**
@@ -10,15 +10,28 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
+function parseQuantity(value: unknown): number | undefined {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
+    return undefined;
+  }
+  return value;
+}
+
 export function parseItem(value: unknown): Item | null {
   if (!isRecord(value) || typeof value.id !== 'string' || typeof value.name !== 'string') {
     return null;
   }
 
+  const quantity = parseQuantity(value.quantity);
+  const unit =
+    quantity !== undefined ? (isItemUnit(value.unit) ? value.unit : 'piece') : undefined;
+
   return {
     id: value.id,
     name: value.name,
     checked: typeof value.checked === 'boolean' ? value.checked : undefined,
+    quantity,
+    unit,
   };
 }
 

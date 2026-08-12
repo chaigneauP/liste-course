@@ -12,7 +12,7 @@ function makeList(overrides: Partial<ShoppingList> = {}): ShoppingList {
   return {
     id: 'list-1',
     name: 'Courses',
-    items: [createItem('a', 'Pain')],
+    items: [createItem('a', { name: 'Pain' })],
     status: 'active',
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',

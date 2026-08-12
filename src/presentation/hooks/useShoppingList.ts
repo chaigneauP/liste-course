@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 
-import { createItem } from '@/domain/entities/item';
+import { createItem, type ItemDetails } from '@/domain/entities/item';
 import {
   addItemToList,
   isListEditable,
   removeItemFromList,
-  renameItemInList,
   toggleItemInList,
+  updateItemInList,
   type ShoppingList,
 } from '@/domain/entities/shoppingList';
 import { useShoppingListUseCases } from '@/presentation/providers/UseCasesProvider';
@@ -88,20 +88,20 @@ export function useShoppingList(listId: string) {
   );
 
   const addItem = useCallback(
-    async (name: string) => {
+    async (details: ItemDetails) => {
       await mutateOptimistic(
-        (current) => addItemToList(current, createItem(createOptimisticItemId(), name)),
-        () => useCases.addItem(listId, name)
+        (current) => addItemToList(current, createItem(createOptimisticItemId(), details)),
+        () => useCases.addItem(listId, details)
       );
     },
     [listId, mutateOptimistic, useCases]
   );
 
-  const renameItem = useCallback(
-    async (itemId: string, name: string) => {
+  const updateItem = useCallback(
+    async (itemId: string, details: ItemDetails) => {
       await mutateOptimistic(
-        (current) => renameItemInList(current, itemId, name),
-        () => useCases.renameItem(listId, itemId, name)
+        (current) => updateItemInList(current, itemId, details),
+        () => useCases.updateItem(listId, itemId, details)
       );
     },
     [listId, mutateOptimistic, useCases]
@@ -133,7 +133,7 @@ export function useShoppingList(listId: string) {
     loading,
     readOnly: list ? !isListEditable(list) : false,
     addItem,
-    renameItem,
+    updateItem,
     removeItem,
     toggleItem,
   };

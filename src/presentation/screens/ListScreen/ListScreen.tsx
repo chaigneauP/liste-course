@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import type { Item } from '@/domain/entities/item';
+import type { Item, ItemDetails } from '@/domain/entities/item';
 import { ItemFormModal } from '@/presentation/components/ItemFormModal';
 import { ItemRow } from '@/presentation/components/ItemRow';
 import { ScreenTop } from '@/presentation/components/ScreenTop';
@@ -19,7 +19,7 @@ import {
 export function ListScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const listId = typeof id === 'string' ? id : '';
-  const { list, items, loading, readOnly, addItem, renameItem, removeItem, toggleItem } =
+  const { list, items, loading, readOnly, addItem, updateItem, removeItem, toggleItem } =
     useShoppingList(listId);
   const insets = useSafeAreaInsets();
   const styles = useListScreenStyles();
@@ -43,15 +43,15 @@ export function ListScreen() {
   }, []);
 
   const handleSubmit = useCallback(
-    (name: string) => {
+    (details: ItemDetails) => {
       if (editingItem) {
-        void renameItem(editingItem.id, name);
+        void updateItem(editingItem.id, details);
       } else {
-        void addItem(name);
+        void addItem(details);
       }
       closeModal();
     },
-    [addItem, closeModal, editingItem, renameItem]
+    [addItem, closeModal, editingItem, updateItem]
   );
 
   const handleDelete = useCallback(
@@ -156,7 +156,15 @@ export function ListScreen() {
           <ItemFormModal
             visible={modalVisible}
             mode={editingItem ? 'edit' : 'create'}
-            initialValue={editingItem?.name ?? ''}
+            initialDetails={
+              editingItem
+                ? {
+                    name: editingItem.name,
+                    quantity: editingItem.quantity,
+                    unit: editingItem.unit,
+                  }
+                : { name: '' }
+            }
             onCancel={closeModal}
             onSubmit={handleSubmit}
           />

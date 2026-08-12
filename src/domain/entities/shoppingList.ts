@@ -1,4 +1,4 @@
-import type { Item } from './item';
+import { applyItemDetails, itemDetailsMatchItem, type Item, type ItemDetails } from './item';
 
 export type ListStatus = 'active' | 'archived';
 
@@ -38,23 +38,23 @@ export function addItemToList(list: ShoppingList, item: Item): ShoppingList {
   return { ...list, items: [...list.items, item] };
 }
 
-export function renameItemInList(
+export function updateItemInList(
   list: ShoppingList,
   itemId: string,
-  name: string
+  details: ItemDetails
 ): ShoppingList {
-  const trimmed = name.trim();
+  const trimmed = details.name.trim();
   if (!isListEditable(list) || !trimmed) {
     return list;
   }
 
   let changed = false;
   const items = list.items.map((item) => {
-    if (item.id !== itemId || item.name === trimmed) {
+    if (item.id !== itemId || itemDetailsMatchItem(item, details)) {
       return item;
     }
     changed = true;
-    return { ...item, name: trimmed };
+    return applyItemDetails(item, details);
   });
 
   if (!changed) {

@@ -5,9 +5,9 @@ import {
   getListCompletion,
   markListAsArchived,
   removeItemFromList,
-  renameItemInList,
   sortListsByRecentUpdate,
   toggleItemInList,
+  updateItemInList,
   type ShoppingList,
 } from './shoppingList';
 
@@ -25,24 +25,24 @@ function makeList(overrides: Partial<ShoppingList> = {}): ShoppingList {
 
 describe('shoppingList entity', () => {
   describe('identity no-ops', () => {
-    it('renameItemInList returns the same reference when the item is missing', () => {
-      const list = makeList({ items: [createItem('a', 'Pain')] });
-      expect(renameItemInList(list, 'missing', 'Lait')).toBe(list);
+    it('updateItemInList returns the same reference when the item is missing', () => {
+      const list = makeList({ items: [createItem('a', { name: 'Pain' })] });
+      expect(updateItemInList(list, 'missing', { name: 'Lait' })).toBe(list);
     });
 
-    it('renameItemInList returns the same reference when the name is unchanged', () => {
-      const list = makeList({ items: [createItem('a', 'Pain')] });
-      expect(renameItemInList(list, 'a', 'Pain')).toBe(list);
-      expect(renameItemInList(list, 'a', '  Pain  ')).toBe(list);
+    it('updateItemInList returns the same reference when details are unchanged', () => {
+      const list = makeList({ items: [createItem('a', { name: 'Pain' })] });
+      expect(updateItemInList(list, 'a', { name: 'Pain' })).toBe(list);
+      expect(updateItemInList(list, 'a', { name: '  Pain  ' })).toBe(list);
     });
 
     it('toggleItemInList returns the same reference when the item is missing', () => {
-      const list = makeList({ items: [createItem('a', 'Pain')] });
+      const list = makeList({ items: [createItem('a', { name: 'Pain' })] });
       expect(toggleItemInList(list, 'missing')).toBe(list);
     });
 
     it('removeItemFromList returns the same reference when the item is missing', () => {
-      const list = makeList({ items: [createItem('a', 'Pain')] });
+      const list = makeList({ items: [createItem('a', { name: 'Pain' })] });
       expect(removeItemFromList(list, 'missing')).toBe(list);
     });
 
@@ -54,27 +54,44 @@ describe('shoppingList entity', () => {
     it('mutations on archived lists are no-ops by identity', () => {
       const list = makeList({
         status: 'archived',
-        items: [createItem('a', 'Pain')],
+        items: [createItem('a', { name: 'Pain' })],
       });
-      expect(addItemToList(list, createItem('b', 'Lait'))).toBe(list);
+      expect(addItemToList(list, createItem('b', { name: 'Lait' }))).toBe(list);
       expect(toggleItemInList(list, 'a')).toBe(list);
-      expect(renameItemInList(list, 'a', 'Eau')).toBe(list);
+      expect(updateItemInList(list, 'a', { name: 'Eau' })).toBe(list);
       expect(removeItemFromList(list, 'a')).toBe(list);
     });
   });
 
   describe('mutations', () => {
     it('toggles an item and returns a new list', () => {
-      const list = makeList({ items: [createItem('a', 'Pain')] });
+      const list = makeList({ items: [createItem('a', { name: 'Pain' })] });
       const next = toggleItemInList(list, 'a');
       expect(next).not.toBe(list);
       expect(next.items[0]?.checked).toBe(true);
     });
 
-    it('renames an item', () => {
-      const list = makeList({ items: [createItem('a', 'Pain')] });
-      const next = renameItemInList(list, 'a', '  Baguette  ');
-      expect(next.items[0]?.name).toBe('Baguette');
+    it('updates item details', () => {
+      const list = makeList({ items: [createItem('a', { name: 'Pain' })] });
+      const next = updateItemInList(list, 'a', {
+        name: '  Baguette  ',
+        quantity: 2,
+        unit: 'piece',
+      });
+      expect(next.items[0]).toEqual({
+        id: 'a',
+        name: 'Baguette',
+        quantity: 2,
+        unit: 'piece',
+      });
+    });
+
+    it('clears quantity and unit when omitted', () => {
+      const list = makeList({
+        items: [createItem('a', { name: 'Lait', quantity: 1, unit: 'l' })],
+      });
+      const next = updateItemInList(list, 'a', { name: 'Lait' });
+      expect(next.items[0]).toEqual({ id: 'a', name: 'Lait' });
     });
   });
 
@@ -82,7 +99,7 @@ describe('shoppingList entity', () => {
     it('reports completion only when the list has items', () => {
       expect(getListCompletion(makeList())).toBeUndefined();
       expect(
-        getListCompletion(makeList({ items: [createItem('a', 'Pain')] }))
+        getListCompletion(makeList({ items: [createItem('a', { name: 'Pain' })] }))
       ).toBe('in-progress');
       expect(
         getListCompletion(

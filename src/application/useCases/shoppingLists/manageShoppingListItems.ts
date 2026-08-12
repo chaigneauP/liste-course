@@ -1,9 +1,9 @@
-import { createItem } from '@/domain/entities/item';
+import { createItem, type ItemDetails } from '@/domain/entities/item';
 import {
   addItemToList,
   removeItemFromList,
-  renameItemInList,
   toggleItemInList,
+  updateItemInList,
   type ShoppingList,
 } from '@/domain/entities/shoppingList';
 import type { IdGenerator } from '@/domain/ports/idGenerator';
@@ -12,13 +12,13 @@ import type { MutateShoppingList } from './mutateShoppingList';
 
 export type AddShoppingListItem = (
   listId: string,
-  name: string
+  details: ItemDetails
 ) => Promise<ShoppingList | null>;
 
-export type RenameShoppingListItem = (
+export type UpdateShoppingListItem = (
   listId: string,
   itemId: string,
-  name: string
+  details: ItemDetails
 ) => Promise<ShoppingList | null>;
 
 export type RemoveShoppingListItem = (
@@ -35,15 +35,15 @@ export function makeAddShoppingListItem(
   mutate: MutateShoppingList,
   idGenerator: IdGenerator
 ): AddShoppingListItem {
-  return (listId, name) =>
-    mutate(listId, (list) => addItemToList(list, createItem(idGenerator.generate(), name)));
+  return (listId, details) =>
+    mutate(listId, (list) => addItemToList(list, createItem(idGenerator.generate(), details)));
 }
 
-export function makeRenameShoppingListItem(
+export function makeUpdateShoppingListItem(
   mutate: MutateShoppingList
-): RenameShoppingListItem {
-  return (listId, itemId, name) =>
-    mutate(listId, (list) => renameItemInList(list, itemId, name));
+): UpdateShoppingListItem {
+  return (listId, itemId, details) =>
+    mutate(listId, (list) => updateItemInList(list, itemId, details));
 }
 
 export function makeRemoveShoppingListItem(
