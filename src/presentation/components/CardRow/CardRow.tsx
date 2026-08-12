@@ -12,6 +12,7 @@ import { useCardRowStyles } from './CardRow.styles';
 type Props = {
   title: string;
   subtitle?: string;
+  description?: string;
   checked?: boolean;
   onPress?: () => void;
   onLongPress?: (anchor: ContextMenuAnchor) => void;
@@ -23,6 +24,7 @@ type Props = {
 export const CardRow = memo(function CardRow({
   title,
   subtitle,
+  description,
   checked = false,
   onPress,
   onLongPress,
@@ -67,6 +69,14 @@ export const CardRow = memo(function CardRow({
           ellipsizeMode="tail">
           {displayTitle}
         </Text>
+        {description ? (
+          <Text
+            style={[styles.description, checked && styles.descriptionChecked]}
+            numberOfLines={2}
+            ellipsizeMode="tail">
+            {description}
+          </Text>
+        ) : null}
       </View>
 
       {(subtitle || right || completionIcon) && (

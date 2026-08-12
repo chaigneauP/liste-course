@@ -37,6 +37,14 @@ export const useCardRowStyles = makeStyles(
       textDecorationLine: 'line-through',
       color: colors.textSecondary,
     },
+    description: {
+      ...typography.caption,
+      color: colors.textSecondary,
+      marginTop: space[1],
+    },
+    descriptionChecked: {
+      color: colors.textSecondary,
+    },
     trailing: {
       flexDirection: 'row',
       alignItems: 'center',

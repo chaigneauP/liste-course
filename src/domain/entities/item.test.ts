@@ -2,6 +2,7 @@ import {
   createItem,
   formatItemQuantity,
   isItemUnit,
+  normalizeItemNote,
 } from './item';
 
 describe('item entity', () => {
@@ -36,6 +37,35 @@ describe('item entity', () => {
         id: 'a',
         name: 'Pain',
       });
+    });
+
+    it('stores trimmed note', () => {
+      expect(createItem('a', { name: 'Lait', note: '  bio  ' })).toEqual({
+        id: 'a',
+        name: 'Lait',
+        note: 'bio',
+      });
+    });
+
+    it('omits empty note', () => {
+      expect(createItem('a', { name: 'Lait', note: '   ' })).toEqual({
+        id: 'a',
+        name: 'Lait',
+      });
+    });
+
+    it('truncates note to max length', () => {
+      const longNote = 'a'.repeat(100);
+      const item = createItem('a', { name: 'Lait', note: longNote });
+      expect(item.note).toHaveLength(80);
+    });
+  });
+
+  describe('normalizeItemNote', () => {
+    it('trims and truncates', () => {
+      expect(normalizeItemNote('  bio  ')).toBe('bio');
+      expect(normalizeItemNote('   ')).toBeUndefined();
+      expect(normalizeItemNote('a'.repeat(100))).toHaveLength(80);
     });
   });
 

@@ -1,4 +1,4 @@
-import { isItemUnit, type Item } from '@/domain/entities/item';
+import { isItemUnit, normalizeItemNote, type Item } from '@/domain/entities/item';
 import { isListStatus, type ShoppingList } from '@/domain/entities/shoppingList';
 
 /**
@@ -25,6 +25,7 @@ export function parseItem(value: unknown): Item | null {
   const quantity = parseQuantity(value.quantity);
   const unit =
     quantity !== undefined ? (isItemUnit(value.unit) ? value.unit : 'piece') : undefined;
+  const note = typeof value.note === 'string' ? normalizeItemNote(value.note) : undefined;
 
   return {
     id: value.id,
@@ -32,6 +33,7 @@ export function parseItem(value: unknown): Item | null {
     checked: typeof value.checked === 'boolean' ? value.checked : undefined,
     quantity,
     unit,
+    note,
   };
 }
 

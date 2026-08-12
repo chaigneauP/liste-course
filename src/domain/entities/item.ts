@@ -6,22 +6,37 @@ export function isItemUnit(value: unknown): value is ItemUnit {
   return typeof value === 'string' && ITEM_UNITS.includes(value as ItemUnit);
 }
 
+export const MAX_ITEM_NOTE_LENGTH = 80;
+
 export type Item = {
   id: string;
   name: string;
   checked?: boolean;
   quantity?: number;
   unit?: ItemUnit;
+  note?: string;
 };
 
 export type ItemDetails = {
   name: string;
   quantity?: number;
   unit?: ItemUnit;
+  note?: string;
 };
 
+export function normalizeItemNote(value: string): string | undefined {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+  if (trimmed.length > MAX_ITEM_NOTE_LENGTH) {
+    return trimmed.slice(0, MAX_ITEM_NOTE_LENGTH);
+  }
+  return trimmed;
+}
+
 const UNIT_LABELS: Record<ItemUnit, string> = {
-  piece: 'unité',
+  piece: 'u',
   g: 'g',
   kg: 'kg',
   ml: 'mL',
@@ -32,6 +47,7 @@ function normalizeItemDetails(details: ItemDetails): ItemDetails {
   const name = details.name.trim();
   let quantity = details.quantity;
   let unit = details.unit;
+  const note = details.note !== undefined ? normalizeItemNote(details.note) : undefined;
 
   if (quantity !== undefined && (!Number.isFinite(quantity) || quantity <= 0)) {
     quantity = undefined;
@@ -44,7 +60,7 @@ function normalizeItemDetails(details: ItemDetails): ItemDetails {
     unit = 'piece';
   }
 
-  return { name, quantity, unit };
+  return { name, quantity, unit, note };
 }
 
 export function createItem(id: string, details: ItemDetails): Item {
@@ -54,6 +70,10 @@ export function createItem(id: string, details: ItemDetails): Item {
   if (normalized.quantity !== undefined) {
     item.quantity = normalized.quantity;
     item.unit = normalized.unit;
+  }
+
+  if (normalized.note !== undefined) {
+    item.note = normalized.note;
   }
 
   return item;
@@ -84,10 +104,14 @@ export function itemDetailsMatchItem(item: Item, details: ItemDetails): boolean 
   }
 
   if (normalized.quantity === undefined) {
-    return item.unit === undefined;
+    if (item.unit !== undefined) {
+      return false;
+    }
+  } else if ((item.unit ?? 'piece') !== normalized.unit) {
+    return false;
   }
 
-  return (item.unit ?? 'piece') === normalized.unit;
+  return item.note === normalized.note;
 }
 
 export function applyItemDetails(item: Item, details: ItemDetails): Item {
@@ -101,6 +125,10 @@ export function applyItemDetails(item: Item, details: ItemDetails): Item {
   if (normalized.quantity !== undefined) {
     next.quantity = normalized.quantity;
     next.unit = normalized.unit;
+  }
+
+  if (normalized.note !== undefined) {
+    next.note = normalized.note;
   }
 
   return next;

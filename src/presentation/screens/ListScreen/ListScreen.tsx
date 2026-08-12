@@ -162,6 +162,7 @@ export function ListScreen() {
                     name: editingItem.name,
                     quantity: editingItem.quantity,
                     unit: editingItem.unit,
+                    note: editingItem.note,
                   }
                 : { name: '' }
             }

@@ -43,7 +43,12 @@ export const ItemRow = memo(function ItemRow({
 
   if (readOnly) {
     return (
-      <CardRow title={item.name} subtitle={formatItemQuantity(item)} checked={item.checked} />
+      <CardRow
+        title={item.name}
+        subtitle={formatItemQuantity(item)}
+        description={item.note}
+        checked={item.checked}
+      />
     );
   }
 
@@ -54,6 +59,7 @@ export const ItemRow = memo(function ItemRow({
     <CardRow
       title={item.name}
       subtitle={quantityLabel}
+      description={item.note}
       checked={checked}
       accessibilityLabel={
         checked ? `Marquer ${item.name} comme non acheté` : `Marquer ${item.name} comme acheté`

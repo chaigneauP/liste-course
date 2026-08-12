@@ -45,13 +45,22 @@ function parseQuantityField(value: string): number | undefined {
   return parsed;
 }
 
-function buildDetails(name: string, quantityText: string, unit: ItemUnit): ItemDetails {
+function buildDetails(
+  name: string,
+  quantityText: string,
+  unit: ItemUnit,
+  note: string
+): ItemDetails {
   const details: ItemDetails = { name: name.trim() };
   const quantity = parseQuantityField(quantityText);
 
   if (quantity !== undefined) {
     details.quantity = quantity;
     details.unit = unit;
+  }
+
+  if (note.trim()) {
+    details.note = note;
   }
 
   return details;
@@ -69,6 +78,7 @@ export function ItemFormModal({
   const [name, setName] = useState(initialDetails.name);
   const [quantityText, setQuantityText] = useState(quantityToFieldValue(initialDetails.quantity));
   const [unit, setUnit] = useState<ItemUnit>(initialDetails.unit ?? DEFAULT_UNIT);
+  const [note, setNote] = useState(initialDetails.note ?? '');
   const [unitMenuOpen, setUnitMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -76,6 +86,7 @@ export function ItemFormModal({
       setName(initialDetails.name);
       setQuantityText(quantityToFieldValue(initialDetails.quantity));
       setUnit(initialDetails.unit ?? DEFAULT_UNIT);
+      setNote(initialDetails.note ?? '');
       setUnitMenuOpen(false);
     }
   }, [visible, initialDetails]);
@@ -84,7 +95,7 @@ export function ItemFormModal({
 
   function handleSubmit() {
     if (canSubmit) {
-      onSubmit(buildDetails(name, quantityText, unit));
+      onSubmit(buildDetails(name, quantityText, unit, note));
     }
   }
 
@@ -166,6 +177,12 @@ export function ItemFormModal({
           ) : null}
         </View>
       </View>
+
+      <TextField
+        value={note}
+        onChangeText={setNote}
+        placeholder="Précision : bio, marque…"
+      />
     </FormModal>
   );
 }
