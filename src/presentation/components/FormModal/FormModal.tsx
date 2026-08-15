@@ -42,7 +42,8 @@ export function FormModal({
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
       <DismissKeyboardView
-        style={[styles.backdrop, keyboardHeight > 0 && { paddingBottom: keyboardHeight }]}>
+        style={[styles.backdrop, keyboardHeight > 0 && { paddingBottom: keyboardHeight }]}
+      >
         <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
 
         <View style={[styles.sheet, compact ? styles.sheetCompact : styles.sheetRegular]}>
@@ -55,7 +56,8 @@ export function FormModal({
             <Pressable
               accessibilityRole="button"
               onPress={onCancel}
-              style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}>
+              style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+            >
               <Text style={styles.buttonText}>{cancelLabel}</Text>
             </Pressable>
 
@@ -68,7 +70,8 @@ export function FormModal({
                 styles.submitButton,
                 pressed && styles.submitButtonPressed,
                 submitDisabled && styles.submitButtonDisabled,
-              ]}>
+              ]}
+            >
               <Text style={[styles.buttonText, styles.submitButtonText]}>{submitLabel}</Text>
             </Pressable>
           </View>

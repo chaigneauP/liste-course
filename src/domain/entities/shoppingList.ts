@@ -51,8 +51,7 @@ export function findMergeCandidate(list: ShoppingList, details: ItemDetails): It
   const targetName = normalizeItemNameForComparison(normalized.name);
 
   return list.items.find(
-    (item) =>
-      !item.checked && normalizeItemNameForComparison(item.name) === targetName
+    (item) => !item.checked && normalizeItemNameForComparison(item.name) === targetName
   );
 }
 
@@ -225,14 +224,13 @@ export function markListAsArchived(list: ShoppingList): ShoppingList {
   return { ...list, status: 'archived' };
 }
 
-export function filterListsByStatus(
-  lists: ShoppingList[],
-  status: ListStatus
-): ShoppingList[] {
+export function filterListsByStatus(lists: ShoppingList[], status: ListStatus): ShoppingList[] {
   return lists.filter((list) => list.status === status);
 }
 
 /** Tri décroissant sur `updatedAt` ISO-8601 (comparaison lexicographique). */
 export function sortListsByRecentUpdate(lists: ShoppingList[]): ShoppingList[] {
-  return [...lists].sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : a.updatedAt > b.updatedAt ? -1 : 0));
+  return [...lists].sort((a, b) =>
+    a.updatedAt < b.updatedAt ? 1 : a.updatedAt > b.updatedAt ? -1 : 0
+  );
 }

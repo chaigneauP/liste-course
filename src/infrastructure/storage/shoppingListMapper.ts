@@ -23,8 +23,7 @@ export function parseItem(value: unknown): Item | null {
   }
 
   const quantity = parseQuantity(value.quantity);
-  const unit =
-    quantity !== undefined ? (isItemUnit(value.unit) ? value.unit : 'piece') : undefined;
+  const unit = quantity !== undefined ? (isItemUnit(value.unit) ? value.unit : 'piece') : undefined;
   const note = typeof value.note === 'string' ? normalizeItemNote(value.note) : undefined;
   const aisle = coerceItemAisle(value.aisle);
 
@@ -72,7 +71,5 @@ export function parseShoppingLists(value: unknown): ShoppingList[] {
   if (!Array.isArray(value)) {
     return [];
   }
-  return value
-    .map(parseShoppingList)
-    .filter((list): list is ShoppingList => list !== null);
+  return value.map(parseShoppingList).filter((list): list is ShoppingList => list !== null);
 }

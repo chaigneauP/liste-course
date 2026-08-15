@@ -78,7 +78,8 @@ export const ItemRow = memo(function ItemRow({
               styles.action,
               checked ? styles.actionDisabled : styles.actionDefault,
               pressed && !checked && styles.actionDefaultPressed,
-            ]}>
+            ]}
+          >
             <Ionicons
               name="pencil"
               size={16}
@@ -97,7 +98,8 @@ export const ItemRow = memo(function ItemRow({
               styles.action,
               checked ? styles.actionDisabled : styles.deleteActionDefault,
               pressed && !checked && styles.deleteActionDefaultPressed,
-            ]}>
+            ]}
+          >
             <Ionicons
               name="trash-outline"
               size={16}

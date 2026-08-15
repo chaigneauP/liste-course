@@ -51,10 +51,7 @@ export function CenterTabButton({ isHomeFocused, onNavigateHome }: Props) {
 
   const buttonStyle = useAnimatedStyle(() => ({
     width: interpolate(morph.value, [0, 1], [BUBBLE_SIZE, PILL_WIDTH]),
-    paddingHorizontal: interpolate(morph.value, [0, 1], [
-      0,
-      CENTER_TAB_PILL_HORIZONTAL_PADDING,
-    ]),
+    paddingHorizontal: interpolate(morph.value, [0, 1], [0, CENTER_TAB_PILL_HORIZONTAL_PADDING]),
     transform: [
       {
         scale: interpolate(morph.value, [0, 0.5, 1], [1, 0.9, 1]),
@@ -85,7 +82,8 @@ export function CenterTabButton({ isHomeFocused, onNavigateHome }: Props) {
       accessibilityLabel={isHomeFocused ? 'Nouvelle liste' : 'Accueil'}
       accessibilityState={{ selected: isHomeFocused }}
       onPress={handlePress}
-      style={({ pressed }) => [pressed && styles.centerButtonPressed]}>
+      style={({ pressed }) => [pressed && styles.centerButtonPressed]}
+    >
       <Animated.View style={[styles.centerButton, buttonStyle]}>
         <Animated.View style={[styles.centerButtonLayer, labelStyle]}>
           <Text style={styles.centerButtonLabel}>Nouvelle liste</Text>

@@ -19,7 +19,8 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         sceneStyle: { backgroundColor: colors.bg },
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="historique"
         options={{

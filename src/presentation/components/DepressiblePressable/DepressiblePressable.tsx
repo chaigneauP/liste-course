@@ -1,10 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
-import {
-  Pressable,
-  type PressableProps,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
+import { Pressable, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
@@ -65,7 +60,8 @@ export function DepressiblePressable({
       {...pressableProps}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      style={style}>
+      style={style}
+    >
       <Animated.View style={[contentStyle, contentAnimatedStyle]}>{children}</Animated.View>
     </Pressable>
   );

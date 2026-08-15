@@ -109,9 +109,9 @@ describe('shoppingList entity', () => {
 
       expect(findMergeCandidate(list, { name: '  lait ', quantity: 2, unit: 'l' })?.id).toBe('a');
       expect(findMergeCandidate(list, { name: 'Pain' })).toBeUndefined();
-      expect(findMergeCandidate(list, { name: 'Eau', quantity: 1, unit: 'l', aisle: 'fresh' })?.id).toBe(
-        'c'
-      );
+      expect(
+        findMergeCandidate(list, { name: 'Eau', quantity: 1, unit: 'l', aisle: 'fresh' })?.id
+      ).toBe('c');
       expect(findMergeCandidate(list, { name: 'Lait', quantity: 1, unit: 'piece' })?.id).toBe('a');
     });
 
@@ -192,9 +192,7 @@ describe('shoppingList entity', () => {
         items: [{ id: 'a', name: 'Pain', checked: true }],
       });
 
-      expect(mergeItemIntoList(list, 'a', { name: 'Pain', quantity: 1, unit: 'piece' })).toBe(
-        list
-      );
+      expect(mergeItemIntoList(list, 'a', { name: 'Pain', quantity: 1, unit: 'piece' })).toBe(list);
       expect(mergeItemIntoList(list, 'missing', { name: 'Pain' })).toBe(list);
     });
   });
@@ -202,13 +200,11 @@ describe('shoppingList entity', () => {
   describe('completion & filters', () => {
     it('reports completion only when the list has items', () => {
       expect(getListCompletion(makeList())).toBeUndefined();
+      expect(getListCompletion(makeList({ items: [createItem('a', { name: 'Pain' })] }))).toBe(
+        'in-progress'
+      );
       expect(
-        getListCompletion(makeList({ items: [createItem('a', { name: 'Pain' })] }))
-      ).toBe('in-progress');
-      expect(
-        getListCompletion(
-          makeList({ items: [{ id: 'a', name: 'Pain', checked: true }] })
-        )
+        getListCompletion(makeList({ items: [{ id: 'a', name: 'Pain', checked: true }] }))
       ).toBe('complete');
     });
 

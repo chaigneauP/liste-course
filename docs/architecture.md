@@ -36,26 +36,26 @@ domain ───────────► rien d’extérieur
 
 Modèle métier et contrats. Aucune dépendance framework.
 
-| Dossier | Rôle |
-|---------|------|
+| Dossier     | Rôle                                                                   |
+| ----------- | ---------------------------------------------------------------------- |
 | `entities/` | Types + fonctions pures (`ShoppingList`, `Item`, `ThemePreference`, …) |
-| `ports/` | Interfaces (`ShoppingListRepository`, `Clock`, `IdGenerator`, …) |
+| `ports/`    | Interfaces (`ShoppingListRepository`, `Clock`, `IdGenerator`, …)       |
 
 Règles importantes :
 
 - Les mutations métier vivent dans les entités (`addItemToList`, `markListAsArchived`, …).
 - Quand une règle interdit la modification, la fonction **renvoie la même référence** (no-op détectable par identité).
-- Les ports décrivent *quoi* persister / générer, jamais *comment*.
+- Les ports décrivent _quoi_ persister / générer, jamais _comment_.
 
 ### 2. Application (`src/application`)
 
 Orchestre le domaine contre les ports. Expose des fonctions appelables.
 
-| Fichier / dossier | Rôle |
-|-------------------|------|
-| `appUseCases.ts` | Façade `AppUseCases` + `createAppUseCases(deps)` |
-| `useCases/shoppingLists/` | Création, requêtes, archive, items |
-| `useCases/theme/` | Préférence de thème |
+| Fichier / dossier         | Rôle                                             |
+| ------------------------- | ------------------------------------------------ |
+| `appUseCases.ts`          | Façade `AppUseCases` + `createAppUseCases(deps)` |
+| `useCases/shoppingLists/` | Création, requêtes, archive, items               |
+| `useCases/theme/`         | Préférence de thème                              |
 
 Pattern usuel : factory `makeXxx(deps) → (input) => Promise<…>`.
 
@@ -65,11 +65,11 @@ Brique partagée : `makeMutateShoppingList` charge → mute (domaine) → horoda
 
 Seule couche autorisée à connaître AsyncStorage, `Date`, etc.
 
-| Fichier / dossier | Rôle |
-|-------------------|------|
+| Fichier / dossier       | Rôle                                                         |
+| ----------------------- | ------------------------------------------------------------ |
 | `createAppContainer.ts` | **Composition root** : branche les implémentations concrètes |
-| `storage/` | Repos AsyncStorage, mapper, mutex, clés |
-| `system/` | `systemClock`, `randomIdGenerator` |
+| `storage/`              | Repos AsyncStorage, mapper, mutex, clés                      |
+| `system/`               | `systemClock`, `randomIdGenerator`                           |
 
 Tout nouveau I/O = nouveau port (domaine) + adaptateur ici + câblage dans `createAppContainer` uniquement.
 
@@ -77,15 +77,15 @@ Tout nouveau I/O = nouveau port (domaine) + adaptateur ici + câblage dans `crea
 
 UI React Native. Consomme les cas d’usage via contexte, jamais le stockage.
 
-| Dossier | Rôle |
-|---------|------|
-| `screens/` | Écrans (`HomeScreen`, `ListScreen`, …) |
-| `components/` | Composants réutilisables |
-| `hooks/` | État local + appels use cases + refresh |
-| `providers/` | `UseCasesProvider` |
-| `theme/` | Tokens, `ThemeProvider`, `makeStyles` |
-| `formatters/` | Textes UI (pluriels FR, etc.) |
-| `navigation/` | Options de stack |
+| Dossier       | Rôle                                    |
+| ------------- | --------------------------------------- |
+| `screens/`    | Écrans (`HomeScreen`, `ListScreen`, …)  |
+| `components/` | Composants réutilisables                |
+| `hooks/`      | État local + appels use cases + refresh |
+| `providers/`  | `UseCasesProvider`                      |
+| `theme/`      | Tokens, `ThemeProvider`, `makeStyles`   |
+| `formatters/` | Textes UI (pluriels FR, etc.)           |
+| `navigation/` | Options de stack                        |
 
 Organisation d’un composant / écran :
 
@@ -107,11 +107,11 @@ Les fichiers de route sont des **re-exports** d’écrans, sauf `_layout.tsx` qu
 3. `ThemeProvider`
 4. `Stack` + `StatusBar`
 
-| Route | Écran | Titre nav |
-|-------|-------|-----------|
-| `index` | `HomeScreen` | Accueil |
-| `liste/[id]` | `ListScreen` | Liste |
-| `historique` | `HistoryScreen` | Historique |
+| Route        | Écran            | Titre nav  |
+| ------------ | ---------------- | ---------- |
+| `index`      | `HomeScreen`     | Accueil    |
+| `liste/[id]` | `ListScreen`     | Liste      |
+| `historique` | `HistoryScreen`  | Historique |
 | `parametres` | `SettingsScreen` | Paramètres |
 
 ---
@@ -147,11 +147,11 @@ Jusque-là :
 
 ## Conventions de langage
 
-| Zone | Langue |
-|------|--------|
-| Routes, titres, libellés UI, alertes | **Français** |
+| Zone                                    | Langue                                            |
+| --------------------------------------- | ------------------------------------------------- |
+| Routes, titres, libellés UI, alertes    | **Français**                                      |
 | Identifiants code / domaine / use cases | **Anglais** (`ShoppingList`, `active`, `archive`) |
-| Commentaires | Souvent français |
+| Commentaires                            | Souvent français                                  |
 
 ---
 

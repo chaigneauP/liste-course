@@ -28,13 +28,7 @@ type Props = {
   rightAction?: RightAction;
 };
 
-export function ScreenTop({
-  title,
-  subtitle,
-  showBack = false,
-  onBack,
-  rightAction,
-}: Props) {
+export function ScreenTop({ title, subtitle, showBack = false, onBack, rightAction }: Props) {
   const insets = useSafeAreaInsets();
   const styles = useScreenTopStyles();
   const { colors } = useTheme();
@@ -57,7 +51,12 @@ export function ScreenTop({
             accessibilityLabel="Retour"
             hitSlop={ACTION_BUTTON_HIT_SLOP}
             onPress={handleBack}
-            style={({ pressed }) => [styles.sideButton, styles.backButton, pressed && styles.sideButtonPressed]}>
+            style={({ pressed }) => [
+              styles.sideButton,
+              styles.backButton,
+              pressed && styles.sideButtonPressed,
+            ]}
+          >
             <Ionicons name="chevron-back" size={24} color={colors.textSecondary} />
           </Pressable>
         ) : null}
@@ -79,7 +78,8 @@ export function ScreenTop({
               styles.sideButton,
               styles.rightButton,
               pressed && styles.sideButtonPressed,
-            ]}>
+            ]}
+          >
             <Ionicons name={rightAction.icon} size={24} color={colors.icon} />
           </Pressable>
         ) : null}

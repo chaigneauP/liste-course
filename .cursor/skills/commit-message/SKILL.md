@@ -31,21 +31,21 @@ Génère un message de commit conventional décrivant les changements qui seront
 
 ### Types
 
-| Type | Usage |
-|------|-------|
-| `feat` | Nouvelle fonctionnalité |
-| `fix` | Correction de bug |
+| Type       | Usage                                       |
+| ---------- | ------------------------------------------- |
+| `feat`     | Nouvelle fonctionnalité                     |
+| `fix`      | Correction de bug                           |
 | `refactor` | Refactoring sans changement de comportement |
-| `chore` | Maintenance, dépendances, config |
-| `docs` | Documentation seule |
-| `test` | Tests |
-| `style` | Formatage, pas de changement logique |
+| `chore`    | Maintenance, dépendances, config            |
+| `docs`     | Documentation seule                         |
+| `test`     | Tests                                       |
+| `style`    | Formatage, pas de changement logique        |
 
 ### Règles
 
 - **Sujet** : impératif, ≤ 72 caractères, sans point final
 - **Scope** : optionnel, domaine concerné (`lists`, `storage`, `ui`, …)
-- **Corps** : expliquer le *pourquoi* et les changements majeurs, pas une liste fichier par fichier
+- **Corps** : expliquer le _pourquoi_ et les changements majeurs, pas une liste fichier par fichier
 - **Langue** : anglais pour le sujet conventional ; corps en français si l'utilisateur communique en français
 - **Référence issue** : ajouter `#<numéro>` si une issue GitLab est connue
 

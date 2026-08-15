@@ -83,12 +83,14 @@ export function ContextMenu({ visible, anchor, action, onClose }: Props) {
                 opacity: menuOpacity,
                 transform: [{ translateY: menuTranslateY }, { scale: menuScale }],
               },
-            ]}>
+            ]}
+          >
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={action.accessibilityLabel ?? action.label}
               onPress={handleActionPress}
-              style={({ pressed }) => [styles.action, pressed && styles.actionPressed]}>
+              style={({ pressed }) => [styles.action, pressed && styles.actionPressed]}
+            >
               {action.icon}
               <Text style={styles.actionLabel} numberOfLines={1}>
                 {action.label}

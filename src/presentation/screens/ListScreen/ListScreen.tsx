@@ -3,13 +3,21 @@ import { useCallback, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, SectionList, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { groupItemsByAisle, formatItemQuantity, type Item, type ItemDetails } from '@/domain/entities/item';
+import {
+  groupItemsByAisle,
+  formatItemQuantity,
+  type Item,
+  type ItemDetails,
+} from '@/domain/entities/item';
 import { ItemFormModal, type ItemFormSubmitOptions } from '@/presentation/components/ItemFormModal';
 import { ItemRow } from '@/presentation/components/ItemRow';
 import { MergeItemConfirmModal } from '@/presentation/components/MergeItemConfirmModal';
 import { ScreenTop } from '@/presentation/components/ScreenTop';
 import { useShoppingList } from '@/presentation/hooks/useShoppingList';
-import { useAisleDictionaryUseCases, useShoppingListUseCases } from '@/presentation/providers/UseCasesProvider';
+import {
+  useAisleDictionaryUseCases,
+  useShoppingListUseCases,
+} from '@/presentation/providers/UseCasesProvider';
 import { useTheme } from '@/presentation/theme';
 
 import {
@@ -21,8 +29,18 @@ import {
 export function ListScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const listId = typeof id === 'string' ? id : '';
-  const { list, items, loading, readOnly, addItem, mergeItem, getMergeCandidate, updateItem, removeItem, toggleItem } =
-    useShoppingList(listId);
+  const {
+    list,
+    items,
+    loading,
+    readOnly,
+    addItem,
+    mergeItem,
+    getMergeCandidate,
+    updateItem,
+    removeItem,
+    toggleItem,
+  } = useShoppingList(listId);
   const shoppingLists = useShoppingListUseCases();
   const aisleDictionary = useAisleDictionaryUseCases();
   const insets = useSafeAreaInsets();
@@ -46,10 +64,7 @@ export function ListScreen() {
     try {
       await shoppingLists.exportList(list.id);
     } catch {
-      Alert.alert(
-        'Partage impossible',
-        'La liste n’a pas pu être partagée. Réessayez.'
-      );
+      Alert.alert('Partage impossible', 'La liste n’a pas pu être partagée. Réessayez.');
     } finally {
       setSharing(false);
     }
@@ -263,7 +278,8 @@ export function ListScreen() {
               styles.fab,
               { bottom: insets.bottom + FAB_BOTTOM_INSET },
               pressed && styles.fabPressed,
-            ]}>
+            ]}
+          >
             <Text style={styles.fabText}>+</Text>
           </Pressable>
 
@@ -290,9 +306,7 @@ export function ListScreen() {
           <MergeItemConfirmModal
             visible={mergePrompt !== null}
             itemName={mergePrompt?.candidate.name ?? ''}
-            itemQuantityLabel={
-              mergePrompt ? formatItemQuantity(mergePrompt.candidate) : undefined
-            }
+            itemQuantityLabel={mergePrompt ? formatItemQuantity(mergePrompt.candidate) : undefined}
             onCancel={closeMergePrompt}
             onMerge={handleMergeConfirm}
             onDeclineMerge={handleMergeDecline}

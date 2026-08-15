@@ -37,7 +37,8 @@ export function ListNameModal({ visible, onCancel, onSubmit }: Props) {
       submitLabel="Créer"
       submitDisabled={!canSubmit}
       onCancel={onCancel}
-      onSubmit={handleSubmit}>
+      onSubmit={handleSubmit}
+    >
       <TextField
         value={value}
         onChangeText={setValue}

@@ -1,13 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
-import {
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import type { ContextMenuAnchor } from '@/presentation/components/ContextMenu';
 import { useTheme } from '@/presentation/theme';
@@ -73,8 +66,7 @@ export function DropdownField<T>({
     closeMenu();
   }
 
-  const menuTop =
-    anchor != null ? anchor.y + anchor.height + dropdownFieldMetrics.gap : 0;
+  const menuTop = anchor != null ? anchor.y + anchor.height + dropdownFieldMetrics.gap : 0;
 
   function renderOptions() {
     return options.map((option) => {
@@ -89,7 +81,8 @@ export function DropdownField<T>({
             styles.option,
             selected && styles.optionSelected,
             pressed && styles.optionPressed,
-          ]}>
+          ]}
+        >
           <Text style={[styles.optionText, selected && styles.optionTextSelected]}>
             {option.label}
           </Text>
@@ -106,13 +99,10 @@ export function DropdownField<T>({
           accessibilityLabel={accessibilityLabel}
           accessibilityState={{ expanded: open }}
           onPress={openMenu}
-          style={({ pressed }) => [styles.trigger, pressed && styles.triggerPressed]}>
+          style={({ pressed }) => [styles.trigger, pressed && styles.triggerPressed]}
+        >
           <Text style={styles.triggerText}>{selectedLabel}</Text>
-          <Ionicons
-            name={open ? 'chevron-up' : 'chevron-down'}
-            size={16}
-            color={colors.icon}
-          />
+          <Ionicons name={open ? 'chevron-up' : 'chevron-down'} size={16} color={colors.icon} />
         </Pressable>
       </View>
 
@@ -129,13 +119,15 @@ export function DropdownField<T>({
                   left: anchor.x,
                   width: anchor.width,
                 },
-              ]}>
+              ]}
+            >
               {scrollable ? (
                 <ScrollView
                   style={styles.menuScroll}
                   showsVerticalScrollIndicator
                   keyboardShouldPersistTaps="handled"
-                  bounces={false}>
+                  bounces={false}
+                >
                   {renderOptions()}
                 </ScrollView>
               ) : (

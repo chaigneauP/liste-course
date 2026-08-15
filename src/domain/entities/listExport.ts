@@ -52,8 +52,7 @@ function parseExportedItem(value: unknown): ExportedItem | null {
   }
 
   const quantity = parseExportedQuantity(value.quantity);
-  const unit =
-    quantity !== undefined ? (isItemUnit(value.unit) ? value.unit : 'piece') : undefined;
+  const unit = quantity !== undefined ? (isItemUnit(value.unit) ? value.unit : 'piece') : undefined;
   const note = typeof value.note === 'string' ? normalizeItemNote(value.note) : undefined;
   const aisle = coerceItemAisle(value.aisle);
   const checked = typeof value.checked === 'boolean' ? value.checked : undefined;

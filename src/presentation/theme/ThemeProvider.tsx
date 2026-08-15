@@ -23,9 +23,7 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const themeUseCases = useThemeUseCases();
   const systemScheme = useColorScheme();
-  const [preference, setPreferenceState] = useState<ThemePreference>(
-    DEFAULT_THEME_PREFERENCE
-  );
+  const [preference, setPreferenceState] = useState<ThemePreference>(DEFAULT_THEME_PREFERENCE);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {

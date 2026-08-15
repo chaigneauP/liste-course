@@ -1,6 +1,7 @@
 // https://docs.expo.dev/guides/using-eslint/
 const { defineConfig } = require('eslint/config');
 const expoConfig = require('eslint-config-expo/flat');
+const eslintConfigPrettier = require('eslint-config-prettier');
 
 const frameworkPaths = [
   { name: 'react', message: 'This layer must stay framework-free.' },
@@ -132,4 +133,6 @@ module.exports = defineConfig([
       ],
     },
   },
+  // Last: turn off ESLint rules that conflict with Prettier formatting.
+  eslintConfigPrettier,
 ]);

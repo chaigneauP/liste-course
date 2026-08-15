@@ -221,7 +221,8 @@ export function ItemFormModal({
         submitLabel="Valider"
         submitDisabled={!canSubmit}
         onCancel={onCancel}
-        onSubmit={handleSubmit}>
+        onSubmit={handleSubmit}
+      >
         <DropdownField
           accessibilityLabel="Choisir le rayon"
           value={aisle}
@@ -259,11 +260,7 @@ export function ItemFormModal({
           </View>
         </View>
 
-        <TextField
-          value={note}
-          onChangeText={setNote}
-          placeholder="Précision : bio, marque…"
-        />
+        <TextField value={note} onChangeText={setNote} placeholder="Précision : bio, marque…" />
       </FormModal>
 
       <MoveAisleConfirmModal

@@ -90,7 +90,8 @@ export function HomeTaglineCarousel() {
     <Animated.Text
       accessibilityLiveRegion="polite"
       style={[styles.phrase, { opacity }]}
-      numberOfLines={2}>
+      numberOfLines={2}
+    >
       {HOME_TAGLINE_PHRASES[phraseIndex]}
     </Animated.Text>
   );

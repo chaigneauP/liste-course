@@ -63,9 +63,15 @@ describe('listExport', () => {
     const raw = serializeListExport(sampleList);
     expect(parseListExport(raw)?.list.name).toBe('Courses weekend');
     expect(parseListExport('{')).toBeNull();
-    expect(parseListExport('{"format":"other","version":1,"list":{"name":"A","items":[]}}')).toBeNull();
-    expect(parseListExport('{"format":"liste-course","version":2,"list":{"name":"A","items":[]}}')).toBeNull();
-    expect(parseListExport('{"format":"liste-course","version":1,"list":{"name":"   ","items":[]}}')).toBeNull();
+    expect(
+      parseListExport('{"format":"other","version":1,"list":{"name":"A","items":[]}}')
+    ).toBeNull();
+    expect(
+      parseListExport('{"format":"liste-course","version":2,"list":{"name":"A","items":[]}}')
+    ).toBeNull();
+    expect(
+      parseListExport('{"format":"liste-course","version":1,"list":{"name":"   ","items":[]}}')
+    ).toBeNull();
   });
 
   it('rebuilds an active list with fresh ids', () => {

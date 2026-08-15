@@ -5,10 +5,7 @@ import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import type { ThemePreference } from '@/domain/entities/themePreference';
 import { ScreenTop } from '@/presentation/components/ScreenTop';
 import { useTabBarBottomInset } from '@/presentation/components/CustomTabBar';
-import {
-  formatArchivedListCount,
-  plural,
-} from '@/presentation/formatters/shoppingListFormatters';
+import { formatArchivedListCount, plural } from '@/presentation/formatters/shoppingListFormatters';
 import { useArchivedLists } from '@/presentation/hooks/useArchivedLists';
 import { useShoppingListUseCases } from '@/presentation/providers/UseCasesProvider';
 import { useThemePreference } from '@/presentation/theme';
@@ -96,7 +93,8 @@ export function SettingsScreen() {
 
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: tabBarInset }]}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.description}>
           Les données restent stockées uniquement sur cet appareil, aucune connexion n’est requise.
         </Text>
@@ -122,9 +120,11 @@ export function SettingsScreen() {
                     styles.themeOption,
                     selected && styles.themeOptionSelected,
                     pressed && !selected && styles.themeOptionPressed,
-                  ]}>
+                  ]}
+                >
                   <Text
-                    style={[styles.themeOptionText, selected && styles.themeOptionTextSelected]}>
+                    style={[styles.themeOptionText, selected && styles.themeOptionTextSelected]}
+                  >
                     {option.label}
                   </Text>
                 </Pressable>
@@ -149,9 +149,9 @@ export function SettingsScreen() {
               styles.actionButton,
               importing && styles.actionButtonDisabled,
               pressed && !importing && styles.actionButtonPressed,
-            ]}>
-            <Text
-              style={[styles.actionButtonText, importing && styles.actionButtonTextDisabled]}>
+            ]}
+          >
+            <Text style={[styles.actionButtonText, importing && styles.actionButtonTextDisabled]}>
               {importing ? 'Import…' : 'Importer une liste'}
             </Text>
           </Pressable>
@@ -171,12 +171,14 @@ export function SettingsScreen() {
               styles.deleteButton,
               archivedCount === 0 && styles.deleteButtonDisabled,
               pressed && archivedCount > 0 && styles.deleteButtonPressed,
-            ]}>
+            ]}
+          >
             <Text
               style={[
                 styles.deleteButtonText,
                 archivedCount === 0 && styles.deleteButtonTextDisabled,
-              ]}>
+              ]}
+            >
               Supprimer l’historique
             </Text>
           </Pressable>

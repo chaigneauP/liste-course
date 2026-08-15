@@ -50,7 +50,8 @@ export function MoveAisleConfirmModal({
             <Pressable
               accessibilityRole="button"
               onPress={onCancel}
-              style={({ pressed }) => [formStyles.button, pressed && formStyles.buttonPressed]}>
+              style={({ pressed }) => [formStyles.button, pressed && formStyles.buttonPressed]}
+            >
               <Text style={formStyles.buttonText}>Annuler</Text>
             </Pressable>
 
@@ -61,7 +62,8 @@ export function MoveAisleConfirmModal({
                 formStyles.button,
                 formStyles.submitButton,
                 pressed && formStyles.submitButtonPressed,
-              ]}>
+              ]}
+            >
               <Text style={[formStyles.buttonText, formStyles.submitButtonText]}>Valider</Text>
             </Pressable>
           </View>

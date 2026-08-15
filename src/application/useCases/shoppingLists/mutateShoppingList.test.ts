@@ -1,8 +1,5 @@
 import { createItem } from '@/domain/entities/item';
-import {
-  toggleItemInList,
-  type ShoppingList,
-} from '@/domain/entities/shoppingList';
+import { toggleItemInList, type ShoppingList } from '@/domain/entities/shoppingList';
 import type { Clock } from '@/domain/ports/clock';
 import type { ShoppingListRepository } from '@/domain/ports/shoppingListRepository';
 
@@ -46,9 +43,7 @@ describe('makeMutateShoppingList', () => {
     const clock: Clock = { now: () => '2026-02-01T00:00:00.000Z' };
     const mutate = makeMutateShoppingList(repository, clock);
 
-    const result = await mutate(list.id, (current) =>
-      toggleItemInList(current, 'missing')
-    );
+    const result = await mutate(list.id, (current) => toggleItemInList(current, 'missing'));
 
     expect(result).toBe(list);
     expect(repository.save).not.toHaveBeenCalled();

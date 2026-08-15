@@ -1,7 +1,4 @@
-import {
-  buildShoppingListFromExport,
-  parseListExport,
-} from '@/domain/entities/listExport';
+import { buildShoppingListFromExport, parseListExport } from '@/domain/entities/listExport';
 import type { ShoppingList } from '@/domain/entities/shoppingList';
 import type { Clock } from '@/domain/ports/clock';
 import type { IdGenerator } from '@/domain/ports/idGenerator';

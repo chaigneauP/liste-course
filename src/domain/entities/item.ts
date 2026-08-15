@@ -7,14 +7,7 @@ export function isItemUnit(value: unknown): value is ItemUnit {
 }
 
 export type ItemAisle =
-  | 'produce'
-  | 'meat_fish'
-  | 'fresh'
-  | 'grocery'
-  | 'frozen'
-  | 'drinks'
-  | 'hygiene'
-  | 'home';
+  'produce' | 'meat_fish' | 'fresh' | 'grocery' | 'frozen' | 'drinks' | 'hygiene' | 'home';
 
 const ITEM_AISLES: ItemAisle[] = [
   'produce',

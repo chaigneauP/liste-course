@@ -23,11 +23,11 @@ Guide pour produire un APK Android de production avec EAS Build, et gérer les v
 
 Définis dans `eas.json` :
 
-| Profil | Script npm | Usage | Sortie Android |
-|--------|------------|--------|----------------|
-| `development` | `npm run build:dev` | Dev client interne | APK |
-| `preview` | `npm run build:preview` | Test interne (sans store) | APK |
-| `production` | `npm run build:prod` | Release prod | APK |
+| Profil        | Script npm              | Usage                     | Sortie Android |
+| ------------- | ----------------------- | ------------------------- | -------------- |
+| `development` | `npm run build:dev`     | Dev client interne        | APK            |
+| `preview`     | `npm run build:preview` | Test interne (sans store) | APK            |
+| `production`  | `npm run build:prod`    | Release prod              | APK            |
 
 > Toujours utiliser `npm run <script>`, pas `npm <script>`.
 
@@ -35,10 +35,10 @@ Définis dans `eas.json` :
 
 Deux notions distinctes :
 
-| Champ | Où | Rôle |
-|-------|-----|------|
-| **Version utilisateur** (`version`) | `app.json` → `expo.version` (ex. `1.0.0`) | Affichée à l’utilisateur (« version 1.0.0 ») |
-| **Version native / build** | Android : `versionCode` · iOS : `buildNumber` | Entier technique imposé par les stores ; doit **augmenter** à chaque upload |
+| Champ                               | Où                                            | Rôle                                                                        |
+| ----------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------- |
+| **Version utilisateur** (`version`) | `app.json` → `expo.version` (ex. `1.0.0`)     | Affichée à l’utilisateur (« version 1.0.0 »)                                |
+| **Version native / build**          | Android : `versionCode` · iOS : `buildNumber` | Entier technique imposé par les stores ; doit **augmenter** à chaque upload |
 
 ### Config actuelle du projet
 
@@ -68,11 +68,11 @@ C’est **manuel** : édite `expo.version` dans `app.json` (et optionnellement `
 
 Convention semver recommandée :
 
-| Changement | Exemple | Quand |
-|------------|---------|--------|
-| Patch | `1.0.0` → `1.0.1` | Correctifs, petits changements |
-| Minor | `1.0.0` → `1.1.0` | Nouvelles features rétrocompatibles |
-| Major | `1.0.0` → `2.0.0` | Breaking changes / refonte |
+| Changement | Exemple           | Quand                               |
+| ---------- | ----------------- | ----------------------------------- |
+| Patch      | `1.0.0` → `1.0.1` | Correctifs, petits changements      |
+| Minor      | `1.0.0` → `1.1.0` | Nouvelles features rétrocompatibles |
+| Major      | `1.0.0` → `2.0.0` | Breaking changes / refonte          |
 
 Le `versionCode` natif, lui, continue d’être incrémenté automatiquement par EAS à chaque build prod, indépendamment du semver.
 
@@ -133,12 +133,12 @@ npx eas-cli submit --platform android --profile production
 
 ## Dépannage rapide
 
-| Problème | Piste |
-|----------|--------|
-| `Unknown command: "build:prod"` | Utiliser `npm run build:prod` |
-| Non connecté à Expo | `npm run eas:login` |
-| Version native déjà utilisée / conflit store | `npx eas-cli build:version:get` puis `build:version:set` |
-| Build qui échoue sur les credentials | Suivre les prompts EAS (keystore Android géré par EAS Credentials) |
+| Problème                                     | Piste                                                              |
+| -------------------------------------------- | ------------------------------------------------------------------ |
+| `Unknown command: "build:prod"`              | Utiliser `npm run build:prod`                                      |
+| Non connecté à Expo                          | `npm run eas:login`                                                |
+| Version native déjà utilisée / conflit store | `npx eas-cli build:version:get` puis `build:version:set`           |
+| Build qui échoue sur les credentials         | Suivre les prompts EAS (keystore Android géré par EAS Credentials) |
 
 ## Références
 

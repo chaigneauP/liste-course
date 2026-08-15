@@ -7,12 +7,14 @@ import type { ShoppingListRepository } from '@/domain/ports/shoppingListReposito
 import { makeExportShoppingList } from './exportShoppingList';
 import { makeImportShoppingList } from './importShoppingList';
 
-function createDeps(overrides: {
-  findById?: jest.Mock;
-  save?: jest.Mock;
-  shareJsonFile?: jest.Mock;
-  pickJsonFileContents?: jest.Mock;
-} = {}) {
+function createDeps(
+  overrides: {
+    findById?: jest.Mock;
+    save?: jest.Mock;
+    shareJsonFile?: jest.Mock;
+    pickJsonFileContents?: jest.Mock;
+  } = {}
+) {
   const findById = overrides.findById ?? jest.fn();
   const save = overrides.save ?? jest.fn(async (_list: ShoppingList) => undefined);
   const shareJsonFile = overrides.shareJsonFile ?? jest.fn(async () => undefined);

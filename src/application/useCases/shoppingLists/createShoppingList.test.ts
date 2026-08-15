@@ -5,9 +5,11 @@ import type { ShoppingListRepository } from '@/domain/ports/shoppingListReposito
 
 import { makeCreateShoppingList } from './createShoppingList';
 
-function createDeps(overrides: {
-  save?: jest.Mock;
-} = {}) {
+function createDeps(
+  overrides: {
+    save?: jest.Mock;
+  } = {}
+) {
   const save = overrides.save ?? jest.fn(async (_list: ShoppingList) => undefined);
   const repository: ShoppingListRepository = {
     findAll: jest.fn(),

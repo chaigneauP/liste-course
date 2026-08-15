@@ -16,10 +16,7 @@ import {
 
 import { getListCompletion, type ShoppingList } from '@/domain/entities/shoppingList';
 import { CardRow } from '@/presentation/components/CardRow';
-import {
-  ContextMenu,
-  type ContextMenuAnchor,
-} from '@/presentation/components/ContextMenu';
+import { ContextMenu, type ContextMenuAnchor } from '@/presentation/components/ContextMenu';
 import { ScrollEdgeFade } from '@/presentation/components/ScrollEdgeFade';
 import { formatItemCount } from '@/presentation/formatters/shoppingListFormatters';
 import { useTheme } from '@/presentation/theme';
@@ -45,11 +42,7 @@ type ListRowProps = {
   onLongPress?: (list: ShoppingList, anchor: ContextMenuAnchor) => void;
 };
 
-const ShoppingListRow = memo(function ShoppingListRow({
-  list,
-  onOpen,
-  onLongPress,
-}: ListRowProps) {
+const ShoppingListRow = memo(function ShoppingListRow({ list, onOpen, onLongPress }: ListRowProps) {
   const styles = useShoppingListsSectionStyles();
 
   const handlePress = useCallback(() => {
@@ -103,8 +96,7 @@ export function ShoppingListsSection({
   );
 
   const updateCanScrollMore = useCallback(() => {
-    const remaining =
-      contentHeightRef.current - layoutHeightRef.current - scrollOffsetRef.current;
+    const remaining = contentHeightRef.current - layoutHeightRef.current - scrollOffsetRef.current;
     setCanScrollMore(remaining > SCROLL_MORE_THRESHOLD_PX);
   }, []);
 
@@ -216,15 +208,14 @@ export function ShoppingListsSection({
             accessibilityLabel="Comment archiver une liste"
             hitSlop={8}
             onPress={showHint}
-            style={({ pressed }) => [styles.infoButton, pressed && styles.infoButtonPressed]}>
+            style={({ pressed }) => [styles.infoButton, pressed && styles.infoButtonPressed]}
+          >
             <Ionicons name="information-circle-outline" size={20} color={colors.textSecondary} />
           </Pressable>
         ) : null}
 
         {sectionInfoMessage && hintVisible ? (
-          <Animated.View
-            pointerEvents="none"
-            style={[styles.hintBubble, { opacity: hintOpacity }]}>
+          <Animated.View pointerEvents="none" style={[styles.hintBubble, { opacity: hintOpacity }]}>
             <Text style={styles.hintText}>{sectionInfoMessage}</Text>
           </Animated.View>
         ) : null}
@@ -244,7 +235,8 @@ export function ShoppingListsSection({
             scrollEventThrottle={16}
             onScroll={handleScroll}
             onContentSizeChange={handleContentSizeChange}
-            onLayout={handleScrollLayout}>
+            onLayout={handleScrollLayout}
+          >
             {lists.map((list) => (
               <ShoppingListRow
                 key={list.id}

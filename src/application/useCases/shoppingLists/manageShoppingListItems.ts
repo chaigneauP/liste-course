@@ -46,22 +46,16 @@ export function makeAddShoppingListItem(
     mutate(listId, (list) => addItemToList(list, createItem(idGenerator.generate(), details)));
 }
 
-export function makeUpdateShoppingListItem(
-  mutate: MutateShoppingList
-): UpdateShoppingListItem {
+export function makeUpdateShoppingListItem(mutate: MutateShoppingList): UpdateShoppingListItem {
   return (listId, itemId, details) =>
     mutate(listId, (list) => updateItemInList(list, itemId, details));
 }
 
-export function makeRemoveShoppingListItem(
-  mutate: MutateShoppingList
-): RemoveShoppingListItem {
+export function makeRemoveShoppingListItem(mutate: MutateShoppingList): RemoveShoppingListItem {
   return (listId, itemId) => mutate(listId, (list) => removeItemFromList(list, itemId));
 }
 
-export function makeToggleShoppingListItem(
-  mutate: MutateShoppingList
-): ToggleShoppingListItem {
+export function makeToggleShoppingListItem(mutate: MutateShoppingList): ToggleShoppingListItem {
   return (listId, itemId) => mutate(listId, (list) => toggleItemInList(list, itemId));
 }
 

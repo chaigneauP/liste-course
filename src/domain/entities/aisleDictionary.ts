@@ -1,12 +1,5 @@
-import {
-  isItemAisle,
-  normalizeItemNameForComparison,
-  type ItemAisle,
-} from './item';
-import {
-  AISLE_DICTIONARY_ALIASES,
-  AISLE_DICTIONARY_CATALOG,
-} from './aisleDictionarySeed';
+import { isItemAisle, normalizeItemNameForComparison, type ItemAisle } from './item';
+import { AISLE_DICTIONARY_ALIASES, AISLE_DICTIONARY_CATALOG } from './aisleDictionarySeed';
 
 export type AisleDictionary = Record<string, ItemAisle>;
 
@@ -51,10 +44,7 @@ export function buildAisleDictionarySeed(
 
 export const DEFAULT_AISLE_DICTIONARY_SEED: AisleDictionary = buildAisleDictionarySeed();
 
-export function lookupAisle(
-  dictionary: AisleDictionary,
-  name: string
-): ItemAisle | undefined {
+export function lookupAisle(dictionary: AisleDictionary, name: string): ItemAisle | undefined {
   const key = normalizeAisleDictionaryKey(name);
   if (!key) {
     return undefined;
@@ -142,10 +132,7 @@ export function isAisleDictionary(value: unknown): value is AisleDictionary {
 
   return Object.entries(value).every(
     ([key, aisle]) =>
-      typeof key === 'string' &&
-      key.length > 0 &&
-      typeof aisle === 'string' &&
-      isItemAisle(aisle)
+      typeof key === 'string' && key.length > 0 && typeof aisle === 'string' && isItemAisle(aisle)
   );
 }
 

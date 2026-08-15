@@ -38,14 +38,16 @@ export function MergeItemConfirmModal({
             <Pressable
               accessibilityRole="button"
               onPress={onCancel}
-              style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}>
+              style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+            >
               <Text style={styles.buttonText}>Annuler</Text>
             </Pressable>
 
             <Pressable
               accessibilityRole="button"
               onPress={onDeclineMerge}
-              style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}>
+              style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+            >
               <Text style={styles.buttonText}>Ne pas fusionner</Text>
             </Pressable>
 
@@ -56,7 +58,8 @@ export function MergeItemConfirmModal({
                 styles.button,
                 styles.submitButton,
                 pressed && styles.submitButtonPressed,
-              ]}>
+              ]}
+            >
               <Text style={[styles.buttonText, styles.submitButtonText]}>Fusionner</Text>
             </Pressable>
           </View>

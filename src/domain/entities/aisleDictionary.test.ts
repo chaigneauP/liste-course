@@ -132,9 +132,7 @@ describe('aisleDictionary entity', () => {
 
     it('returns the same reference when every seed key already exists', () => {
       const dictionary = { ...DEFAULT_AISLE_DICTIONARY_SEED };
-      expect(mergeSeedIntoDictionary(dictionary, DEFAULT_AISLE_DICTIONARY_SEED)).toBe(
-        dictionary
-      );
+      expect(mergeSeedIntoDictionary(dictionary, DEFAULT_AISLE_DICTIONARY_SEED)).toBe(dictionary);
     });
   });
 });

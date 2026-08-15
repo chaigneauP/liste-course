@@ -66,14 +66,16 @@ export const CardRow = memo(function CardRow({
         <Text
           style={[styles.title, checked && styles.titleChecked]}
           numberOfLines={2}
-          ellipsizeMode="tail">
+          ellipsizeMode="tail"
+        >
           {displayTitle}
         </Text>
         {description ? (
           <Text
             style={[styles.description, checked && styles.descriptionChecked]}
             numberOfLines={2}
-            ellipsizeMode="tail">
+            ellipsizeMode="tail"
+          >
             {description}
           </Text>
         ) : null}
@@ -112,7 +114,8 @@ export const CardRow = memo(function CardRow({
         checked && styles.rowChecked,
         pressed && !checked && styles.rowPressed,
         pressed && checked && styles.rowCheckedPressed,
-      ]}>
+      ]}
+    >
       {content}
     </Pressable>
   );

@@ -61,7 +61,8 @@ export function CustomTabBar({ state, navigation }: TabBarProps) {
           accessibilityState={{ selected: state.index === historiqueIndex }}
           onPress={() => navigateTo(LEFT_TAB_ROUTE)}
           style={[styles.sideTab, state.index === historiqueIndex && styles.sideTabActive]}
-          contentStyle={styles.sideTabContent}>
+          contentStyle={styles.sideTabContent}
+        >
           <Ionicons
             name="time-outline"
             size={24}
@@ -71,7 +72,8 @@ export function CustomTabBar({ state, navigation }: TabBarProps) {
             style={[
               styles.sideTabLabel,
               state.index === historiqueIndex && styles.sideTabLabelActive,
-            ]}>
+            ]}
+          >
             Historique
           </Text>
         </DepressiblePressable>
@@ -84,7 +86,8 @@ export function CustomTabBar({ state, navigation }: TabBarProps) {
           accessibilityState={{ selected: state.index === parametresIndex }}
           onPress={() => navigateTo(RIGHT_TAB_ROUTE)}
           style={[styles.sideTab, state.index === parametresIndex && styles.sideTabActive]}
-          contentStyle={styles.sideTabContent}>
+          contentStyle={styles.sideTabContent}
+        >
           <Ionicons
             name="settings-outline"
             size={24}
@@ -94,7 +97,8 @@ export function CustomTabBar({ state, navigation }: TabBarProps) {
             style={[
               styles.sideTabLabel,
               state.index === parametresIndex && styles.sideTabLabelActive,
-            ]}>
+            ]}
+          >
             Paramètres
           </Text>
         </DepressiblePressable>

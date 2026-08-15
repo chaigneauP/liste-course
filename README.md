@@ -39,11 +39,11 @@ L’application apparaît sous le nom **« liste de course »** sur votre écran
 
 ### Dépannage
 
-| Problème | Solution |
-|----------|----------|
+| Problème                                       | Solution                                                                                                                                                            |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | « Application bloquée » ou « Source inconnue » | Autorisez l’installation depuis l’application utilisée pour télécharger l’APK (Réglages → Applications → [Chrome/Fichiers] → Installer des applications inconnues). |
-| « Application non installée » | Désinstallez une ancienne version incompatible, ou vérifiez que vous avez assez d’espace de stockage. |
-| L’app ne s’ouvre pas | Assurez-vous d’avoir téléchargé l’APK **preview** ou **production** (pas le build *development*, qui nécessite un ordinateur connecté). |
+| « Application non installée »                  | Désinstallez une ancienne version incompatible, ou vérifiez que vous avez assez d’espace de stockage.                                                               |
+| L’app ne s’ouvre pas                           | Assurez-vous d’avoir téléchargé l’APK **preview** ou **production** (pas le build _development_, qui nécessite un ordinateur connecté).                             |
 
 ---
 
@@ -59,16 +59,16 @@ Les mises à jour ne sont **pas automatiques** (pas de Play Store).
 
 ## Utilisation rapide
 
-| Action | Comment faire |
-|--------|---------------|
-| Créer une liste | Appuyez sur **Nouvelle liste** (bouton central en bas) |
-| Ouvrir une liste | Appuyez sur la liste depuis l’accueil |
-| Ajouter un article | Dans une liste, appuyez sur **+** en bas à droite |
-| Cocher un article | Appuyez sur la case à cocher |
-| Archiver une liste | Maintenez appuyé sur la liste depuis l’accueil |
-| Voir l’historique | Onglet **Historique** |
-| Changer le thème | Onglet **Paramètres** → Apparence |
-| Supprimer l’historique | Onglet **Paramètres** → Supprimer l’historique |
+| Action                 | Comment faire                                          |
+| ---------------------- | ------------------------------------------------------ |
+| Créer une liste        | Appuyez sur **Nouvelle liste** (bouton central en bas) |
+| Ouvrir une liste       | Appuyez sur la liste depuis l’accueil                  |
+| Ajouter un article     | Dans une liste, appuyez sur **+** en bas à droite      |
+| Cocher un article      | Appuyez sur la case à cocher                           |
+| Archiver une liste     | Maintenez appuyé sur la liste depuis l’accueil         |
+| Voir l’historique      | Onglet **Historique**                                  |
+| Changer le thème       | Onglet **Paramètres** → Apparence                      |
+| Supprimer l’historique | Onglet **Paramètres** → Supprimer l’historique         |
 
 ---
 

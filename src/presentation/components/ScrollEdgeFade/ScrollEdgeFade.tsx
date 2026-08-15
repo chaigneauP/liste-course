@@ -30,11 +30,7 @@ export function ScrollEdgeFade({ visible, color }: Props) {
 
   return (
     <Animated.View pointerEvents="none" style={[styles.fade, { opacity }]}>
-      <LinearGradient
-        colors={['transparent', color]}
-        locations={[0, 1]}
-        style={styles.gradient}
-      />
+      <LinearGradient colors={['transparent', color]} locations={[0, 1]} style={styles.gradient} />
     </Animated.View>
   );
 }
