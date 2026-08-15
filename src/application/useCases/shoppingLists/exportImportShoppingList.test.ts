@@ -4,7 +4,6 @@ import type { IdGenerator } from '@/domain/ports/idGenerator';
 import type { ListTransferGateway } from '@/domain/ports/listTransferGateway';
 import type { ShoppingListRepository } from '@/domain/ports/shoppingListRepository';
 
-import { makeDownloadShoppingList } from './downloadShoppingList';
 import { makeExportShoppingList } from './exportShoppingList';
 import { makeImportShoppingList } from './importShoppingList';
 
@@ -12,13 +11,11 @@ function createDeps(overrides: {
   findById?: jest.Mock;
   save?: jest.Mock;
   shareJsonFile?: jest.Mock;
-  saveJsonFile?: jest.Mock;
   pickJsonFileContents?: jest.Mock;
 } = {}) {
   const findById = overrides.findById ?? jest.fn();
   const save = overrides.save ?? jest.fn(async (_list: ShoppingList) => undefined);
   const shareJsonFile = overrides.shareJsonFile ?? jest.fn(async () => undefined);
-  const saveJsonFile = overrides.saveJsonFile ?? jest.fn(async () => 'saved' as const);
   const pickJsonFileContents = overrides.pickJsonFileContents ?? jest.fn(async () => null);
 
   const repository: ShoppingListRepository = {
@@ -29,7 +26,6 @@ function createDeps(overrides: {
   };
   const transfer: ListTransferGateway = {
     shareJsonFile,
-    saveJsonFile,
     pickJsonFileContents,
   };
   const clock: Clock = { now: () => '2026-08-12T08:00:00.000Z' };
@@ -46,7 +42,6 @@ function createDeps(overrides: {
     findById,
     save,
     shareJsonFile,
-    saveJsonFile,
     pickJsonFileContents,
   };
 }
@@ -84,29 +79,6 @@ describe('export/import shopping list use cases', () => {
 
     await expect(exportList('missing')).rejects.toThrow('Shopping list not found');
     expect(shareJsonFile).not.toHaveBeenCalled();
-  });
-
-  it('downloads an existing list into a user-chosen folder', async () => {
-    const { repository, transfer, saveJsonFile } = createDeps({
-      findById: jest.fn(async () => sampleList),
-    });
-    const downloadList = makeDownloadShoppingList(repository, transfer);
-
-    await expect(downloadList('list-1')).resolves.toBe('saved');
-    expect(saveJsonFile).toHaveBeenCalledWith(
-      'Courses.json',
-      expect.stringContaining('"format": "liste-course"')
-    );
-  });
-
-  it('propagates download cancellation', async () => {
-    const { repository, transfer } = createDeps({
-      findById: jest.fn(async () => sampleList),
-      saveJsonFile: jest.fn(async () => 'cancelled' as const),
-    });
-    const downloadList = makeDownloadShoppingList(repository, transfer);
-
-    await expect(downloadList('list-1')).resolves.toBe('cancelled');
   });
 
   it('returns null when the user cancels the picker', async () => {

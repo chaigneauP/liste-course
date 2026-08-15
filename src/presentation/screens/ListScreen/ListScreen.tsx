@@ -40,41 +40,13 @@ export function ListScreen() {
       return;
     }
 
-    Alert.alert('Exporter la liste', 'Choisissez comment récupérer le fichier JSON.', [
-      { text: 'Annuler', style: 'cancel' },
-      {
-        text: 'Télécharger',
-        onPress: () => void runExport('download'),
-      },
-      {
-        text: 'Partager…',
-        onPress: () => void runExport('share'),
-      },
-    ]);
-  }
-
-  async function runExport(mode: 'share' | 'download') {
-    if (!list || sharing) {
-      return;
-    }
-
     setSharing(true);
     try {
-      if (mode === 'share') {
-        await shoppingLists.exportList(list.id);
-        return;
-      }
-
-      const result = await shoppingLists.downloadList(list.id);
-      if (result === 'saved') {
-        Alert.alert('Fichier enregistré', 'La liste a été téléchargée dans le dossier choisi.');
-      }
+      await shoppingLists.exportList(list.id);
     } catch {
       Alert.alert(
-        mode === 'share' ? 'Partage impossible' : 'Téléchargement impossible',
-        mode === 'share'
-          ? 'La liste n’a pas pu être partagée. Réessayez.'
-          : 'La liste n’a pas pu être enregistrée. Réessayez.'
+        'Partage impossible',
+        'La liste n’a pas pu être partagée. Réessayez.'
       );
     } finally {
       setSharing(false);

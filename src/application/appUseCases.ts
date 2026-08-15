@@ -17,10 +17,6 @@ import {
   type DeleteArchivedShoppingLists,
 } from './useCases/shoppingLists/deleteArchivedShoppingLists';
 import {
-  makeDownloadShoppingList,
-  type DownloadShoppingList,
-} from './useCases/shoppingLists/downloadShoppingList';
-import {
   makeExportShoppingList,
   type ExportShoppingList,
 } from './useCases/shoppingLists/exportShoppingList';
@@ -72,7 +68,6 @@ export type ShoppingListUseCases = {
   archive: ArchiveShoppingList;
   deleteArchived: DeleteArchivedShoppingLists;
   exportList: ExportShoppingList;
-  downloadList: DownloadShoppingList;
   importList: ImportShoppingList;
   addItem: AddShoppingListItem;
   updateItem: UpdateShoppingListItem;
@@ -113,7 +108,6 @@ export function createAppUseCases({
       archive: makeArchiveShoppingList(mutate),
       deleteArchived: makeDeleteArchivedShoppingLists(shoppingListRepository),
       exportList: makeExportShoppingList(shoppingListRepository, listTransferGateway),
-      downloadList: makeDownloadShoppingList(shoppingListRepository, listTransferGateway),
       importList: makeImportShoppingList(
         shoppingListRepository,
         listTransferGateway,

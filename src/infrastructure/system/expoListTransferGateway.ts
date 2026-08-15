@@ -1,23 +1,11 @@
-import { Directory, File, Paths } from 'expo-file-system';
+import { File, Paths } from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
 import * as Sharing from 'expo-sharing';
 
 import type { ListTransferGateway } from '@/domain/ports/listTransferGateway';
 
-function isPickerCancelled(error: unknown): boolean {
-  if (!(error instanceof Error)) {
-    return false;
-  }
-  return /cancel+ed/i.test(error.message);
-}
-
-function basenameWithoutExtension(filename: string): string {
-  return filename.replace(/\.json$/i, '');
-}
-
 /**
  * Adaptateur Expo : écriture cache + Sharing pour l’export,
- * sélecteur de dossier pour le téléchargement,
  * DocumentPicker + lecture fichier pour l’import.
  */
 export function createExpoListTransferGateway(): ListTransferGateway {
@@ -37,20 +25,6 @@ export function createExpoListTransferGateway(): ListTransferGateway {
         dialogTitle: 'Partager la liste',
         UTI: 'public.json',
       });
-    },
-
-    async saveJsonFile(filename, contents) {
-      try {
-        const directory = await Directory.pickDirectoryAsync();
-        const file = directory.createFile(basenameWithoutExtension(filename), 'application/json');
-        file.write(contents);
-        return 'saved';
-      } catch (error) {
-        if (isPickerCancelled(error)) {
-          return 'cancelled';
-        }
-        throw error;
-      }
     },
 
     async pickJsonFileContents() {
