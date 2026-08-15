@@ -1,0 +1,1 @@
+export { MoveAisleConfirmModal } from './MoveAisleConfirmModal';

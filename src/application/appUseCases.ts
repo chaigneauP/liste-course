@@ -2,8 +2,19 @@ import type { Clock } from '@/domain/ports/clock';
 import type { IdGenerator } from '@/domain/ports/idGenerator';
 import type { ListTransferGateway } from '@/domain/ports/listTransferGateway';
 import type { ShoppingListRepository } from '@/domain/ports/shoppingListRepository';
+import type { AisleDictionaryRepository } from '@/domain/ports/aisleDictionaryRepository';
 import type { ThemePreferenceRepository } from '@/domain/ports/themePreferenceRepository';
 
+import {
+  makeEvaluateAisleLearning,
+  makeLearnAisle,
+  makeOverwriteAisle,
+  makeSuggestAisle,
+  type EvaluateAisleLearning,
+  type LearnAisle,
+  type OverwriteAisle,
+  type SuggestAisle,
+} from './useCases/aisleDictionary/aisleDictionary';
 import {
   makeArchiveShoppingList,
   type ArchiveShoppingList,
@@ -55,6 +66,7 @@ import {
 export type AppDependencies = {
   shoppingListRepository: ShoppingListRepository;
   themePreferenceRepository: ThemePreferenceRepository;
+  aisleDictionaryRepository: AisleDictionaryRepository;
   listTransferGateway: ListTransferGateway;
   clock: Clock;
   idGenerator: IdGenerator;
@@ -81,9 +93,17 @@ export type ThemeUseCases = {
   savePreference: SaveThemePreference;
 };
 
+export type AisleDictionaryUseCases = {
+  suggestAisle: SuggestAisle;
+  evaluateAisleLearning: EvaluateAisleLearning;
+  learnAisle: LearnAisle;
+  overwriteAisle: OverwriteAisle;
+};
+
 export type AppUseCases = {
   shoppingLists: ShoppingListUseCases;
   theme: ThemeUseCases;
+  aisleDictionary: AisleDictionaryUseCases;
 };
 
 /**
@@ -93,6 +113,7 @@ export type AppUseCases = {
 export function createAppUseCases({
   shoppingListRepository,
   themePreferenceRepository,
+  aisleDictionaryRepository,
   listTransferGateway,
   clock,
   idGenerator,
@@ -123,6 +144,12 @@ export function createAppUseCases({
     theme: {
       getPreference: makeGetThemePreference(themePreferenceRepository),
       savePreference: makeSaveThemePreference(themePreferenceRepository),
+    },
+    aisleDictionary: {
+      suggestAisle: makeSuggestAisle(aisleDictionaryRepository),
+      evaluateAisleLearning: makeEvaluateAisleLearning(aisleDictionaryRepository),
+      learnAisle: makeLearnAisle(aisleDictionaryRepository),
+      overwriteAisle: makeOverwriteAisle(aisleDictionaryRepository),
     },
   };
 }

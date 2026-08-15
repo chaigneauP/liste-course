@@ -2,6 +2,7 @@ import { createContext, useContext, type ReactNode } from 'react';
 
 import type {
   AppUseCases,
+  AisleDictionaryUseCases,
   ShoppingListUseCases,
   ThemeUseCases,
 } from '@/application/appUseCases';
@@ -35,4 +36,8 @@ export function useShoppingListUseCases(): ShoppingListUseCases {
 
 export function useThemeUseCases(): ThemeUseCases {
   return useAppUseCases().theme;
+}
+
+export function useAisleDictionaryUseCases(): AisleDictionaryUseCases {
+  return useAppUseCases().aisleDictionary;
 }

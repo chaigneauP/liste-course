@@ -4,12 +4,12 @@ import { ActivityIndicator, Alert, Pressable, SectionList, Text, View } from 're
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { groupItemsByAisle, formatItemQuantity, type Item, type ItemDetails } from '@/domain/entities/item';
-import { ItemFormModal } from '@/presentation/components/ItemFormModal';
+import { ItemFormModal, type ItemFormSubmitOptions } from '@/presentation/components/ItemFormModal';
 import { ItemRow } from '@/presentation/components/ItemRow';
 import { MergeItemConfirmModal } from '@/presentation/components/MergeItemConfirmModal';
 import { ScreenTop } from '@/presentation/components/ScreenTop';
 import { useShoppingList } from '@/presentation/hooks/useShoppingList';
-import { useShoppingListUseCases } from '@/presentation/providers/UseCasesProvider';
+import { useAisleDictionaryUseCases, useShoppingListUseCases } from '@/presentation/providers/UseCasesProvider';
 import { useTheme } from '@/presentation/theme';
 
 import {
@@ -24,6 +24,7 @@ export function ListScreen() {
   const { list, items, loading, readOnly, addItem, mergeItem, getMergeCandidate, updateItem, removeItem, toggleItem } =
     useShoppingList(listId);
   const shoppingLists = useShoppingListUseCases();
+  const aisleDictionary = useAisleDictionaryUseCases();
   const insets = useSafeAreaInsets();
   const styles = useListScreenStyles();
   const { colors } = useTheme();
@@ -33,6 +34,7 @@ export function ListScreen() {
   const [mergePrompt, setMergePrompt] = useState<{
     candidate: Item;
     details: ItemDetails;
+    overwriteAisle: boolean;
   } | null>(null);
 
   async function handleSharePress() {
@@ -68,10 +70,36 @@ export function ListScreen() {
     setEditingItem(null);
   }, []);
 
+  const persistAisleLearning = useCallback(
+    (details: ItemDetails, options: ItemFormSubmitOptions) => {
+      if (details.aisle === undefined) {
+        return;
+      }
+      if (options.overwriteAisle) {
+        void aisleDictionary.overwriteAisle(details.name, details.aisle);
+      } else {
+        void aisleDictionary.learnAisle(details.name, details.aisle);
+      }
+    },
+    [aisleDictionary]
+  );
+
+  const suggestAisle = useCallback(
+    (name: string) => aisleDictionary.suggestAisle(name),
+    [aisleDictionary]
+  );
+
+  const evaluateAisleLearning = useCallback(
+    (name: string, aisle: ItemDetails['aisle']) =>
+      aisleDictionary.evaluateAisleLearning(name, aisle),
+    [aisleDictionary]
+  );
+
   const handleSubmit = useCallback(
-    (details: ItemDetails) => {
+    (details: ItemDetails, options: ItemFormSubmitOptions) => {
       if (editingItem) {
         void updateItem(editingItem.id, details);
+        persistAisleLearning(details, options);
         closeModal();
         return;
       }
@@ -79,14 +107,15 @@ export function ListScreen() {
       const candidate = getMergeCandidate(details);
       if (candidate) {
         closeModal();
-        setMergePrompt({ candidate, details });
+        setMergePrompt({ candidate, details, overwriteAisle: options.overwriteAisle });
         return;
       }
 
       void addItem(details);
+      persistAisleLearning(details, options);
       closeModal();
     },
-    [addItem, closeModal, editingItem, getMergeCandidate, updateItem]
+    [addItem, closeModal, editingItem, getMergeCandidate, persistAisleLearning, updateItem]
   );
 
   const closeMergePrompt = useCallback(() => {
@@ -98,16 +127,22 @@ export function ListScreen() {
       return;
     }
     void mergeItem(mergePrompt.candidate.id, mergePrompt.details);
+    persistAisleLearning(mergePrompt.details, {
+      overwriteAisle: mergePrompt.overwriteAisle,
+    });
     setMergePrompt(null);
-  }, [mergeItem, mergePrompt]);
+  }, [mergeItem, mergePrompt, persistAisleLearning]);
 
   const handleMergeDecline = useCallback(() => {
     if (!mergePrompt) {
       return;
     }
     void addItem(mergePrompt.details);
+    persistAisleLearning(mergePrompt.details, {
+      overwriteAisle: mergePrompt.overwriteAisle,
+    });
     setMergePrompt(null);
-  }, [addItem, mergePrompt]);
+  }, [addItem, mergePrompt, persistAisleLearning]);
 
   const handleDelete = useCallback(
     (itemId: string) => {
@@ -248,6 +283,8 @@ export function ListScreen() {
             }
             onCancel={closeModal}
             onSubmit={handleSubmit}
+            onSuggestAisle={suggestAisle}
+            onEvaluateAisleLearning={evaluateAisleLearning}
           />
 
           <MergeItemConfirmModal
