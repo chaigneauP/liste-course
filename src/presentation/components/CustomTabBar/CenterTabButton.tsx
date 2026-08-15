@@ -22,7 +22,7 @@ import { CENTER_BUTTON_HEIGHT } from './CustomTabBar.styles';
 
 const MORPH_MS = 220;
 const BUBBLE_SIZE = CENTER_BUTTON_HEIGHT;
-const PILL_WIDTH = 156;
+const PILL_WIDTH = 144;
 const HOME_ICON_SIZE = 26;
 /** Contenu masqué pendant le morph ; visible seulement près des extrémités. */
 const CONTENT_HIDE_START = 0.15;

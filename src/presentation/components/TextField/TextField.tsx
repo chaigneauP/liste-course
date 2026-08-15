@@ -1,4 +1,4 @@
-import { Text, TextInput, View, type KeyboardTypeOptions } from 'react-native';
+import { Keyboard, Text, TextInput, View, type KeyboardTypeOptions } from 'react-native';
 
 import { useTheme } from '@/presentation/theme';
 
@@ -13,7 +13,6 @@ type Props = {
   showCounter?: boolean;
   autoFocus?: boolean;
   keyboardType?: KeyboardTypeOptions;
-  onSubmitEditing?: () => void;
 };
 
 export function TextField({
@@ -24,7 +23,6 @@ export function TextField({
   showCounter = false,
   autoFocus = false,
   keyboardType,
-  onSubmitEditing,
 }: Props) {
   const styles = useTextFieldStyles();
   const { colors } = useTheme();
@@ -42,7 +40,7 @@ export function TextField({
         autoFocus={autoFocus}
         keyboardType={keyboardType}
         returnKeyType="done"
-        onSubmitEditing={onSubmitEditing}
+        onSubmitEditing={Keyboard.dismiss}
       />
 
       {counterVisible ? (

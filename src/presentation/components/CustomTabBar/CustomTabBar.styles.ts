@@ -11,41 +11,41 @@ export const CENTER_BUTTON_OVERHANG = 24;
 export const CENTER_BUTTON_HEIGHT = 60;
 
 export const useCustomTabBarStyles = makeStyles(({ colors, spacing, typography }) => ({
-    bar: {
-      backgroundColor: colors.surface,
-      borderTopWidth: 1,
-      borderTopColor: colors.border,
-      overflow: 'visible',
-    },
-    barRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      minHeight: TAB_BAR_CONTENT_HEIGHT,
-      paddingTop: spacing[3],
-      paddingHorizontal: spacing[2],
-    },
-    sideTab: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    sideTabContent: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: spacing[1],
-    },
-    sideTabActive: {},
-    sideTabLabel: {
-      ...typography.caption,
-      color: colors.textSecondary,
-    },
-    sideTabLabelActive: {
-      color: colors.iconActive,
-      fontWeight: '600',
-    },
-    centerSpacer: {
-      flex: 1,
-    },
+  bar: {
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    overflow: 'visible',
+  },
+  barRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minHeight: TAB_BAR_CONTENT_HEIGHT,
+    paddingTop: spacing[3],
+    paddingHorizontal: spacing[2],
+  },
+  sideTab: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sideTabContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing[1],
+  },
+  sideTabActive: {},
+  sideTabLabel: {
+    ...typography.caption,
+    color: colors.textSecondary,
+  },
+  sideTabLabelActive: {
+    color: colors.iconActive,
+    fontWeight: '600',
+  },
+  centerSpacer: {
+    flex: 1,
+  },
   centerButtonAnchor: {
     position: 'absolute',
     top: -CENTER_BUTTON_OVERHANG,

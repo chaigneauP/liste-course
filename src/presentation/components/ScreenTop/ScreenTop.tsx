@@ -63,7 +63,7 @@ export function ScreenTop({
         ) : null}
 
         <View style={styles.textBlock}>
-          <Text style={styles.title} numberOfLines={2}>
+          <Text style={styles.title} numberOfLines={1}>
             {title}
           </Text>
           {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}

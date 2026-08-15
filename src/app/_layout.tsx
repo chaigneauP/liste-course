@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
 import { createAppContainer } from '@/infrastructure/createAppContainer';
+import { DismissKeyboardView } from '@/presentation/components/DismissKeyboardView';
 import { createRootStackOptions } from '@/presentation/navigation/rootStackOptions';
 import { UseCasesProvider } from '@/presentation/providers/UseCasesProvider';
 import { ThemeProvider, useTheme } from '@/presentation/theme';
@@ -28,13 +29,13 @@ function RootNavigator() {
   const theme = useTheme();
 
   return (
-    <>
+    <DismissKeyboardView>
       <StatusBar style={theme.scheme === 'dark' ? 'light' : 'dark'} />
       <Stack screenOptions={createRootStackOptions(theme)}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="liste/[id]" />
       </Stack>
-    </>
+    </DismissKeyboardView>
   );
 }
 

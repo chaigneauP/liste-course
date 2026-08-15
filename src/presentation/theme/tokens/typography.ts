@@ -5,14 +5,14 @@ import type { TextStyle } from 'react-native';
  * couleur : celle-ci vient du thème au point d'utilisation.
  */
 export const typography = {
-  screenTitle: { fontSize: 28, fontWeight: '700' },
+  screenTitle: { fontSize: 24, fontWeight: '700' },
   screenSubtitle: { fontSize: 15 },
   sectionTitle: { fontSize: 18, fontWeight: '600' },
   modalTitle: { fontSize: 18, fontWeight: '700' },
   emptyTitle: { fontSize: 17, fontWeight: '600' },
   cardTitle: { fontSize: 16 },
   input: { fontSize: 16 },
-  button: { fontSize: 15, fontWeight: '600' },
+  button: { fontSize: 14, fontWeight: '600' },
   buttonSmall: { fontSize: 14, fontWeight: '600' },
   body: { fontSize: 14 },
   bodyRelaxed: { fontSize: 16, lineHeight: 20 },

@@ -1,15 +1,10 @@
 import type { ReactNode } from 'react';
-import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { DismissKeyboardView } from '@/presentation/components/DismissKeyboardView';
 
 import { useFormModalStyles } from './FormModal.styles';
+import { useKeyboardHeight } from './useKeyboardHeight';
 
 type Props = {
   visible: boolean;
@@ -17,6 +12,8 @@ type Props = {
   subtitle?: string;
   /** `compact` resserre la feuille quand elle contient un sous-titre. */
   density?: 'regular' | 'compact';
+  /** Remonte la feuille au-dessus du clavier lorsqu'il est ouvert. */
+  avoidKeyboard?: boolean;
   submitLabel: string;
   cancelLabel?: string;
   submitDisabled?: boolean;
@@ -30,6 +27,7 @@ export function FormModal({
   title,
   subtitle,
   density = 'regular',
+  avoidKeyboard = false,
   submitLabel,
   cancelLabel = 'Annuler',
   submitDisabled = false,
@@ -39,12 +37,12 @@ export function FormModal({
 }: Props) {
   const styles = useFormModalStyles();
   const compact = density === 'compact';
+  const keyboardHeight = useKeyboardHeight(avoidKeyboard);
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.backdrop}>
+      <DismissKeyboardView
+        style={[styles.backdrop, keyboardHeight > 0 && { paddingBottom: keyboardHeight }]}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
 
         <View style={[styles.sheet, compact ? styles.sheetCompact : styles.sheetRegular]}>
@@ -75,7 +73,7 @@ export function FormModal({
             </Pressable>
           </View>
         </View>
-      </KeyboardAvoidingView>
+      </DismissKeyboardView>
     </Modal>
   );
 }

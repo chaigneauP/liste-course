@@ -33,6 +33,7 @@ export function ListNameModal({ visible, onCancel, onSubmit }: Props) {
       title="Nouvelle liste"
       subtitle="Donnez un titre à votre liste de courses."
       density="compact"
+      avoidKeyboard
       submitLabel="Créer"
       submitDisabled={!canSubmit}
       onCancel={onCancel}
@@ -44,7 +45,6 @@ export function ListNameModal({ visible, onCancel, onSubmit }: Props) {
         maxLength={MAX_LIST_TITLE_LENGTH}
         showCounter
         autoFocus
-        onSubmitEditing={handleSubmit}
       />
     </FormModal>
   );

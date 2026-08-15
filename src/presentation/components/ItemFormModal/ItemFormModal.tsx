@@ -139,7 +139,6 @@ export function ItemFormModal({
         onChangeText={setName}
         placeholder="Ex. : Lait, pain, tomates…"
         autoFocus
-        onSubmitEditing={handleSubmit}
       />
 
       <View style={styles.qtyUnitRow}>
