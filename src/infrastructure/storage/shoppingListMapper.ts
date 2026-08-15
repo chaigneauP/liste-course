@@ -1,4 +1,4 @@
-import { isItemAisle, isItemUnit, normalizeItemNote, type Item } from '@/domain/entities/item';
+import { coerceItemAisle, isItemUnit, normalizeItemNote, type Item } from '@/domain/entities/item';
 import { isListStatus, type ShoppingList } from '@/domain/entities/shoppingList';
 
 /**
@@ -26,7 +26,7 @@ export function parseItem(value: unknown): Item | null {
   const unit =
     quantity !== undefined ? (isItemUnit(value.unit) ? value.unit : 'piece') : undefined;
   const note = typeof value.note === 'string' ? normalizeItemNote(value.note) : undefined;
-  const aisle = isItemAisle(value.aisle) ? value.aisle : undefined;
+  const aisle = coerceItemAisle(value.aisle);
 
   return {
     id: value.id,

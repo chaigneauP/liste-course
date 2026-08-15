@@ -101,7 +101,7 @@ describe('shoppingList entity', () => {
     it('findMergeCandidate matches unchecked items by normalized name only', () => {
       const list = makeList({
         items: [
-          createItem('a', { name: 'Lait', quantity: 1, unit: 'l', aisle: 'dairy' }),
+          createItem('a', { name: 'Lait', quantity: 1, unit: 'l', aisle: 'fresh' }),
           { ...createItem('b', { name: 'Pain' }), checked: true },
           createItem('c', { name: 'Eau', quantity: 1, unit: 'l', aisle: 'drinks' }),
         ],
@@ -109,7 +109,7 @@ describe('shoppingList entity', () => {
 
       expect(findMergeCandidate(list, { name: '  lait ', quantity: 2, unit: 'l' })?.id).toBe('a');
       expect(findMergeCandidate(list, { name: 'Pain' })).toBeUndefined();
-      expect(findMergeCandidate(list, { name: 'Eau', quantity: 1, unit: 'l', aisle: 'dairy' })?.id).toBe(
+      expect(findMergeCandidate(list, { name: 'Eau', quantity: 1, unit: 'l', aisle: 'fresh' })?.id).toBe(
         'c'
       );
       expect(findMergeCandidate(list, { name: 'Lait', quantity: 1, unit: 'piece' })?.id).toBe('a');
@@ -149,7 +149,7 @@ describe('shoppingList entity', () => {
             quantity: 1,
             unit: 'l',
             note: 'bio',
-            aisle: 'dairy',
+            aisle: 'fresh',
           }),
         ],
       });
@@ -167,7 +167,7 @@ describe('shoppingList entity', () => {
         quantity: 3,
         unit: 'l',
         note: 'bio',
-        aisle: 'dairy',
+        aisle: 'fresh',
       });
     });
 

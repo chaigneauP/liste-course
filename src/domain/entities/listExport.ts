@@ -1,5 +1,5 @@
 import {
-  isItemAisle,
+  coerceItemAisle,
   isItemUnit,
   normalizeItemNote,
   type Item,
@@ -55,7 +55,7 @@ function parseExportedItem(value: unknown): ExportedItem | null {
   const unit =
     quantity !== undefined ? (isItemUnit(value.unit) ? value.unit : 'piece') : undefined;
   const note = typeof value.note === 'string' ? normalizeItemNote(value.note) : undefined;
-  const aisle = isItemAisle(value.aisle) ? value.aisle : undefined;
+  const aisle = coerceItemAisle(value.aisle);
   const checked = typeof value.checked === 'boolean' ? value.checked : undefined;
 
   return { name, checked, quantity, unit, note, aisle };

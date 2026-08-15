@@ -8,33 +8,45 @@ export function isItemUnit(value: unknown): value is ItemUnit {
 
 export type ItemAisle =
   | 'produce'
-  | 'dairy'
-  | 'meat'
-  | 'fish'
-  | 'bakery'
-  | 'frozen'
+  | 'meat_fish'
+  | 'fresh'
   | 'grocery'
+  | 'frozen'
   | 'drinks'
   | 'hygiene'
-  | 'home'
-  | 'other';
+  | 'home';
 
 const ITEM_AISLES: ItemAisle[] = [
   'produce',
-  'dairy',
-  'meat',
-  'fish',
-  'bakery',
-  'frozen',
+  'meat_fish',
+  'fresh',
   'grocery',
+  'frozen',
   'drinks',
   'hygiene',
   'home',
-  'other',
 ];
+
+/** Maps removed aisle keys from older app versions onto the current set. */
+const LEGACY_AISLE_MAP: Record<string, ItemAisle> = {
+  dairy: 'fresh',
+  bakery: 'fresh',
+  meat: 'meat_fish',
+  fish: 'meat_fish',
+};
 
 export function isItemAisle(value: unknown): value is ItemAisle {
   return typeof value === 'string' && ITEM_AISLES.includes(value as ItemAisle);
+}
+
+export function coerceItemAisle(value: unknown): ItemAisle | undefined {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+  if (isItemAisle(value)) {
+    return value;
+  }
+  return LEGACY_AISLE_MAP[value];
 }
 
 export const AUTO_AISLE_KEY = 'auto' as const;
@@ -44,30 +56,24 @@ export type ItemAisleGroupKey = typeof AUTO_AISLE_KEY | ItemAisle;
 export const ITEM_AISLE_ORDER: readonly ItemAisleGroupKey[] = [
   AUTO_AISLE_KEY,
   'produce',
-  'dairy',
-  'meat',
-  'fish',
-  'bakery',
-  'frozen',
+  'meat_fish',
+  'fresh',
   'grocery',
+  'frozen',
   'drinks',
   'hygiene',
   'home',
-  'other',
 ];
 
 export const ITEM_AISLE_LABELS: Record<ItemAisle, string> = {
-  produce: 'Fruits et Légumes',
-  dairy: 'Crèmerie',
-  meat: 'Boucherie',
-  fish: 'Poissonnerie',
-  bakery: 'Boulangerie',
+  produce: 'Fruits et légumes',
+  meat_fish: 'Boucherie et poissonnerie',
+  fresh: 'Produits frais',
+  grocery: 'Épicerie',
   frozen: 'Surgelés',
-  grocery: 'Epicerie',
   drinks: 'Boissons',
-  hygiene: 'Hygiène',
-  home: 'Maison',
-  other: 'Autres',
+  hygiene: 'Hygiène et beauté',
+  home: 'Entretien et maison',
 };
 
 export const AUTO_AISLE_LABEL = 'Auto';

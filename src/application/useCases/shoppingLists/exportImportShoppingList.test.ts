@@ -123,7 +123,7 @@ describe('export/import shopping list use cases', () => {
       version: 1,
       list: {
         name: 'Importée',
-        items: [{ name: 'Lait', aisle: 'dairy' }],
+        items: [{ name: 'Lait', aisle: 'fresh' }],
       },
     });
     const { repository, transfer, clock, idGenerator, save, pickJsonFileContents } = createDeps({
@@ -137,7 +137,7 @@ describe('export/import shopping list use cases', () => {
       id: 'id-1',
       name: 'Importée',
       status: 'active',
-      items: [{ id: 'id-2', name: 'Lait', aisle: 'dairy' }],
+      items: [{ id: 'id-2', name: 'Lait', aisle: 'fresh' }],
       createdAt: '2026-08-12T08:00:00.000Z',
       updatedAt: '2026-08-12T08:00:00.000Z',
     });

@@ -114,7 +114,8 @@ describe('item entity', () => {
   describe('isItemAisle', () => {
     it('accepts only known aisles', () => {
       expect(isItemAisle('produce')).toBe(true);
-      expect(isItemAisle('other')).toBe(true);
+      expect(isItemAisle('fresh')).toBe(true);
+      expect(isItemAisle('other')).toBe(false);
       expect(isItemAisle('snacks')).toBe(false);
       expect(isItemAisle(null)).toBe(false);
     });
@@ -135,7 +136,7 @@ describe('item entity', () => {
   describe('groupItemsByAisle', () => {
     it('groups items with Auto first and omits empty sections', () => {
       const items = [
-        createItem('1', { name: 'Lait', aisle: 'dairy' }),
+        createItem('1', { name: 'Lait', aisle: 'fresh' }),
         createItem('2', { name: 'Pain' }),
         createItem('3', { name: 'Pommes', aisle: 'produce' }),
         createItem('4', { name: 'Eau', aisle: 'drinks' }),
@@ -144,7 +145,7 @@ describe('item entity', () => {
       expect(groupItemsByAisle(items).map((section) => section.key)).toEqual([
         'auto',
         'produce',
-        'dairy',
+        'fresh',
         'drinks',
       ]);
       expect(groupItemsByAisle(items)[0]?.items.map((item) => item.name)).toEqual(['Pain']);

@@ -113,6 +113,14 @@ describe('shoppingListMapper', () => {
       });
     });
 
+    it('migrates legacy aisles', () => {
+      expect(parseItem({ id: 'a', name: 'Lait', aisle: 'dairy' })?.aisle).toBe('fresh');
+      expect(parseItem({ id: 'a', name: 'Pain', aisle: 'bakery' })?.aisle).toBe('fresh');
+      expect(parseItem({ id: 'a', name: 'Steak', aisle: 'meat' })?.aisle).toBe('meat_fish');
+      expect(parseItem({ id: 'a', name: 'Saumon', aisle: 'fish' })?.aisle).toBe('meat_fish');
+      expect(parseItem({ id: 'a', name: 'Divers', aisle: 'other' })?.aisle).toBeUndefined();
+    });
+
     it('rejects invalid payloads', () => {
       expect(parseItem(null)).toBeNull();
       expect(parseItem({ id: 1, name: 'Pain' })).toBeNull();
